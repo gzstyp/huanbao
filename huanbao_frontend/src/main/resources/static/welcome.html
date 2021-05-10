@@ -1,8 +1,8 @@
 <meta charset="utf-8"/>
 <style type="text/css">
     #container{
-        height:880px;
-        width:1820px;
+        height:1080px;
+        width:1366px;
         margin-left:-4px;
     }
 </style>
@@ -17,6 +17,20 @@
     </div>
 </div>
 <script type="text/javascript">
+    function windowShow() {
+        var width = winFn.fnGetWidth();
+        var height = winFn.fnGetHeight();
+        $('#container').css({"width":(width-238)+"px","height":(height-88)+"px","min-height":(height-88)+"px"});
+    }
+    var scripts = [null, null];
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
+        $(function($){
+            windowShow();
+        });
+    });
+    $(window).resize(function () {
+        windowShow();
+    }).resize();
     var map = new BMap.Map("container");          // 创建地图实例
     var point = new BMap.Point(114.373485,36.110373);
     map.centerAndZoom(point,12);             // 初始化地图，设置中心点坐标和地图级别
