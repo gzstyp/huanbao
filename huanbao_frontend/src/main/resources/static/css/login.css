@@ -1,0 +1,117 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-family:"Microsoft YaHei", "微软雅黑",fantasy,serif,Arial,monospace,tahoma,Roboto,Simsun,sans-serif;
+    color: #333;
+    border: 0;
+}
+.nav_header{
+    /*background: #3b8cff;*/
+    height: 50px;
+    line-height: 50px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    border-bottom:1px solid #ddd;
+}
+.company{
+	width:1002px;
+	position: absolute;
+    text-align: left;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.company span{
+    color:#07b0ff;
+    font-size:20px;
+}
+.contentBox {
+    width:100%;
+    height: 70%;
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-color:#3b8cff;
+}
+.clear{
+    clear: both;
+}
+.leftBox{
+	margin:-165px 0 0 -150px;
+	height: 330px;
+	width: 300px;
+	left:20%;
+	top:50%;
+	position: absolute;
+    background:url("../images/tech.png");
+}
+.leftBox span{
+	font-size:3.8em;
+	color:#fff;
+}
+.loginBox{
+    height: 370px;
+    width: 350px;
+    right:30%;
+    top:50%;
+    margin:-185px -175px 0 0;
+    background-color:#eee;
+    position: absolute;
+    border-radius:6px;
+    behavior: url(css/PIE.htc);/*解决低版本的IE支持圆角或CSS3*/
+}
+.loginBox input{
+    height:44px;
+    line-height:44px;
+    width:200px;
+    font-size:16px;
+    padding-left:4px;
+    padding-right:4px;
+    margin-top:60px;
+    border-radius:3px;
+    outline: none;
+}
+.loginBox button{
+    text-decoration: none;
+    outline:none;
+    height:44px;
+    line-height:44px;
+    width:244px;
+    font-size:16px;
+    position: absolute;
+    background-color:#3b8cff;/*158*/
+    border-radius:6px;
+    behavior: url(css/PIE.htc);
+    cursor:pointer;
+    margin:-22px 0 0 -122px;
+    left:50%;
+    top:80%;
+    color:#fff;
+}
+.copyright{
+    background: #ddd;
+    height: 48px;
+    line-height: 48px;
+    /*border-top: 1px solid #ddd;*/
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+.copyright span{
+    line-height: 48px;
+    height: 48px;
+    margin: 0 8px;
+}
+.copyright span a:hover{
+    color:#3083eb;
+}

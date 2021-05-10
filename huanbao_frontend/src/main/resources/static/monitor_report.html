@@ -1,0 +1,504 @@
+<meta charset="utf-8"/>
+<style type="text/css">
+    a:link,a:visited,a:hover,a:active{
+        text-decoration: none;
+        outline:none;
+        color:#1a1a1a;
+    }
+    li{
+        list-style:none;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12" style="display:flex;justify-content:center;">
+                <div style="display:flex;flex-direction:column;width:786px;padding:10px 40px;border:1px solid #d0d0d0;margin-top:4px;">
+                    <div style="width:100%;display:flex;font-size:14px;justify-content:start;">中高风险地区<a href="javascript:thisPage.selecHightArea();" style="color:#1E9FFF" title="请选择中高风险地区">选择</a></div>
+                    <div style="width:100%;display:flex;justify-content:start;" id="select_ul_area"></div>
+                    <div style="width:100%;display:flex;justify-content:center;margin-top:10px;">
+                        <table class="no-border" style="display:inline">
+                            <tr>
+                                <td class="hidden-480" style="padding: 0px 6px;">
+                                    采样时间
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" id="sampling_date_start" class="form-control search-query date-picker" placeholder="起始日期" style="width:86px;display:none;" permission='monitorReport_export_page' data-date-format="yyyy-mm-dd"/>
+                                    </div>
+                                </td>
+                                <td style="padding-left:4px;">
+                                    至
+                                </td>
+                                <td style="padding-left:4px;">
+                                    <div class="input-group">
+                                        <input type="text" id="sampling_date_end" class="form-control search-query date-picker" placeholder="结束日期" style="width:86px;display:none;" permission='monitorReport_export_page' data-date-format="yyyy-mm-dd"/>
+                                    </div>
+                                </td>
+                                <td style="padding-left:2px;">
+                                    <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnSearch" permission='monitorReport_export_page' style="display:none;">
+                                            <span class="fa fa-eye bigger-110"></span>
+                                            查看
+                                        </button>
+                                    </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnExport" permission='monitorReport_export_word' style="display:none">
+                                            <span class="fa fa-download"></span>
+                                            导出
+                                        </button>
+                                    </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:center;margin-top:10px;">贵州省冷冻冷藏肉品新冠病毒监测结果报告</div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>
+                            为了贯彻落实国务院联防联控机制《关于开展冷冻冷藏肉品风险排查的通知》（联防联控机制综发〔2020〕210 号）文件的要求。为科学规范指导开展我省新冠病毒环境监测工作，深入开展病毒溯源和疫情防控，2020年8月10日贵州省卫生健康委员会联合多部委下发了《贵州省农贸（集贸）市场及冷冻冷藏产品新冠病毒环境和人员监测方案》。要求各市（州）及县（区），为加强对农贸（集贸）市场及大型食品冷库新冠病毒环境监测。现将我省此次新冠肺炎监测结果报告如下，采样时间为<span id="date_by">截至今日</span>。
+                        </div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:start;">一、监测概况</div>
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:start;">
+                        <div>本周9市（州）全部完成了采样及检测任务。本次共采集相关样本xx份，经新冠核酸检测均为阴性。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>其中冷库食品xx份（其中冷库水产品xx份，其他冷冻肉类xx份），外环境样本xx份（其中产品外包装xx份），从业人员咽拭子xx份，共计xx份。监测结果见表1。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        表1 全省食品、外环境（含包装）及相关从业人员监测情况
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        <table width="692" height="129" border="1">
+                            <tr>
+                                <td width="72" rowspan="2" align="center" valign="middle">地区</td>
+                                <td colspan="2" align="center" valign="middle">食品样本</td>
+                                <td colspan="2" align="center" valign="middle">外环境样子</td>
+                                <td colspan="2" align="center" valign="middle">从业人员咽拭子</td>
+                                <td width="75" rowspan="2" align="center" valign="middle">合计</td>
+                            </tr>
+                            <tr>
+                                <td width="71" align="center" valign="middle">检测份数</td>
+                                <td width="78" align="center" valign="middle">阳性份数</td>
+                                <td width="81" align="center" valign="middle">检测份数</td>
+                                <td width="98" align="center" valign="middle">阳性份数</td>
+                                <td width="88" align="center" valign="middle">检测份数</td>
+                                <td width="77" align="center" valign="middle">阳性份数</td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle">黔西南州</td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle">黔东南州</td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle">合计</td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                                <td align="center" valign="middle"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:start;margin-top:10px;">二、食品及外环境样本监测结果</div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>（一）不同类型场所监测结果   本次共监测5种类型的销售场所，即<span id="span_site_type">仓储场所（冷库）、批发市场、超市、农贸市场、其它（如餐饮企业、酒店等）</span>。详见表2。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        表2 全省不同类型场所监测情况
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        <table width="692" height="106" border="1" id="tableSiteType">
+                            <tr>
+                                <td align="center" valign="middle">地区</td>
+                                <td align="center" valign="middle">仓储场所（冷库）</td>
+                                <td align="center" valign="middle">批发市场</td>
+                                <td align="center" valign="middle">超市</td>
+                                <td align="center" valign="middle">农贸市场</td>
+                                <td align="center" valign="middle">其它</td>
+                                <td align="center" valign="middle">合计</td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle">贵阳市</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle">合计</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                                <td align="center" valign="middle">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>(二)不同来源食品监测情况   本次监测的进口或中高风险地区来源的海产品、肉类要求全部采集并检测，其余的搭配一定数量抽检。本次无中高风险地区来源的食品（本周中高风险地区为 <span title="请从上面选择中高风险地区" style="color:#e32323" id="high_stake">未选择中高风险地区</span>）。详见表3。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        表3  不同来源食品监测情况
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        <table width="692" border="1">
+                            <tr>
+                                <td><div align="center">地区</div></td>
+                                <td><div align="center">进口</div></td>
+                                <td><div align="center">国产</div></td>
+                                <td><div align="center">中高风险地区</div></td>
+                                <td><div align="center">合计</div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">黔西南州</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">黔东南州</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">合计</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>（三）外环境不同样本类型监测情况   本次主要采集水产品、其他肉类、产品包装、摊位设施用具等物体表面(如台面，刀具，容器)、冰箱冷柜、地面、污水、转运工具、公共场所物体表面（如门把手等）等9类外环境样本类型。本次重点区分产品包装和其余外环境样本，共xx份。详见表4。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        表4  外环境样本监测情况
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        <table width="692" border="1">
+                            <tr>
+                                <td><div align="center">地区</div></td>
+                                <td><div align="center">产品外包装样本</div></td>
+                                <td><div align="center">其余外环境样本</div></td>
+                                <td><div align="center">合计</div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">黔西南州</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">黔东南州</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="center">合计</div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                                <td><div align="center"></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:start;margin-top:10px;">三、从业人员监测结果</div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div>本次监测主要采集<span id="span_employee">销售、宰杀、加工、贮存、运输、管理员和其他7</span>类从业人员的咽拭子样本。情况详见表5。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        表5  不同从业人员监测情况
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;justify-content:center;">
+                        <table width="692" border="1" id="tableEmployee">
+                            <thead>
+                                <tr>
+                                    <td><div align="center">地区</div></td>
+                                    <td><div align="center">销售</div></td>
+                                    <td><div align="center">宰杀</div></td>
+                                    <td><div align="center">加工</div></td>
+                                    <td><div align="center">贮存</div></td>
+                                    <td><div align="center">运输</div></td>
+                                    <td><div align="center">管理员</div></td>
+                                    <td><div align="center">其他</div></td>
+                                    <td><div align="center">合计</div></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div align="center">贵阳市</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div align="center">合计</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                    <td><div align="center">0</div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:18px;font-weight:bold;justify-content:start;margin-top:10px;">四、下一步防控建议</div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div><span style="font-size:16px;font-weight:bold;">（一）切实做好外防输入工作。</span> 虽然我省目前所采集的外环境及从业人员样本中新冠病毒核酸检测结果均为阴性，但境外新冠肺炎疫情依然严峻，境内多地亦有散发、乃至聚集性疫情。我省依旧面临新冠肺炎输入传播风险。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div><span style="font-size:16px;font-weight:bold;">（二）摸清食品来源情况。</span>海关部门要加强进口食品检验检疫，商务、市场监管部门要摸清涉及场所以及分布底数，特别是要掌握进口、中高风险地区食品在我省流通环节情况。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div><span style="font-size:16px;font-weight:bold;">（三）加强宣传，做好个人防护。</span>张贴和滚动播放宣传资料，工作人员佩戴口罩和加强手卫生，做到勤洗手、常通风，保持安全的社交距离。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div><span style="font-size:16px;font-weight:bold;">（四）保持环境清洁，加强消毒措施。</span>做好源头管控，公共场所做好日常清洁和预防性消毒等应对措施。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;line-height:1.6;margin-top:10px;">
+                        <div><span style="font-size:16px;font-weight:bold;">（五）建立制度，加强监测。</span>建立员工健康监测制度，每日对员工健康状况进行登记；在市场入口外，增加体温测量设备，体温检测正常方可进入。</div>
+                    </div>
+                    <div style="width:100%;display:flex;font-size:14px;justify-content:end;margin-top:10px;" id="todayDate">2020年11月24日</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="div_monitor_report_select_hight_area" style="display:none;padding:0px;">
+    <div class="col-sm-12">
+        <div class="checkbox" id="selectHightArea"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var urlRoute = '/monitorReport/';/*请求controller层的url*/
+        var urlQueryPermissions = urlRoute + 'queryPermissions';
+        var urlExportExcel = urlRoute + 'queryExportWord';/*导出Excel*/
+        var urlQueryExportData = urlRoute + 'queryDataView';
+        var urlQueryHightArea = urlRoute + 'getDicts';/*获取中高风险地区,根据父id获取字段数据*/
+        thisPage = {
+            init : function(){
+                this.initDom();
+                winFn.initDate();
+                this.addEvent();
+                this.permissions();
+                thisPage.viewReport();
+            },
+            addEvent : function(){
+                this.btnEvent();
+            },
+            initDom(){
+                $('#todayDate').html(winFn.getTodayDate());
+            },
+            selecHightArea : function(){
+                layerFn.queryGetHint(urlQueryHightArea,{pid:'000000001a371eac000000007762ed12'},function(data){
+                    if(data.code === AppKey.code.code200){
+                        $('#selectHightArea').empty();
+                        var _name = "hightArea";
+                        data = data.data;
+                        var html = '';
+                        for(var index in data){
+                            html += '<div>';
+                                html += '<label>';
+                                html += '<input name="'+_name+'" type="checkbox" value="'+data[index]['VALUE']+'" alt="'+data[index]['LABEL']+'" class="ace"/>';
+                                html += '<span class="lbl">'+data[index]['LABEL']+'</span>';
+                                html += '</label>';
+                            html += '</div>';
+                        }
+                        $('#selectHightArea').html(html);
+                        layerFn.addOrEdit('中高风险地区','#div_monitor_report_select_hight_area',['460px','420px'],function(indexLayer){
+                            var checkboxValue = '';
+                            var checkboxLabel = '';
+                            var _indx = 0;
+                            $("input[name='"+_name+"']:checked").each(function(){
+                                _indx++;
+                                var v = $(this).val();
+                                var alt = $(this).attr('alt');
+                                if(checkboxValue.length > 0){
+                                    checkboxValue = checkboxValue + ',' + v;
+                                    checkboxLabel = checkboxLabel +"；"+ _indx + '、' + alt;
+                                }else{
+                                    checkboxValue = v;
+                                    checkboxLabel = _indx+"、"+alt;
+                                }
+                            });
+                            $('#select_ul_area').html(checkboxLabel);
+                            $('#high_stake').html(checkboxLabel);
+                            layerFn.closeIndex(indexLayer);
+                        });
+                    }
+                });
+            },
+            permissions : function(){
+                layerFn.ajaxGetResult(urlQueryPermissions,{},(result)=>{
+                    var {code,data} = result;
+                    if(code === AppKey.code.code200){
+                        for(var i=0;i<data.length;i++){
+                            $("[permission='"+data[i]+"']").css({"display":"inline"});
+                        }
+                    }
+                });
+            },
+            getSelectLabel : function(){
+                this.showLabel(winFn.getDomValue('#sampling_date_start'),winFn.getDomValue('#sampling_date_end'));
+            },
+            showLabel : function(start,end){
+                var date = "";
+                if(start != null && end != null){
+                    date = start +"至"+end;
+                }
+                if(start == null && end == null){
+                    date = "截至"+winFn.getCurrentDate();
+                }
+                if(start == null && end != null){
+                    date = "截至"+end;
+                }
+                if(start != null && end == null){
+                    date = start+"至"+winFn.getCurrentDate();
+                }
+                $('#date_by').text(date);
+            },
+            btnEvent : function(){
+                $('#btnSearch').on('click',function(){
+                    thisPage.viewReport();
+                });
+                $('#btnExport').on('click',function(){
+                    thisPage.exportExcel();
+                });
+            },
+            viewReport : function(){
+                var _this = this;
+                var params = {
+                    sampling_date_start : winFn.getDomValue('#sampling_date_start'),
+                    sampling_date_end : winFn.getDomValue('#sampling_date_end')
+                };
+                layerFn.queryGetHintResult(urlQueryExportData,params,(data)=>{
+                    _this.getSelectLabel();
+                    if(data.code === AppKey.code.code200){
+                        data = data.data;
+                        _this.tableEmployee(data.listEmployee);
+                        _this.tableSiteType(data.listSiteType);
+                    }else if(data.code === AppKey.code.code201){
+                        _this.tableDataTips('tableEmployee','没有数据');
+                    }else{
+                        _this.tableDataTips('tableEmployee',data.msg);
+                    }
+                });
+            },
+            exportExcel : function(){
+                var url = urlExportExcel+'?&sampling_date_start='+$("#sampling_date_start").val()+
+                '&sampling_date_end='+$("#sampling_date_end").val()+
+                '&select_area='+$('#select_ul_area').html();
+                layerFn.handleTop('请耐心等待,处理完成将会自动下载!',AppKey.code.code200);
+                winFn.getPageHashToken(url);
+            },
+            tableDataTips : function(tableDom,msg){
+                var html = '<tr>';
+                html += '<td style="padding:4px 0px" align="center" valign="middle">'+msg+'</td>';
+                html += '</tr>';
+                $('#'+tableDom).html(html);
+            },
+            /*示例代码1*/
+            tableEmployee : function(data){
+                var max = winFn.getMaxValue(data,"profession_total");//注意1
+                var items = winFn.getItems(data,"profession",max);//注意2
+                $('#span_employee').html(items+max);
+                var htmlHeader = winFn.fillRowData('thead','地区',items.split(','),"合计",max);//表头
+                $('#tableEmployee').html(htmlHeader);//注意3
+                var htmlIndex = '';
+                var totalAll = 0;//最后1行的最后1列的值的计算
+                for(var i=0;i<data.length;i++){
+                    var rows = data[i];
+                    var values = rows['profession_total'].split(',');//等价 rows.profession_total.split(',');
+                    var total = 0;
+                    for(var j = 0; j < values.length; j++){
+                        total += Number.parseInt(values[j]);
+                    }
+                    htmlIndex += winFn.fillRowData('tbody',rows['name'],values,total,max);//数据行,注意5
+                    totalAll += total;
+                }
+                var list = new Array();
+                for(var k = 0; k < max; k++){
+                    var v = winFn.calculateTotal(data,'profession_total',k);//注意6
+                    list.push(v);
+                }
+                htmlIndex += winFn.fillRowData('tbody','合计',list,totalAll,max);//最后一行合计
+                $('#tableEmployee').append(htmlIndex);//注意7
+            },
+            /*检测场所报告,已高度解耦,已替换下面的方法*/
+            tableExample : function(data){
+                winFn.initFillTable('#tableSiteType',data,'type_total','site_type','地区','area','合计','合计');
+                var max = winFn.getMaxValue(data,"type_total");
+                var items = winFn.getItems(data,"site_type",max);
+                $('#span_site_type').html(items);
+            },
+            /*示例代码2,已被上面的方法替换*/
+            tableSiteType : function(data){
+                var max = winFn.getMaxValue(data,"type_total");
+                var items = winFn.getItems(data,"site_type",max);
+                var htmlHeader = winFn.fillRowData('thead','地区',items.split(','),"合计",max);//表头
+                $('#tableSiteType').html(htmlHeader);
+                var htmlIndex = '';
+                var totalAll = 0;//最后1行的最后1列的值的计算
+                for(var i=0;i<data.length;i++){
+                    var rows = data[i];
+                    var values = rows['type_total'].split(',');
+                    var total = 0;
+                    for(var j = 0; j < values.length; j++){
+                        total += Number.parseInt(values[j]);
+                    }
+                    htmlIndex += winFn.fillRowData('tbody',rows['area'],values,total,max);//数据行
+                    totalAll += total;
+                }
+                var list = new Array();
+                for(var k = 0; k < max; k++){
+                    var v = winFn.calculateTotal(data,'type_total',k);
+                    list.push(v);
+                }
+                htmlIndex += winFn.fillRowData('tbody','合计',list,totalAll,max);//最后一行合计
+                $('#tableSiteType').append(htmlIndex);
+            }
+        };
+        thisPage.init();
+    });
+</script>

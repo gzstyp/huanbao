@@ -1,0 +1,168 @@
+<meta charset="utf-8"/>
+<style type="text/css">
+    .welcome-container{
+        height:calc(100vh - 176px);
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        padding:12px;
+        padding-bottom:0;
+    }
+    .container-row{
+        width:100%;
+        height:99%;
+        display:flex;
+        justify-content:space-between;
+        margin-top:12px;
+    }
+    .container-card{
+        padding:10px;
+        width:49.5%;
+        border-radius:10px;
+        -moz-box-shadow:2px 2px 5px #c1bdbd;
+        -webkit-box-shadow:2px 2px 5px #c1bdbd;
+        box-shadow:2px 2px 5px #c1bdbd;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="welcome-container">
+                    <div class="container-row">
+                        <div class="container-card">
+                            <div style="width:100%;font-size:16px;height:26px;line-height:26px;">修改密码</div>
+                            <form class="form-horizontal" role="form">
+                                <div class="space-4"></div>
+                                <div class="space-4"></div>
+                                <div class="space-4"></div>
+                                <div class="col-sm-3" style="height:34px;line-height:34px;">原始密码</div>
+                                <div class="input-group col-sm-8">
+                                    <input type="password" class="form-control search-query" id="original_password" placeholder="当前登录密码" />
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="col-sm-3" style="height:34px;line-height:34px;">新的密码</div>
+                                <div class="input-group col-sm-8">
+                                    <input type="password" class="form-control search-query" id="new_password" placeholder="输入新的密码" />
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="col-sm-3" style="height:34px;line-height:34px;">确认密码</div>
+                                <div class="input-group col-sm-8">
+                                    <input type="password" class="form-control search-query" id="verify_password" placeholder="输入确认密码" />
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="col-xs-12" style="padding:0 8.2% 0 25%">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white col-xs-12" id="btn_submit">
+                                            <span class="fa fa-check bigger-110"></span>
+                                            提交
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="container-card">
+                            <div style="width:100%;font-size:16px;height:26px;line-height:26px">个人资料</div>
+                            <form class="form-horizontal" role="form">
+                                <div class="space-4"></div>
+                                <div class="space-4"></div>
+                                <div class="space-4"></div>
+                                <div class="col-sm-3" style="height:34px;line-height:34px;">真实姓名</div>
+                                <div class="input-group col-sm-8">
+                                    <input type="text" class="form-control search-query" id="real_name" placeholder="真实姓名" />
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="col-sm-3" style="height:34px;line-height:34px;">单位名称</div>
+                                <div class="input-group col-sm-8">
+                                    <input type="text" class="form-control search-query" id="affiliated_unit" placeholder="工作单位" />
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="col-xs-12" style="padding:0 8.2% 0 25%">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white col-xs-12" id="btn_save">
+                                            <span class="fa fa-plus bigger-110"></span>
+                                            保存
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var scripts = [null, null];
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
+        $(function($){
+            var urlRoute = '/user/';/*请求controller层的url*/
+            var editPassword = urlRoute + 'editPassword';/*修改密码*/
+            var editPersionInfo = urlRoute + 'editPersionInfo';/*修改个人信息*/
+            thisPage = {
+                init : function(){
+                    thisPage.initEvent();
+                },
+                initEvent : function(){
+                    $('#btn_submit').on('click',function(){
+                        thisPage.btnSubmit();
+                    });
+                    $('#btn_save').on('click',function(){
+                        thisPage.btnSave();
+                    });
+                },
+                btnSave : function(){
+                    if (verifyFn.inputRequired('#real_name')){
+                        layerFn.alert('请输入真实姓名',AppKey.code.code199);
+                        return;
+                    }
+                    if (verifyFn.inputRequired('#affiliated_unit')){
+                        layerFn.alert('请输入单位名称',AppKey.code.code199);
+                        return;
+                    }
+                    var params = {
+                        real_name : winFn.getDomValue('#real_name'),
+                        affiliated_unit : winFn.getDomValue('#affiliated_unit')
+                    };
+                    layerFn.submit(editPersionInfo,params,function(data){
+                        winFn.setDomValue('#real_name','');
+                        winFn.setDomValue('#affiliated_unit','');
+                        layerFn.alert(data.msg,data.code);
+                    });
+                },
+                btnSubmit : function(){
+                    if (verifyFn.inputRequired('#original_password')){
+                        layerFn.alert('请输入原始密码',AppKey.code.code199);
+                        return;
+                    }
+                    if (verifyFn.inputRequired('#new_password')){
+                        layerFn.alert('请输入新的密码',AppKey.code.code199);
+                        return;
+                    }
+                    if (verifyFn.inputRequired('#verify_password')){
+                        layerFn.alert('请输入确认密码',AppKey.code.code199);
+                        return;
+                    }
+                    var params = {
+                        original_password : winFn.getDomValue('#original_password'),
+                        new_password : winFn.getDomValue('#new_password'),
+                        verify_password : winFn.getDomValue('#verify_password')
+                    };
+                    layerFn.submit(editPassword,params,function(data){
+                        winFn.setDomValue('#original_password','');
+                        winFn.setDomValue('#new_password','');
+                        winFn.setDomValue('#verify_password','');
+                        layerFn.alert(data.msg,data.code);
+                    });
+                }
+            }
+            thisPage.init();
+        });
+    });
+    $(function(){
+        setTimeout(() => {
+            document.getElementById("user_info").classList = ("light-blue");
+        },220);
+    });
+</script>

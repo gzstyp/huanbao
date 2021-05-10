@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="device_noise">
+
+    <sql id="sql_column">
+        kid,
+        device_flag,
+        device_name,
+        flag_name,
+        model,
+        company_name,
+        linkman,
+        phone,
+        description
+    </sql>
+
+    <!-- 添加数据 -->
+    <update id="add" parameterType="HashMap">
+        INSERT INTO DEVICE_NOISE (
+        <trim suffixOverrides=",">
+            <if test="kid != null">kid,</if>
+            <if test="device_flag != null">device_flag,</if>
+            <if test="device_name != null">device_name,</if>
+            <if test="flag_name != null">flag_name,</if>
+            <if test="model != null">model,</if>
+            <if test="company_name != null">company_name,</if>
+            <if test="linkman != null">linkman,</if>
+            <if test="phone != null">phone,</if>
+            <if test="description != null">description</if>
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+			<if test="kid != null">#{kid},</if>
+			<if test="device_flag != null">#{device_flag},</if>
+			<if test="device_name != null">#{device_name},</if>
+			<if test="flag_name != null">#{flag_name},</if>
+			<if test="model != null">#{model},</if>
+			<if test="company_name != null">#{company_name},</if>
+			<if test="linkman != null">#{linkman},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="description != null">#{description}</if>
+        </trim>
+        )
+    </update>
+
+    <select id="queryExistById" resultType="String" parameterType="String">
+        SELECT kid FROM DEVICE_NOISE WHERE kid = #{kid} LIMIT 1
+    </select>
+
+    <!-- 基于主键kid的存在就更新,否则新增操作 -->
+    <update id="updateOrEdit" parameterType="HashMap">
+        INSERT INTO DEVICE_NOISE (
+        <trim suffixOverrides=",">
+            <if test="kid != null">kid,</if>
+            <if test="device_flag != null">device_flag,</if>
+            <if test="device_name != null">device_name,</if>
+            <if test="flag_name != null">flag_name,</if>
+            <if test="model != null">model,</if>
+            <if test="company_name != null">company_name,</if>
+            <if test="linkman != null">linkman,</if>
+            <if test="phone != null">phone,</if>
+            <if test="description != null">description</if>
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            <if test="kid != null">#{kid},</if>
+            <if test="device_flag != null">#{device_flag},</if>
+            <if test="device_name != null">#{device_name},</if>
+            <if test="flag_name != null">#{flag_name},</if>
+            <if test="model != null">#{model},</if>
+            <if test="company_name != null">#{company_name},</if>
+            <if test="linkman != null">#{linkman},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="description != null">#{description}</if>
+        </trim>
+        )
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="device_flag != null">device_flag = #{device_flag},</if>
+            <if test="device_name != null">device_name = #{device_name},</if>
+            <if test="flag_name != null">flag_name = #{flag_name},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="company_name != null">company_name = #{company_name},</if>
+            <if test="linkman != null">linkman = #{linkman},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="description != null">description = #{description}</if>
+        </trim>
+    </update>
+
+    <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
+    <update id="updateEditBatch" parameterType="ArrayList">
+        INSERT IGNORE INTO DEVICE_NOISE (
+        <foreach collection="list" item="item" index="index">
+            <trim suffixOverrides=",">
+                <if test="index==0">
+                    <if test="item.kid != null">kid,</if>
+                    <if test="item.device_flag != null">device_flag,</if>
+                    <if test="item.device_name != null">device_name,</if>
+                    <if test="item.flag_name != null">flag_name,</if>
+                    <if test="item.model != null">model,</if>
+                    <if test="item.company_name != null">company_name,</if>
+                    <if test="item.linkman != null">linkman,</if>
+                    <if test="item.phone != null">phone,</if>
+                    <if test="item.description != null">description</if>
+                </if>
+            </trim>
+        </foreach>
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            <trim suffixOverrides=",">
+                <if test="item.kid != null">#{item.kid},</if>
+                <if test="item.device_flag != null">#{item.device_flag},</if>
+                <if test="item.device_name != null">#{item.device_name},</if>
+                <if test="item.flag_name != null">#{item.flag_name},</if>
+                <if test="item.model != null">#{item.model},</if>
+                <if test="item.company_name != null">#{item.company_name},</if>
+                <if test="item.linkman != null">#{item.linkman},</if>
+                <if test="item.phone != null">#{item.phone},</if>
+                <if test="item.description != null">#{item.description}</if>
+            </trim>
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        <foreach collection="list" item="item" index="index">
+            <trim suffixOverrides=",">
+                <if test="index==0">
+                <if test="item.kid != null">kid = values(kid),</if>
+                <if test="item.device_flag != null">device_flag = values(device_flag),</if>
+                <if test="item.device_name != null">device_name = values(device_name),</if>
+                <if test="item.flag_name != null">flag_name = values(flag_name),</if>
+                <if test="item.model != null">model = values(model),</if>
+                <if test="item.company_name != null">company_name = values(company_name),</if>
+                <if test="item.linkman != null">linkman = values(linkman),</if>
+                <if test="item.phone != null">phone = values(phone),</if>
+                <if test="item.description != null">description = values(description)</if>
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <!-- 批量添加|插入-->
+    <update id="addBatch" parameterType="ArrayList">
+        INSERT INTO DEVICE_NOISE (
+            <foreach collection="list" item="item" index="index">
+                <trim suffixOverrides=",">
+                    <if test="index==0">
+                        <if test="item.kid != null">kid,</if>
+                        <if test="item.device_flag != null">device_flag,</if>
+                        <if test="item.device_name != null">device_name,</if>
+                        <if test="item.flag_name != null">flag_name,</if>
+                        <if test="item.model != null">model,</if>
+                        <if test="item.company_name != null">company_name,</if>
+                        <if test="item.linkman != null">linkman,</if>
+                        <if test="item.phone != null">phone,</if>
+                        <if test="item.description != null">description</if>
+                    </if>
+                </trim>
+            </foreach>
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            <trim suffixOverrides=",">
+                <if test="item.kid != null">#{item.kid},</if>
+                <if test="item.device_flag != null">#{item.device_flag},</if>
+                <if test="item.device_name != null">#{item.device_name},</if>
+                <if test="item.flag_name != null">#{item.flag_name},</if>
+                <if test="item.model != null">#{item.model},</if>
+                <if test="item.company_name != null">#{item.company_name},</if>
+                <if test="item.linkman != null">#{item.linkman},</if>
+                <if test="item.phone != null">#{item.phone},</if>
+                <if test="item.description != null">#{item.description}</if>
+            </trim>
+            )
+        </foreach>
+    </update>
+
+	<!-- 编辑数据 -->
+	<update id="edit" parameterType="HashMap">
+		UPDATE DEVICE_NOISE
+		<trim prefix="SET" suffixOverrides=",">
+            <if test="device_flag != null">device_flag = #{device_flag},</if>
+            <if test="device_name != null">device_name = #{device_name},</if>
+            <if test="flag_name != null">flag_name = #{flag_name},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="company_name != null">company_name = #{company_name},</if>
+            <if test="linkman != null">linkman = #{linkman},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="description != null">description = #{description}</if>
+		</trim>
+		WHERE kid = #{kid} LIMIT 1
+	</update>
+
+    <!-- 根据id查询对应的数据 -->
+    <select id="queryById" parameterType="String" resultType="HashMap">
+        SELECT
+            device_flag,
+            device_name,
+            flag_name,
+            model,
+            company_name,
+            linkman,
+            phone,
+            description
+        FROM DEVICE_NOISE WHERE kid = #{kid} LIMIT 1
+    </select>
+
+	<!-- 行删除 -->
+	<delete id="delById" parameterType="String">
+		DELETE FROM DEVICE_NOISE WHERE kid = #{kid} LIMIT 1
+	</delete>
+
+	<!-- 删除|批量删除,物理删除-->
+	<delete id="delByKeys" parameterType="ArrayList">
+		DELETE FROM DEVICE_NOISE WHERE
+			kid IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+		</foreach>
+	</delete>
+
+	<!-- listData条件查询 -->
+	<sql id="sql_where_listData">
+		<trim prefix="WHERE" prefixOverrides="AND">
+            <if test="device_name != null">
+                AND device_name LIKE CONCAT('%',#{device_name},'%')
+            </if>
+            <if test="device_flag != null">
+                AND device_flag LIKE CONCAT('%',#{device_flag},'%')
+            </if>
+		</trim>
+	</sql>
+
+	<!-- 列表数据 -->
+	<select id="listData" parameterType="HashMap" resultType="HashMap">
+		SELECT
+      kid,
+			device_name,
+			flag_name,
+			device_flag,
+			model,
+			company_name,
+			linkman,
+			phone,
+			description
+		FROM DEVICE_NOISE
+		<include refid="sql_where_listData"/>
+		<choose>
+    	<when test="order != null and column != null">
+    		ORDER BY ${column} ${order}
+    	</when>
+    	<otherwise>
+        </otherwise>
+        </choose>
+        <if test="section != null and pageSize != null">
+        	LIMIT #{section},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 总条数总记录数 -->
+	<select id="listTotal" parameterType="HashMap" resultType="Integer">
+		SELECT COUNT(1) TOTAL FROM DEVICE_NOISE
+		<include refid="sql_where_listData"/>
+        LIMIT 1
+	</select>
+
+  <select id="queryDeviceTotal" parameterType="HashMap" resultType="Integer">
+    SELECT COUNT(1) TOTAL FROM DEVICE_NOISE LIMIT 1
+  </select>
+
+</mapper>

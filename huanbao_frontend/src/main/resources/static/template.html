@@ -1,0 +1,224 @@
+<meta charset="utf-8"/>
+<div class="row">
+    <div class="col-xs-12">
+        <!--除了这个 class="row" 之外,下面的排版都不要再使用class="row"，否则它会离左边很近而且超过左边距!!! -->
+        <div class="row">
+            <div class="col-xs-12">
+                内容
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page specific plugin scripts -->
+<script type="text/javascript">
+    var scripts = [null, null];
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
+        $(function($){
+
+        });
+    });
+</script>
+
+<!--搜索栏的下拉列表-->
+<td class="hidden-480" style="padding: 0px 6px;">权限类型</td>
+<td class="hidden-480">
+    <div class="input-group">
+    <span class="input-group-btn">
+        <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle col-sm-12" style="margin-left:0.01em">
+            <span id="dropdowncategory">权限类型</span><!--注意显示文字-->
+            <i class="ace-icon fa fa-angle-down"></i>
+        </button>
+        <ul class="dropdown-menu col-sm-12" style="margin-left:-1px;width:99px;min-width:99px;"><!--注意宽度-->
+            <li>
+                <a href="javascript:winFn.dropdown('#key_category','','#dropdowncategory','权限类型');">权限类型</a><!--注意显示文字-->
+            </li>
+            <li>
+                <a href="javascript:winFn.dropdown('#key_category',1,'#dropdowncategory','查询权限');">查询权限</a>
+            </li>
+            <li>
+                <a href="javascript:winFn.dropdown('#key_category',2,'#dropdowncategory','编辑权限');">编辑权限</a>
+            </li>
+        </ul>
+        <input id="key_category" type="hidden"><!--注意搜索时隐藏域-->
+    </span>
+    </div>
+</td>
+
+表单时-复选框
+<label class="col-sm-3 control-label no-padding-right"><div class="hr-4"></div>爱好</label>
+<div class="col-sm-7">
+    <div class="hr-4"></div>
+    <div class="checkbox">
+        <label>
+            <input name="hobby" type="checkbox" class="ace" />
+            <span class="lbl">登山</span>
+        </label>
+        <label>
+            <input name="hobby" type="checkbox" class="ace" />
+            <span class="lbl">游泳</span>
+        </label>
+        <label>
+            <input name="hobby" type="checkbox" class="ace" disabled=""/>
+            <span class="lbl">禁用</span>
+        </label>
+    </div>
+</div>
+
+取值:
+var checkboxValue = '';
+$("input[name='checkbox1']:checked").each(function(){
+    var v = $(this).val();
+    if(checkboxValue.length > 0){
+        checkboxValue = checkboxValue + ',' + v;
+    }else{
+        checkboxValue = v;
+    }
+});
+console.info(checkboxValue);
+赋值:
+方式1：
+$("input:checkbox[value='1']").prop("checked",true);
+
+方式2：
+var arrs = [1,2];
+$.each(arrs,function(index,value){
+    $("input[name='checkbox1'][value="+value+"]").prop("checked",true);
+});
+方式3：
+$("input[name='checkbox1']").each(function(index,element){
+    var v = $(this).val();
+    if(v == 1){
+        $(this).prop("checked",true);
+    }
+});
+
+表单时-单选框
+<label class="col-sm-3 control-label no-padding-right"><div class="hr-4"></div>性别</label>
+<div class="col-sm-7">
+    <div class="hr-4"></div>
+    <div class="radio">
+        <label>
+            <input name="gender" type="radio" class="ace" />
+            <span class="lbl">男生</span>
+        </label>
+        <label>
+            <input name="gender" type="radio" class="ace" />
+            <span class="lbl">女生</span>
+        </label>
+        <label>
+            <input name="gender" type="radio" class="ace" />
+            <span class="lbl">保密</span>
+        </label>
+        <label>
+            <input name="gender" type="radio" class="ace" disabled=""/>
+            <span class="lbl">禁用</span>
+        </label>
+    </div>
+</div>
+赋值：
+$("input[name='radio']").each(function(index,element){
+    var v = $(this).val();
+    if(v == 1){
+        $(this).prop("checked",true);
+    }
+});
+$.each(map.data,function(k,v){
+    try{
+        if(k =='STATE'){
+            $("input[name='STATE']").each(function(index,element){
+                var value = $(this).val();
+                if(v == value){
+                    $(this).prop("checked",true);
+                }
+            });
+        }
+        $('#'+k).val(v);
+    }catch(e){}
+});
+
+取值：
+var STATE = $("input[name='STATE']:checked").val();
+console.info(STATE);
+
+
+表单时-下拉列表项
+<label class="col-sm-3 control-label no-padding-right"><div class="hr-4"></div>菜单权限标识</label>
+<div class="col-sm-7">
+    <div class="hr-4"></div>
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle col-sm-12" style="margin-left:0.01em">
+                <span id="dropdownType">权限类型</span><!--注意显示文字-->
+                <i class="ace-icon fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu col-sm-12" style="margin-left:-1px;width:276px;min-width:276px;"><!--注意宽度-->
+                <li>
+                    <a id="" href="javascript:winFn.dropdown('#dropdown_type','','#dropdownType','权限类型');">权限类型</a>
+                </li>
+                <li>
+                    <a id="1当不是从后端获取时直接写value的值一样即可,也就是和第二参数一致即可,如果页面有多个id='1'相同的页面报错不用管!下面有例子" href="javascript:winFn.dropdown('#dropdown_type',1,'#dropdownType','查询权限');">查询权限</a>
+                </li>
+                <li>
+                    <a id="2" href="javascript:winFn.dropdown('#dropdown_type',2,'#dropdownType','编辑权限');">编辑权限</a>
+                </li>
+            </ul>
+            <input id="dropdown_type" type="hidden"><!--注意隐藏域-->
+        </span>
+    </div>
+</div>
+----------------------------------------例子,html----------------------------------------
+<div class="col-sm-3 control-label no-padding-right" for="result"><div class="hr-4"></div>核酸检测结果</div>
+<div class="col-sm-7">
+    <div class="hr-4"></div>
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle col-sm-12" style="margin-left:0.01em">
+                <span id="dropdownLabelresult">选择检测结果</span><!--注意显示文字-->
+                <i class="ace-icon fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu col-sm-12" style="margin-left:-1px;width:333px;min-width:333px;max-width:333px">
+                <li>
+                    <a id="result_" href="javascript:winFn.dropdown('#result','','#下拉列表的id','选择检测结果');">选择检测结果</a>
+                </li>
+                <li>
+                    <a id="result1,其中1对应的第二个参数" href="javascript:winFn.dropdown('#result',1,'#下拉列表的id','下拉列表的文本');">下拉列表的文本</a>
+                </li>
+                <li>
+                    <a id="result2,2的前缀推荐使用数据库表的列" href="javascript:winFn.dropdown('#result',2,'#dropdownLabelresult','阴性');">阴性</a>
+                </li>
+                <li>
+                    <a id="result3" href="javascript:winFn.dropdown('#result',3,'#dropdownLabelresult','阳性');">阳性</a>
+                </li>
+            </ul>
+            <input id="result" type="hidden">
+        </span>
+    </div>
+</div>
+----------------------------------------例子,js代码----------------------------------------
+if(map != null){
+    $.each(map.data,function(k,v){
+        try{
+            $('#'+k).val(v);//负责赋值;下面是下拉列表的赋值
+            if(k == 'result'){
+                winFn.editDropdown('#dropdownLabelresult下拉的domId','result'+v);//v是从后端返回的值,无需添加#前缀,看下面的例子
+            }
+            if(k == 'risk'){
+                winFn.editDropdown('#dropdownLabel字段xxx','字段xxx'+v);//用于页面下拉固定value值,比如:1是0否;1未检测;2阴性;3阳性
+            }
+            if(k == 'site_type'){
+                winFn.editDropdown('#dropdownLabel字段xxx',v);//下拉列表的value值动态从数据库获取,如学历或场所类型
+            }
+        }catch(e){}
+    });
+}else{
+    winFn.addDropdown('#dropdownLabelresult','选择检测结果');
+}
+-- 动态显示权限按钮
+layerFn.ajaxGetResult(urlQueryPermissions,{},(result)=>{
+	var {code,data} = result;
+	if(code === AppKey.code.code200){
+		for(var i=0;i<data.length;i++){
+			$("[permission='"+data[i]+"']").css({"display":"inline"});
+		}
+	}
+});

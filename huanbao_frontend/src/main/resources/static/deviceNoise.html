@@ -1,0 +1,373 @@
+<meta charset="utf-8"/>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="clearfix">
+                    <table class="no-border" style="display:inline">
+                        <tr permission='deviceNoise_btn_listData' style="display:none">
+                            <td style="padding: 0px 6px;">
+                                设备名称
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" id="key_device_name" class="form-control search-query" placeholder="设备名称" style="width:140px"/>
+                                </div>
+                            </td>
+                            <td class="hidden-480" style="padding: 0px 6px;">
+                                设备标识
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" id="key_device_flag" class="form-control search-query hidden-480" placeholder="设备标识" style="width:140px"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnSearch" permission='deviceNoise_btn_listData' style="display:none">
+                                            <span class="ace-icon fa fa-search bigger-110"></span>
+                                            搜索
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnAdd" permission='deviceNoise_btn_add' style="display:none">
+                                            <span class="ace-icon glyphicon glyphicon-plus bigger-110"></span>
+                                            添加
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnDel" permission='deviceNoise_btn_delByKeys' style="display:none">
+                                            <span class="fa fa-trash red2 bigger-110"></span>
+                                            删除
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="hidden-480 pull-right tableTools-container" permission='deviceNoise_btn_listData' style="display:none"></div>
+                </div>
+                <table id="tableListDeviceNoise" class="table table-striped table-bordered table-hover"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="div_device_noise_edit" style="display:none;padding:20px 0px;">
+    <form class="form-horizontal" id="form_device_noise_edit" role="form">
+        <label class="col-sm-3 control-label no-padding-right" for="device_flag"><div class="hr-4"></div>设备标识</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="device_flag" placeholder="设备标识" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="device_name"><div class="hr-4"></div>设备名称</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="device_name" placeholder="设备名称" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="flag_name"><div class="hr-4"></div>标识名称</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="flag_name" placeholder="标识名称(选填)" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="model"><div class="hr-4"></div>设备型号</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="model" placeholder="设备型号" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="company_name"><div class="hr-4"></div>厂家名称</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="company_name" placeholder="厂家名称" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="linkman"><div class="hr-4"></div>联系人</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="linkman" placeholder="厂家联系人" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="phone"><div class="hr-4"></div>联系电话</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="phone" placeholder="厂家联系电话" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="description"><div class="hr-4"></div>备注描述</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="description" placeholder="备注描述" class="form-control"/>
+        </div>
+    </form>
+</div>
+<div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
+<input type="hidden" id="device_noise_edit_keyId"/>
+<div style="display:none;">
+    <input type="hidden" id="deviceNoise_btn_listData"/>
+    <input type="hidden" id="deviceNoise_btn_add"/>
+    <input type="hidden" id="deviceNoise_row_edit"/>
+    <input type="hidden" id="deviceNoise_row_queryById"/>
+    <input type="hidden" id="deviceNoise_row_delById"/>
+    <input type="hidden" id="deviceNoise_btn_delByKeys"/>
+</div>
+<script type="text/javascript">
+    var scripts = [null,null];
+    $('.page-content-area').ace_ajax('loadScripts',scripts,function(){
+        var tableDom = '#tableListDeviceNoise';
+        var inputEditKeyId = '#device_noise_edit_keyId';
+        $(function(){
+            var urlRoute = '/deviceNoise/';/*请求controller层的url*/
+            var getList = urlRoute + 'listData';/*获取数据列表*/
+            var urlAdd = urlRoute + 'add';/*添加*/
+            var urlEdit = urlRoute + 'edit';/*编辑*/
+            var urlQueryById = urlRoute + 'queryById';/*根据id查询对应的数据*/
+            var urlDelById = urlRoute + 'delById';/*根据id删除对应的数据*/
+            var urlDelByKeys = urlRoute + 'delByKeys';/*批量删除*/
+            var thisTable = pageDataTable.initDataTable({
+                tableDom : tableDom,
+                sAjaxSource: getList,
+                fnServerParams : function(params){
+                    params.push({"name":"device_name","value":$("#key_device_name").val()},{"name":"device_flag","value":$("#key_device_flag").val()});
+                },
+                aoColumns : [
+                    {
+                        bSortable: false,
+                        mData : "kid",
+                        sWidth : "38px",
+                        sClass : "center",
+                        sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
+                    },
+                    {
+                        mData : "device_name",
+                        sTitle : "设备名称"
+                    },
+                    {
+                        mData : "flag_name",
+                        sTitle : "标识名称"
+                    },
+                    {
+                        mData : "device_flag",
+                        sTitle : "设备标识"
+                    },
+                    {
+                        mData : "model",
+                        sTitle : "设备型号"
+                    },
+                    {
+                        mData : "company_name",
+                        sTitle : "厂家名称"
+                    },
+                    {
+                        mData : "linkman",
+                        sTitle : "厂家联系人"
+                    },
+                    {
+                        mData : "phone",
+                        sTitle : "厂家联系电话"
+                    },
+                    {
+                        mData : "description",
+                        sTitle : "备注描述",
+                        bSortable : false,
+                        sWidth : "18%"
+                    },
+                    {
+                        mData : "_kid_",
+                        sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
+                        bSortable : false,
+                        sWidth : "12%"
+                    }
+                ],
+                columnDefs : [
+                    {
+                        targets : 0,//指定的列
+                        render : function(value,type,row,meta){
+                            return '<label title="选择|取消"><input type="checkbox" name="kid" value="'+value+'" style="cursor:pointer;text-decoration:none;outline:none;"/><span class="lbl"></span></label>';
+                        }
+                    },
+                    {
+                        targets : -1,
+                        render : function(value,type,row,meta){
+                            var html = "<a href='javascript:thisPage.rowEdit("+meta.row+");' style='outline:none;text-decoration: none;color:#3b8cff;margin-left:6px;display:none' permission='deviceNoise_row_edit'>编辑</a>"+
+                                "<a class='hidden-xs' href='javascript:thisPage.rowDel("+meta.row+");' style='outline:none;text-decoration: none;color:#f00;margin-left:6px;display:none' permission='deviceNoise_row_delById'>删除</a>";
+                            return html;
+                        }
+                    },
+                    {
+                        targets: [1,2,3,4,5,6,7,8],
+                        render: function (value,type,row,meta){
+                            return pageDataTable.formatColumn(value);
+                        }
+                    },
+                    {
+                        "visible":false,//列的隐藏显示
+                        "targets": []//指定列
+                    }
+                ]
+            });
+            pageDataTable.buttons(thisTable);
+            pageDataTable.action(thisTable);
+            pageDataTable.select(thisTable,tableDom);
+            pageDataTable.tooltip();
+            var thisJquery = $(tableDom).dataTable();
+            thisPage = {
+                init : function(){
+                    this.addEvent();
+                },
+                initDom : function(){
+                },
+                createDropdown : function(){
+                },
+                addEvent : function(){
+                    this.btnEvent();
+                },
+                btnEvent : function(){
+                    $(tableDom +' tbody').on('dblclick','tr',function(){
+                        if(verifyFn.inputRequired('#deviceNoise_row_edit')){
+                            return;
+                        }
+                        thisPage.trDblclick(thisTable.row(this).data());
+                    });
+                    $('#btnAdd').on('click',function(){
+                        thisPage.edit();
+                    });
+                    //搜索按钮
+                    $('#btnSearch').on('click',function(){
+                        thisPage.search();
+                    });
+                    //按钮组-自定义显示列
+                    $('#iconColumn').parent().parent().on('click',function(){
+                        pageDataTable.columnCustom(thisTable,tableDom,'#divKeyColumns');
+                    });
+                    //按钮组-搜索
+                    $('#iconRefresh').parent().parent().on('click',function(){
+                        thisPage.search();
+                    });
+                    $('#btnDel').on('click',function(){
+                        thisPage.delKeys();
+                    });
+                },
+                /*批量删除*/
+                delKeys : function(){
+                    if(verifyFn.inputCheck('#deviceNoise_btn_delByKeys','没有删除操作权限'))return;
+                    var kids = '';
+                    var index = 0;
+                    $(tableDom + ' tbody input:checked').each(function(){
+                        index ++;
+                        var value = this.value;
+                        if(value != null && value != ''){
+                            if(kids.length > 0)
+                                kids += ",";
+                            kids += value;
+                        }
+                    });
+                    if(kids == ''){
+                        layerFn.alert('请选择要删除的数据!',AppKey.code.code199);
+                        return;
+                    }
+                    layerFn.confirm('将要删除['+index+']条数据且是无法恢复,确定要继续吗?',function(){
+                        layerFn.delBatchHint(urlDelByKeys,kids,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+                trDblclick : function(data){
+                    thisPage.edit(data.kid);
+                },
+                search : function(){
+                    if(verifyFn.inputCheck('#deviceNoise_btn_listData','没有操作权限'))return;
+                    $(tableDom + ' input[type=checkbox]').prop('checked',false);
+                    thisTable.draw();
+                },
+                resetForm : function(){
+                    winFn.clearFormData('#form_device_noise_edit');
+                },
+                edit : function(kid){
+                    var title = '添加';
+                    if(kid != null && kid.length >0){
+                        if(verifyFn.inputCheck('#deviceNoise_row_queryById','没有操作权限'))return;
+                        title = '编辑';
+                        winFn.setDomValue(inputEditKeyId,kid);
+                        layerFn.queryByIdHint(urlQueryById,kid,function(data){
+                            thisPage.openDialog(title,kid,data);
+                        });
+                    }else{
+                        winFn.setDomValue(inputEditKeyId,'');
+                        thisPage.openDialog(title);
+                    }
+                },
+                openDialog : function(title,kid,map){
+                    var url = urlAdd;
+                    if(kid != null && kid.length >0){
+                        url = urlEdit;
+                        if(verifyFn.inputCheck('#deviceNoise_row_edit','没有编辑权限'))return;
+                    }else{
+                        if(verifyFn.inputCheck('#deviceNoise_btn_add','没有添加权限'))return;
+                    }
+                    var height = 240;
+                    var lines = 8;
+                    if(lines > 3){
+                        height = height + (lines - 3) * 40;
+                    }
+                    layerFn.addOrEdit(title,'#div_device_noise_edit',['500px',height+'px'],function(index,layero){
+                        //var editKey = winFn.getDomValue(inputEditKeyId);//用于某些值在新增时必填,编辑时可填可不填,填时则更新,否则不更新
+                        //if(editKey == null){}
+                        if(verifyFn.inputCheck('#device_flag','设备标识不能为空'))return;
+                        if(verifyFn.inputCheck('#device_name','设备名称不能为空'))return;
+                        if(verifyFn.inputCheck('#model','设备型号不能为空'))return;
+                        var params = {
+                            device_flag : winFn.getDomValue('#device_flag'),
+                            device_name : winFn.getDomValue('#device_name'),
+                            flag_name : winFn.getDomValue('#flag_name'),
+                            model : winFn.getDomValue('#model'),
+                            company_name : winFn.getDomValue('#company_name'),
+                            linkman : winFn.getDomValue('#linkman'),
+                            phone : winFn.getDomValue('#phone'),
+                            description : winFn.getDomValue('#description'),
+                            kid : winFn.getDomValue(inputEditKeyId)
+                        };
+                        layerFn.submit(url,params,function(data){
+                            thisPage.complete(data,index,true);
+                        });
+                    });
+                    thisPage.resetForm();//清空
+                    if(map != null){
+                        $.each(map.data,function(k,v){
+                            try{
+                                $('#'+k).val(v);
+                            }catch(e){}
+                        });
+                    }
+                },
+                rowEdit : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    thisPage.edit(row.kid);
+                },
+                rowDel : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    if(verifyFn.inputCheck('#deviceNoise_row_delById','没有删除操作权限'))return;
+                    layerFn.confirm('删除后无法恢复,确定要删除吗?',function(){
+                        layerFn.delByIdHint(urlDelById,row.kid,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+                complete : function(data,index,search){
+                    try{
+                        if(index){
+                            layerFn.closeIndex(index);
+                        }
+                        if(search){
+                            thisPage.search();
+                        }
+                        if(data){
+                            layerFn.handleResult(data.msg,data.code);
+                        }
+                    }catch(e){}
+                }
+            };
+            thisPage.init();
+        });
+    });
+</script>

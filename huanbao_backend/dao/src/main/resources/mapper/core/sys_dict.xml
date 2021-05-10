@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys_dict">
+
+    <sql id="sql_select">
+        <if test="KID != null">KID,</if>
+        <if test="NAME != null">NAME,</if>
+        <if test="PID != null">PID,</if>
+        <if test="REMARKS != null">REMARKS,</if>
+        <if test="SORT != null">SORT</if>
+    </sql>
+
+    <sql id="sql_column">
+        KID,
+        NAME,
+        PID,
+        REMARKS,
+        SORT
+    </sql>
+
+    <!-- 添加数据 -->
+    <update id="add" parameterType="HashMap">
+        INSERT INTO SYS_DICT (
+        <trim suffixOverrides=",">
+            <if test="KID != null">KID,</if>
+            <if test="NAME != null">NAME,</if>
+            <if test="PID != null">PID,</if>
+            <if test="REMARKS != null">REMARKS,</if>
+            <if test="SORT != null">SORT</if>
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+			<if test="KID != null">#{KID},</if>
+			<if test="NAME != null">#{NAME},</if>
+			<if test="PID != null">#{PID},</if>
+			<if test="REMARKS != null">#{REMARKS},</if>
+			<if test="SORT != null">#{SORT}</if>
+        </trim>
+        )
+    </update>
+
+    <select id="queryExistById" resultType="String" parameterType="String">
+        SELECT KID FROM SYS_DICT WHERE KID = #{KID} LIMIT 1
+    </select>
+
+    <!-- 基于主键KID的存在就更新,否则新增操作 -->
+    <update id="updateOrEdit" parameterType="HashMap">
+        INSERT INTO SYS_DICT (
+        <trim suffixOverrides=",">
+            <if test="KID != null">KID,</if>
+            <if test="NAME != null">NAME,</if>
+            <if test="PID != null">PID,</if>
+            <if test="REMARKS != null">REMARKS,</if>
+            <if test="SORT != null">SORT</if>
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            <if test="KID != null">#{KID},</if>
+            <if test="NAME != null">#{NAME},</if>
+            <if test="PID != null">#{PID},</if>
+            <if test="REMARKS != null">#{REMARKS},</if>
+            <if test="SORT != null">#{SORT}</if>
+        </trim>
+        )
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="PID != null">PID = #{PID},</if>
+            <if test="REMARKS != null">REMARKS = #{REMARKS},</if>
+            <if test="SORT != null">SORT = #{SORT}</if>
+        </trim>
+    </update>
+
+	<!-- 编辑数据 -->
+	<update id="edit" parameterType="HashMap">
+		UPDATE IGNORE SYS_DICT
+		<trim prefix="SET" suffixOverrides=",">
+            <if test="NAME != null">NAME = #{NAME},</if>
+            <if test="PID != null">PID = #{PID},</if>
+            <if test="REMARKS != null">REMARKS = #{REMARKS},</if>
+            <if test="SORT != null">SORT = #{SORT}</if>
+		</trim>
+		WHERE KID = #{KID} LIMIT 1
+	</update>
+
+    <!-- 根据id查询对应的数据 -->
+    <select id="queryById" parameterType="String" resultType="HashMap">
+        SELECT
+            NAME,
+            PID,
+            REMARKS,
+            SORT
+        FROM SYS_DICT WHERE KID = #{KID} LIMIT 1
+    </select>
+	
+	<!-- 行删除 -->
+	<delete id="delById" parameterType="String">
+		UPDATE SYS_DICT SET DELETED = 1 WHERE KID = #{KID} LIMIT 1
+	</delete>
+	
+	<!-- 删除|批量删除,逻辑删除-->
+	<update id="delByKeys" parameterType="ArrayList">
+        UPDATE SYS_DICT SET DELETED = 1 WHERE
+			KID IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+		</foreach>
+	</update>
+	
+	<!-- listData条件查询 -->
+	<sql id="sql_where_listData">
+		<trim prefix="AND" prefixOverrides="AND">
+            <if test="NAME != null">
+                AND SDT.NAME LIKE CONCAT('%',#{NAME},'%')
+            </if>
+            <if test="PNAME != null">
+                AND SD.NAME LIKE CONCAT('%',#{PNAME},'%')
+            </if>
+		</trim>
+	</sql>
+	
+	<!-- 列表数据 -->
+	<select id="listData" parameterType="HashMap" resultType="HashMap">
+        SELECT SDT.KID,SDT.NAME,SDT.SORT,SD.NAME PNAME, SDT.REMARKS FROM SYS_DICT SDT
+        LEFT JOIN SYS_DICT SD ON SD.KID = SDT.PID WHERE SDT.DELETED = 0
+		<include refid="sql_where_listData"/>
+		<choose>
+    	<when test="order != null and column != null">
+    		ORDER BY ${column} ${order}
+    	</when>
+    	<otherwise>
+            ORDER BY SDT.SORT
+        </otherwise>
+        </choose>
+        <if test="section != null and pageSize != null">
+        	LIMIT #{section},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 总条数总记录数 -->
+	<select id="listTotal" parameterType="HashMap" resultType="Integer">
+        SELECT COUNT(SDT.KID) FROM SYS_DICT SDT
+        LEFT JOIN SYS_DICT SD ON SD.KID = SDT.PID WHERE SDT.DELETED = 0
+		<include refid="sql_where_listData"/>
+        LIMIT 1
+	</select>
+
+    <!--根据PID获取数据字典-->
+    <select id="queryDictData" resultType="HashMap" parameterType="String">
+        SELECT KID VALUE,NAME LABEL FROM SYS_DICT WHERE PID = #{kid} AND DELETED = 0 ORDER BY SORT
+    </select>
+
+    <!-- 获取营养成分数据 -->
+    <select id="getDictData" resultType="HashMap" parameterType="HashMap">
+        SELECT KID VALUE,NAME LABEL,SORT,'INGREDIENT' FROM SYS_DICT WHERE PID = #{INGREDIENT} AND DELETED = 0
+        UNION ALL
+        SELECT KID VALUE,NAME LABEL,SORT,'UNIT' FROM SYS_DICT WHERE PID = #{UNIT} AND DELETED = 0 ORDER BY SORT
+    </select>
+</mapper>

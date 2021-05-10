@@ -1,0 +1,356 @@
+<meta charset="utf-8"/>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="clearfix">
+                    <table class="no-border" style="display:inline">
+                        <tr permission='dictionary_btn_listData' style="display:none">
+                            <td style="padding: 0px 6px;">
+                                字典名称
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" id="key_NAME" class="form-control search-query" placeholder="字典名称" style="width:140px"/>
+                                </div>
+                            </td>
+                            <td class="hidden-480" style="padding: 0px 6px;">
+                                父级名称
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" id="key_VALUE" class="form-control search-query hidden-480" placeholder="父级字典名称" style="width:140px"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnSearch" permission='dictionary_btn_listData' style="display:none">
+                                            <span class="ace-icon fa fa-search bigger-110"></span>
+                                            搜索
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-inverse btn-white" id="btnAdd" permission='dictionary_btn_add' style="display:none">
+                                        <span class="ace-icon glyphicon glyphicon-plus bigger-110"></span>
+                                        添加
+                                    </button>
+                                </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-inverse btn-white" id="btnDel" permission='dictionary_btn_delByKeys' style="display:none">
+                                        <span class="fa fa-trash red2 bigger-110"></span>
+                                        删除
+                                    </button>
+                                </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="hidden-480 pull-right tableTools-container" permission='dictionary_btn_listData' style="display:none"></div>
+                </div>
+                <table id="tableListDictionary" class="table table-striped table-bordered table-hover"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="div_sys_dict_edit" style="display:none;padding:20px 0px;">
+    <form class="form-horizontal" id="form_sys_dict_edit" role="form">
+        <label class="col-sm-3 control-label no-padding-right" for="NAME"><div class="hr-4"></div>字典名称</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="NAME" placeholder="字典名称" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="SORT"><div class="hr-4"></div>排序号</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="SORT" placeholder="排序号,仅支持正整数" oninput="value=value.replace(/[^\d]/g,'')" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="REMARKS"><div class="hr-4"></div>字典备注</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="REMARKS" placeholder="字典备注" class="form-control"/>
+        </div>
+    </form>
+</div>
+<div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
+<input type="hidden" id="sys_dict_edit_keyId"/>
+<div style="display:none;">
+    <input type="hidden" id="dictionary_btn_add"/>
+    <input type="hidden" id="dictionary_row_edit"/>
+    <input type="hidden" id="dictionary_row_queryById"/>
+    <input type="hidden" id="dictionary_row_delById"/>
+    <input type="hidden" id="dictionary_btn_delByKeys"/>
+    <input type="hidden" id="dictionary_btn_listData"/>
+</div>
+<script type="text/javascript">
+    var scripts = [null,null];
+    $('.page-content-area').ace_ajax('loadScripts',scripts,function(){
+        var tableDom = '#tableListDictionary';
+        var inputEditKeyId = '#sys_dict_edit_keyId';
+        $(function(){
+            var urlRoute = '/dictionary/';/*请求controller层的url*/
+            var getList = urlRoute + 'listData';/*获取数据列表,此处不需要添加的,已在请求的url添加了前缀*/
+            var urlAdd = urlRoute + 'add';/*添加*/
+            var urlEdit = urlRoute + 'edit';/*编辑*/
+            var urlQueryById = urlRoute + 'queryById';/*根据id查询对应的数据*/
+            var urlDelById = urlRoute + 'delById';/*根据id删除对应的数据*/
+            var urlDelByKeys = urlRoute + 'delByKeys';/*批量删除*/
+            var thisTable = pageDataTable.initDataTable({
+                tableDom : tableDom,
+                sAjaxSource: getList,
+                fnServerParams : function(params){
+                    params.push({"name":"NAME","value":$("#key_NAME").val()},{"name":"PNAME","value":$("#key_VALUE").val()});
+                },
+                aoColumns : [
+                    {
+                        bSortable: false,
+                        mData : "KID",
+                        sWidth : "38px",
+                        sClass : "center",
+                        sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
+                    },
+                    {
+                        mData : "NAME",
+                        sTitle : "字典名称",
+                        sWidth : "15%"
+                    },
+                    {
+                        mData : "PNAME",
+                        sTitle : "父级名称",
+                        sWidth : "15%"
+                    },
+                    {
+                        mData : "SORT",
+                        sTitle : "排序",
+                        sWidth : "5%"
+                    },
+                    {
+                        mData : "REMARKS",
+                        sTitle : "备注"
+                    },
+                    {
+                        mData : "_KID_",
+                        sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
+                        bSortable : false,
+                        sWidth : "30%"
+                    }
+                ],
+                columnDefs : [
+                    {
+                        targets : 0,//指定的列
+                        render : function(value,type,row,meta){//第1个参数可能会没有值!!!,当key不存在时就没有值
+                            return '<label><input type="checkbox" name="KID" value="'+value+'" style="cursor:pointer;text-decoration:none;outline:none;"/><span class="lbl"></span></label>';
+                        }
+                    },
+                    {
+                        targets : -1,
+                        render : function(value,type,row,meta){
+                            var html = "<a href='javascript:thisPage.rowEdit("+meta.row+");' style='outline:none;text-decoration: none;color:#3b8cff;margin-left:6px;display:none' permission='dictionary_row_edit'>编辑</a>"+
+                                "<a class='hidden-xs' href='javascript:thisPage.rowDel("+meta.row+");' style='outline:none;text-decoration: none;color:#f00;margin-left:6px;display:none' permission='dictionary_row_delById'>删除</a>"+
+                                "<a class='hidden-xs' href='javascript:thisPage.rowNode("+meta.row+");' style='outline:none;text-decoration: none;color:#1186ec;margin-left:6px;display:none' permission='dictionary_btn_add'>添加子数据</a>";
+                            return html;
+                        }
+                    },
+                    {
+                        targets: [1,2,3,4],
+                        render: function (value,type,row,meta){
+                            return pageDataTable.formatColumn(value);
+                        }
+                    }
+                ]
+            });
+            pageDataTable.buttons(thisTable);
+            pageDataTable.action(thisTable);
+            pageDataTable.select(thisTable,tableDom);
+            pageDataTable.tooltip();
+            var thisJquery = $(tableDom).dataTable();
+            thisPage = {
+                init : function(){
+                    this.addEvent();
+                },
+                addEvent : function(){
+                    this.btnEvent();
+                },
+                btnEvent : function(){
+                    $(tableDom +' tbody').on('dblclick','tr',function(){
+                        if(verifyFn.inputRequired('#dictionary_row_edit')){
+                            return;
+                        }
+                        thisPage.trDblclick(thisTable.row(this).data());
+                    });
+                    $('#btnAdd').on('click',function(){
+                        thisPage.edit();
+                    });
+                    //搜索按钮
+                    $('#btnSearch').on('click',function(){
+                        thisPage.search();
+                    });
+                    //按钮组-自定义显示列
+                    $('#iconColumn').parent().parent().on('click',function(){
+                        pageDataTable.columnCustom(thisTable,tableDom,'#divKeyColumns');
+                    });
+                    //按钮组-搜索
+                    $('#iconRefresh').parent().parent().on('click',function(){
+                        thisPage.search();
+                    });
+                    $('#btnDel').on('click',function(){
+                        thisPage.delKeys();
+                    });
+                },
+                /*批量删除*/
+                delKeys : function(){
+                    if (verifyFn.inputRequired('#dictionary_btn_delByKeys')){
+                        layerFn.alert('没有删除操作权限',AppKey.code.code199);
+                        return;
+                    }
+                    var kids = '';
+                    var index = 0;
+                    $(tableDom + ' tbody input:checked').each(function(){
+                        index ++;
+                        var value = this.value;
+                        if(value != null && value != ''){
+                            if(kids.length > 0)
+                                kids += ",";
+                            kids += value;
+                        }
+                    });
+                    if(kids == ''){
+                        layerFn.alert('请选择要删除的数据!',AppKey.code.code199);
+                        return;
+                    }
+                    layerFn.confirm('将要准备删除['+index+']数据且是无法恢复,确定要继续吗?',function(){
+                        layerFn.delBatchHint(urlDelByKeys,kids,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+                trDblclick : function(data){
+                    thisPage.edit(data.KID,data.NAME);
+                },
+                search : function(){
+                    if (verifyFn.inputRequired('#dictionary_btn_listData')){
+                        layerFn.alert('没有操作权限',AppKey.code.code199);
+                        return;
+                    }
+                    $(tableDom + ' input[type=checkbox]').prop('checked',false);
+                    thisTable.draw();
+                },
+                resetForm : function(){
+                    winFn.clearFormData('#form_sys_dict_edit');
+                },
+                edit : function(kid,name){
+                    var title = '添加';
+                    if(kid != undefined && kid != ''){
+                        title = '编辑'+name;
+                        winFn.setDomValue(inputEditKeyId,kid);
+                        if (verifyFn.inputRequired('#dictionary_row_queryById')){
+                            layerFn.alert('没有操作权限',AppKey.code.code199);
+                            return;
+                        }
+                        layerFn.queryByIdHint(urlQueryById,kid,function(data){
+                            thisPage.openDialog(title,kid,data);
+                        });
+                    }else{
+                        winFn.setDomValue(inputEditKeyId,'');
+                        thisPage.openDialog(title);
+                    }
+                },
+                openDialog : function(title,kid,map){
+                    var url = urlAdd;
+                    if(kid != undefined && kid != ''){
+                        url = urlEdit;
+                        if (verifyFn.inputRequired('#dictionary_row_edit')){
+                            layerFn.alert('没有编辑权限',AppKey.code.code199);
+                            return;
+                        }
+                    }else{
+                        if (verifyFn.inputRequired('#dictionary_btn_add')){
+                            layerFn.alert('没有添加权限',AppKey.code.code199);
+                            return;
+                        }
+                    }
+                    layerFn.addOrEdit(title,'#div_sys_dict_edit',['400px','250px'],function(index,layero){
+                        if(verifyFn.inputRequired('#NAME')){
+                            layerFn.alert('字典名称不能为空',AppKey.code.code199);
+                            return;
+                        }
+                        var params = {
+                            NAME : winFn.getDomValue('#NAME'),
+                            SORT : winFn.getDomValue('#SORT'),
+                            REMARKS : winFn.getDomValue('#REMARKS'),
+                            KID : winFn.getDomValue(inputEditKeyId)
+                        };
+                        layerFn.submit(url,params,function(data){
+                            thisPage.complete(data,index,true);
+                        });
+                    });
+                    thisPage.resetForm();
+                    if(map != null){
+                        $.each(map.data,function(k,v){
+                            try{
+                                $('#'+k).val(v);
+                            }catch(e){}
+                        });
+                    }
+                },
+                rowEdit : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    thisPage.edit(row.KID,row.NAME);
+                },
+                rowDel : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    if (verifyFn.inputRequired('#dictionary_row_delById')){
+                        layerFn.alert('没有删除操作权限',AppKey.code.code199);
+                        return;
+                    }
+                    layerFn.confirm('删除后无法恢复,确定要删除吗?',function(){
+                        layerFn.delByIdHint(urlDelById,row.KID,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+                rowNode : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    layerFn.addOrEdit('['+row.NAME+']添加子字典','#div_sys_dict_edit',['400px','250px'],function(index,layero){
+                        if(verifyFn.inputRequired('#NAME')){
+                            layerFn.alert('字典名称不能为空',AppKey.code.code199);
+                            return;
+                        }
+                        var params = {
+                            NAME : winFn.getDomValue('#NAME'),
+                            SORT : winFn.getDomValue('#SORT'),
+                            PID : row.KID,
+                            REMARKS : winFn.getDomValue('#REMARKS')
+                        };
+                        if (verifyFn.inputRequired('#dictionary_btn_add')){
+                            layerFn.alert('没有添加权限',AppKey.code.code199);
+                            return;
+                        }
+                        layerFn.submit(urlAdd,params,function(data){
+                            thisPage.complete(data,index,true);
+                        });
+                    });
+                    thisPage.resetForm();
+                },
+                complete : function(data,index,search){
+                    try{
+                        if(index){
+                            layerFn.closeIndex(index);
+                        }
+                        if(search){
+                            thisPage.search();
+                        }
+                        if(data){
+                            layerFn.handleResult(data.msg,data.code);
+                        }
+                    }catch(e){}
+                }
+            };
+            thisPage.init();
+        });
+    });
+</script>
