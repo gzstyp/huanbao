@@ -32,7 +32,7 @@
     <select id="queryExistById" resultType="String" parameterType="String">
         SELECT kid FROM SYS_AREA WHERE kid = #{kid} LIMIT 1
     </select>
-	
+
     <!-- 基于主键kid的存在就更新,否则新增操作 -->
     <update id="updateOrEdit" parameterType="HashMap">
         INSERT INTO SYS_AREA (
@@ -110,21 +110,21 @@
             level
         FROM SYS_AREA WHERE kid = #{kid} LIMIT 1
     </select>
-	
+
 	<!-- 行删除 -->
 	<delete id="delById" parameterType="String">
 		DELETE FROM SYS_AREA WHERE kid = #{kid} LIMIT 1
 	</delete>
-	
+
 	<!-- 删除|批量删除-->
 	<delete id="delByKeys" parameterType="ArrayList">
-		DELETE FROM SYS_AREA WHERE 
+		DELETE FROM SYS_AREA WHERE
 			kid IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
 		</foreach>
 	</delete>
-	
+
 	<!-- listData条件查询 -->
 	<sql id="sql_where_listData">
 		<trim prefix="WHERE" prefixOverrides="AND">
@@ -136,7 +136,7 @@
             </if>
 		</trim>
 	</sql>
-	
+
 	<!-- 列表数据 -->
 	<select id="listData" parameterType="HashMap" resultType="HashMap">
         SELECT
@@ -160,7 +160,7 @@
         	LIMIT #{section},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 总条数总记录数 -->
 	<select id="listTotal" parameterType="HashMap" resultType="Integer">
 		SELECT COUNT(saa.kid) TOTAL FROM SYS_AREA saa
@@ -168,4 +168,10 @@
 		<include refid="sql_where_listData"/>
         LIMIT 1
 	</select>
+
+  <select id="getAreaTree" parameterType="Long" resultType="HashMap">
+        select s.kid,s.name,s.pid,s.level,case when count(sa.kid) > 0 then 'true' else 'false' end isParent from sys_area s
+        left join sys_area sa on s.kid = sa.pid
+        where s.pid = #{pid} group by s.kid,s.name,s.pid,s.level ORDER BY S.kid ASC
+    </select>
 </mapper>

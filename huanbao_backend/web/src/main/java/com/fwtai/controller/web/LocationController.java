@@ -77,6 +77,12 @@ public class LocationController{
         ToolClient.responseJson(locationService.getSiteList(value),response);
     }
 
+    @PreAuthorize("hasAuthority('location_btn_getAreaTree')")
+    @GetMapping("/getAreaTree")
+    public void getAreaTree(final Long kid,final HttpServletResponse response){
+        ToolClient.responseJson(locationService.getAreaTree(kid),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);

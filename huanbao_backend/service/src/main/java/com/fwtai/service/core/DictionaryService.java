@@ -2,7 +2,7 @@ package com.fwtai.service.core;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.config.ConfigFile;
-import com.fwtai.controller.core.DictionaryDao;
+import com.fwtai.core.DictionaryDao;
 import com.fwtai.service.DataService;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolString;

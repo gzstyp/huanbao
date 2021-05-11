@@ -278,8 +278,7 @@
             county_name,
             address,
             area,
-            description,
-            create_time
+            description
         FROM LOCATION WHERE kid = #{kid} LIMIT 1
     </select>
 
@@ -299,29 +298,33 @@
 
 	<!-- listData条件查询 -->
 	<sql id="sql_where_listData">
-		<trim prefix="WHERE" prefixOverrides="AND">
-            <if test="name != null">
-                AND name LIKE CONCAT('%',#{name},'%')
-            </if>
-            <if test="county_id != null">
-                AND county_id LIKE CONCAT('%',#{county_id},'%')
-            </if>
-		</trim>
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="name != null">
+        AND ln.name LIKE CONCAT('%',#{name},'%')
+      </if>
+      <if test="county_id != null">
+        AND ln.county_id = #{county_id}
+      </if>
+      <if test="siteName != null">
+        AND se.name = #{siteName}
+      </if>
+    </trim>
 	</sql>
 
 	<!-- 列表数据 -->
 	<select id="listData" parameterType="HashMap" resultType="HashMap">
-		SELECT
-      kid,
-			name,
-			site_id,
-			longs,
-			lat,
-			county_name,
-			address,
-			area,
-			description
-		FROM LOCATION
+    SELECT
+      ln.kid,
+      ln.name,
+      se.name siteName,
+      ln.longs,
+      ln.lat,
+      ln.county_name,
+      ln.address,
+      ln.area,
+      ln.description
+    FROM LOCATION ln
+    left join site se on se.kid = ln.site_id
 		<include refid="sql_where_listData"/>
 		<choose>
     	<when test="order != null and column != null">
@@ -337,7 +340,8 @@
 
 	<!-- 总条数总记录数 -->
 	<select id="listTotal" parameterType="HashMap" resultType="Integer">
-		SELECT COUNT(1) TOTAL FROM LOCATION
+		SELECT COUNT(1) TOTAL FROM LOCATION ln
+    left join site se on se.kid = ln.site_id
 		<include refid="sql_where_listData"/>
         LIMIT 1
 	</select>

@@ -1,4 +1,4 @@
-package com.fwtai.controller.core;
+package com.fwtai.core;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.datasource.DaoHandle;
@@ -8,9 +8,10 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 字典表访问数据库
+ * 省市县区域访问数据库
  * @作者 田应平
  * @版本 v1.0
  * @创建时间 2020/4/9 13:43
@@ -19,41 +20,40 @@ import java.util.List;
  * @官网 <url>http://www.yinlz.com</url>
 */
 @Repository
-public class DictionaryDao{
+public class AreaDao{
 
     @Resource
     private DaoHandle dao;
 
     public int add(final PageFormData pageFormData){
-        return dao.execute("sys_dict.add",pageFormData);
+        return dao.execute("sys_area.add",pageFormData);
     }
 
     public String queryExistById(final String kid){
-        return dao.queryForString("sys_dict.queryExistById",kid);
+        return dao.queryForString("sys_area.queryExistById",kid);
     }
 
     public int edit(final PageFormData pageFormData){
-        return dao.execute("sys_dict.edit",pageFormData);
+        return dao.execute("sys_area.edit",pageFormData);
     }
 
     public HashMap<String, Object> queryById(final String kid){
-        return dao.queryForHashMap("sys_dict.queryById",kid);
+        return dao.queryForHashMap("sys_area.queryById",kid);
     }
 
     public int delById(final String kid){
-        return dao.execute("sys_dict.delById",kid);
+        return dao.execute("sys_area.delById",kid);
     }
 
     public int delByKeys(final ArrayList<String> list){
-        return dao.execute("sys_dict.delByKeys",list);
+        return dao.execute("sys_area.delByKeys",list);
     }
 
     public HashMap<String,Object> listData(final PageFormData pageFormData){
-        return dao.queryForPage(pageFormData,"sys_dict.listData","sys_dict.listTotal");
+        return dao.queryForPage(pageFormData,"sys_area.listData","sys_area.listTotal");
     }
 
-    /*根据父级字典ID查询数据字典数据*/
-    public List<HashMap<String,String>> queryDictData(final String kid){
-        return dao.queryForListString("sys_dict.queryDictData",kid);
+    public List<Map<String, Object>> getAreaTree(final Long pid){
+        return dao.queryForListMap("sys_area.getAreaTree",pid);
     }
 }

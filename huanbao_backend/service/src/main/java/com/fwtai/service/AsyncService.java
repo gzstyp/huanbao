@@ -1,6 +1,6 @@
 package com.fwtai.service;
 
-import com.fwtai.controller.core.AsyncDao;
+import com.fwtai.core.AsyncDao;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 

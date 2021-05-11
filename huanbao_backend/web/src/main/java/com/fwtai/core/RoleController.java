@@ -1,4 +1,4 @@
-package com.fwtai.controller.core;
+package com.fwtai.core;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.service.core.RoleService;
