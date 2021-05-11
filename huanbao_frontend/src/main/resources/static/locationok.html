@@ -81,27 +81,19 @@
         <div class="col-sm-7">
             <div class="hr-4"></div>
             <div class="input-group">
-                <input type="text" id="longs" class="form-control search-query hidden-480" maxlength="20" placeholder="经度" oninput="value=value.replace(/[^\d.]/g,'')"/>
+                <input type="text" id="longs" class="form-control search-query hidden-480" oninput="value=value.replace(/[^\d]/g,'')" maxlength="20" placeholder="经度"/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-inverse btn-white" id="btnLongs">
                         <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
-                        经度
+                        经纬度
                     </button>
                 </span>
             </div>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="longs"><div class="hr-4"></div>纬度</label>
+        <label class="col-sm-3 control-label no-padding-right" for="lats"><div class="hr-4"></div>纬度</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <div class="input-group">
-                <input type="text" id="lat" class="form-control search-query hidden-480" maxlength="20" placeholder="纬度" oninput="value=value.replace(/[^\d.]/g,'')"/>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-inverse btn-white" id="btnLat">
-                        <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
-                        纬度
-                    </button>
-                </span>
-            </div>
+            <input type="text" id="lats" placeholder="纬度" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" maxlength="20"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="county_name"><div class="hr-4"></div>监测区域</label>
         <div class="col-sm-7">
@@ -117,7 +109,7 @@
         <label class="col-sm-3 control-label no-padding-right" for="area"><div class="hr-4"></div>监测面积(亩)</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="area" placeholder="监测面积（亩）" class="form-control" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <input type="text" id="area" placeholder="监测面积（亩）" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="description"><div class="hr-4"></div>描述备注</label>
         <div class="col-sm-7">
@@ -298,7 +290,9 @@
                     });
                     $('#areaSearch').on('click',function(){
                         var value = winFn.getDomValue('#siteName');
-                        thisPage.getListSite(value);
+                        if(value != null){
+                            thisPage.getListSite(value);
+                        }
                     });
                     $('#site_label').on('click',function(){
                         thisPage.addBindArea();
@@ -306,18 +300,9 @@
                     $('#county_name').on('click',function(){
                         thisPage.openAreaDialog();
                     });
-                    $('#btnLongs').on('click',function(){
-                        thisPage.openPage();
-                    });
-                    $('#btnLat').on('click',function(){
-                        thisPage.openPage();
-                    });
-                },
-                openPage : function(){
-                    window.open('/location/index.html','_blank').location;
                 },
                 openAreaDialog : function(){
-
+                    alert(1)
                 },
                 getListSite : function(value){
                     var params = {};
@@ -425,14 +410,14 @@
                         //if(editKey == null){}
                         if(verifyFn.inputCheck('#name','检测点名称不能为空'))return;
                         if(verifyFn.inputCheck('#site_id','请选择位置地点'))return;
-                        if(verifyFn.inputCheck('#longs','经度不能为空'))return;
-                        if(verifyFn.inputCheck('#lat','纬度不能为空'))return;
+                        if(verifyFn.inputCheck('#longs','请选择经度'))return;
+                        if(verifyFn.inputCheck('#lats','请选择纬度!'))return;
                         if(verifyFn.inputCheck('#county_name','选择监测区域'))return;
                         var params = {
                             name : winFn.getDomValue('#name'),
                             site_id : winFn.getDomValue('#site_id'),
                             longs : winFn.getDomValue('#longs'),
-                            lat : winFn.getDomValue('#lat'),
+                            lat : winFn.getDomValue('#lats'),
                             county_id : winFn.getDomValue('#county_id'),
                             county_name : winFn.getDomValue('#county_name'),
                             address : winFn.getDomValue('#address'),
@@ -481,6 +466,35 @@
                 }
             };
             thisPage.init();
+        });
+    });
+</script>
+<script src="/location/layui/layui.js"></script>
+<script src="/location/layui/lay/modules/layer.js"></script>
+<script charset="UTF-8" src="/location/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/location/layui_exts/'
+    }).extend({
+        locationX: '/location/locationX', location: '/location/location',
+    }).use(['layer', 'form', 'jquery', 'location'], function(){
+        $ = layui.jquery;
+        var form = layui.form;
+        var location = layui.location;
+        var locationData = {lng: 106.634927, lat: 26.652517};
+        location.render("#btnLongs",{
+            type: 1, apiType: "baiduMap",
+            coordinate: "baiduMap",
+            mapType: 2,/* 2或3 */
+            zoom: 15,
+            title: '区域定位',
+            init: function(){
+                return {longitude: $("#longs").val() ? $("#longs").val() : locationData.lng, latitude: $("#lats").val() ? $("#lats").val() : locationData.lat};
+            },
+            success: function(data){
+                $("#longs").val(data.lng);
+                $("#lats").val(data.lat);
+            }
         });
     });
 </script>
