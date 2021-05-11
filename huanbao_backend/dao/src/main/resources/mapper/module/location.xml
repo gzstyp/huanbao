@@ -64,7 +64,7 @@
     <select id="queryExistById" resultType="String" parameterType="String">
         SELECT kid FROM LOCATION WHERE kid = #{kid} LIMIT 1
     </select>
-	
+
     <!-- 基于主键kid的存在就更新,否则新增操作 -->
     <update id="updateOrEdit" parameterType="HashMap">
         INSERT INTO LOCATION (
@@ -282,21 +282,21 @@
             create_time
         FROM LOCATION WHERE kid = #{kid} LIMIT 1
     </select>
-	
+
 	<!-- 行删除 -->
 	<delete id="delById" parameterType="String">
 		DELETE FROM LOCATION WHERE kid = #{kid} LIMIT 1
 	</delete>
-	
+
 	<!-- 删除|批量删除,物理删除-->
 	<delete id="delByKeys" parameterType="ArrayList">
-		DELETE FROM LOCATION WHERE 
+		DELETE FROM LOCATION WHERE
 			kid IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
 		</foreach>
 	</delete>
-	
+
 	<!-- listData条件查询 -->
 	<sql id="sql_where_listData">
 		<trim prefix="WHERE" prefixOverrides="AND">
@@ -308,11 +308,11 @@
             </if>
 		</trim>
 	</sql>
-	
+
 	<!-- 列表数据 -->
 	<select id="listData" parameterType="HashMap" resultType="HashMap">
 		SELECT
-            kid,
+      kid,
 			name,
 			site_id,
 			longs,
@@ -334,11 +334,23 @@
         	LIMIT #{section},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 总条数总记录数 -->
 	<select id="listTotal" parameterType="HashMap" resultType="Integer">
 		SELECT COUNT(1) TOTAL FROM LOCATION
 		<include refid="sql_where_listData"/>
         LIMIT 1
 	</select>
+
+  <!--查询位置地点名称-->
+  <select id="getSiteList" resultType="HashMap" parameterType="String">
+    SELECT kid,name from site
+    <where>
+      <trim prefix="AND" prefixOverrides="AND">
+        <if test="value != null"> name LIKE CONCAT(#{value},'%') </if>
+      </trim>
+    </where>
+    LIMIT 20
+  </select>
+
 </mapper>

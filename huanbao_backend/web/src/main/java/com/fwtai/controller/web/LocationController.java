@@ -70,6 +70,13 @@ public class LocationController{
         ToolClient.responseJson(locationService.listData(new PageFormData(request)),response);
     }
 
+    /**查询位置地点名称*/
+    @PreAuthorize("hasAuthority('location_btn_getListSite')")
+    @GetMapping("/getSiteList")
+    public void getSiteList(final String value,final HttpServletResponse response){
+        ToolClient.responseJson(locationService.getSiteList(value),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);

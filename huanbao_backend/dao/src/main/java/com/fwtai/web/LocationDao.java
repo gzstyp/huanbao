@@ -5,9 +5,9 @@ import com.fwtai.datasource.DaoHandle;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 检测点信息访问数据库
@@ -50,5 +50,9 @@ public class LocationDao{
 
     public HashMap<String,Object> listData(final PageFormData pageFormData){
         return dao.queryForPage(pageFormData,"location.listData","location.listTotal");
+    }
+
+    public List<HashMap<String, String>> getSiteList(String value){
+        return dao.queryForListString("location.getSiteList",value);
     }
 }

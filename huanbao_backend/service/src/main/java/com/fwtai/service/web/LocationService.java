@@ -2,18 +2,17 @@ package com.fwtai.service.web;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.config.ConfigFile;
-import com.fwtai.web.LocationDao;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolString;
+import com.fwtai.web.LocationDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -107,5 +106,10 @@ public class LocationService{
         } catch (Exception e){
             return ToolClient.dataTableException(formData.get("sEcho"));
         }
+    }
+
+    /**查询位置地点名称*/
+    public String getSiteList(final String value){
+        return ToolClient.queryJson(locationDao.getSiteList(value));
     }
 }
