@@ -1,4 +1,10 @@
 <meta charset="utf-8"/>
+<style type="text/css">
+    .tableArea{
+        width:40px;
+        text-align:center;
+    }
+</style>
 <div class="row">
     <div class="col-xs-12">
         <div class="row">
@@ -67,7 +73,8 @@
         <label class="col-sm-3 control-label no-padding-right" for="site_id"><div class="hr-4"></div>位置地点</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="site_id" placeholder="点击选择位置地点" class="form-control"/>
+            <input type="text" id="site_label" placeholder="点击选择位置地点" class="form-control"/>
+            <input type="hidden" id="site_id" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="longs"><div class="hr-4"></div>经度</label>
         <div class="col-sm-7">
@@ -111,6 +118,31 @@
     <input type="hidden" id="location_row_queryById"/>
     <input type="hidden" id="location_row_delById"/>
     <input type="hidden" id="location_btn_delByKeys"/>
+    <input type="hidden" id="location_btn_getListSite"/>
+</div>
+<div id="div_bind_area" style="display:none;padding:2px 2px 2px 0px">
+    <div class="input-group">
+        <input type="text" id="siteName" class="form-control search-query" placeholder="位置地点名称关键字查询"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-inverse btn-white" id="areaSearch">
+                <span class="ace-icon fa fa-search bigger-110"></span>
+                查询
+            </button>
+        </span>
+    </div>
+    <table id="listArea" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>选项</td>
+            <td>位置地点名称</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="2" style="height:37px;text-align:center;">正在加载……</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <script type="text/javascript">
     var scripts = [null,null];
@@ -125,6 +157,7 @@
             var urlQueryById = urlRoute + 'queryById';/*根据id查询对应的数据*/
             var urlDelById = urlRoute + 'delById';/*根据id删除对应的数据*/
             var urlDelByKeys = urlRoute + 'delByKeys';/*批量删除*/
+            var urlGetSiteList = urlRoute + 'getSiteList';/*获取位置地点名称*/
             var thisTable = pageDataTable.initDataTable({
                 tableDom : tableDom,
                 sAjaxSource: getList,
@@ -246,6 +279,59 @@
                     $('#btnDel').on('click',function(){
                         thisPage.delKeys();
                     });
+                    $('#areaSearch').on('click',function(){
+                        var value = winFn.getDomValue('#siteName');
+                        if(value != null){
+                            thisPage.getListSite(value);
+                        }
+                    });
+                    $('#site_label').on('click',function(){
+                        thisPage.addBindArea();
+                    });
+                },
+                getListSite : function(value){
+                    var params = {};
+                    if(value != null && value.length > 0){
+                        params = {
+                            value : value
+                        };
+                    }
+                    layerFn.queryGetHandleHint(urlGetSiteList,params,function(data){
+                        thisPage.renderArea(data);
+                    });
+                },
+                addBindArea : function(){
+                    if(verifyFn.inputCheck('#location_btn_getListSite','没有操作权限'))return;
+                    layerFn.winDom('选择地点位置','#div_bind_area',['550px','450px'],function(index,layero){
+                        var siteKid = $("input[name='siteKid']:checked").val();
+                        var alt = $("input[name='siteKid']:checked").attr('alt');
+                        if(siteKid != null && siteKid.length > 0){
+                            $('#site_label').val(alt);
+                            $('#site_id').val(siteKid);
+                            layerFn.closeIndex(index);
+                        }else{
+                            layerFn.alert('请选择地点位置', AppKey.code.code199);
+                        }
+                    });
+                    thisPage.getListSite();
+                },
+                renderArea : function(data){
+                    var html = '';
+                    if(AppKey.code.code200 == data.code){
+                        data = data.data;
+                        for(var i=0;i<data.length;i++){
+                            var obj = data[i];
+                            html += '<tr>';
+                            html += '<td class="tableArea"><input type="radio" alt="'+obj.name+'" name="siteKid" value="'+obj.kid+'"/></td>';
+                            html += '<td>'+obj.name+'</td>';
+                            html += '</tr>';
+                        }
+                    }else if(AppKey.code.code201 == data.code){
+                        html = '<td colspan="2" style="height:37px;text-align:center;">没有查到数据,请换个关键字试试</td>';
+                    }else{
+                        html = '<td colspan="2" style="height:37px;text-align:center;">'+data.msg+'</td>';
+                    }
+                    $('#listArea tbody').empty().html(html);
                 },
                 /*批量删除*/
                 delKeys : function(){
