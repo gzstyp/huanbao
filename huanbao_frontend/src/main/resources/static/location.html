@@ -79,12 +79,28 @@
         <label class="col-sm-3 control-label no-padding-right" for="longs"><div class="hr-4"></div>经度</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="longs" placeholder="选择经度" class="form-control"/>
+            <div class="input-group">
+                <input type="text" id="longs" class="form-control search-query hidden-480" placeholder="选择经度"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-inverse btn-white" id="btnLongs">
+                        <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
+                        经度
+                    </button>
+                </span>
+            </div>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="lat"><div class="hr-4"></div>纬度</label>
+        <label class="col-sm-3 control-label no-padding-right" for="longs"><div class="hr-4"></div>纬度</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="lat" placeholder="选择纬度" class="form-control"/>
+            <div class="input-group">
+                <input type="text" id="lat" class="form-control search-query hidden-480" placeholder="选择纬度"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-inverse btn-white" id="btnLat">
+                        <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
+                        纬度
+                    </button>
+                </span>
+            </div>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="county_name"><div class="hr-4"></div>监测区域</label>
         <div class="col-sm-7">
@@ -288,6 +304,15 @@
                     $('#site_label').on('click',function(){
                         thisPage.addBindArea();
                     });
+                    $('#btnLongs').on('click',function(){
+                        thisPage.openAreaDialog();
+                    });
+                    $('#btnLat').on('click',function(){
+                        thisPage.openAreaDialog();
+                    });
+                },
+                openAreaDialog : function(){
+
                 },
                 getListSite : function(value){
                     var params = {};
