@@ -21,6 +21,14 @@
                                     <input type="text" id="key_name" class="form-control search-query" placeholder="检测点名称" style="width:140px"/>
                                 </div>
                             </td>
+                            <td style="padding: 0px 6px;">
+                                位置地点
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" id="key_siteName" class="form-control search-query" placeholder="位置地点名称" style="width:140px"/>
+                                </div>
+                            </td>
                             <td class="hidden-480" style="padding: 0px 6px;">
                                 区域
                             </td>
@@ -108,6 +116,10 @@
             <div class="hr-4"></div>
             <input type="text" id="county_name" placeholder="选择监测区域" class="form-control"/>
             <input type="hidden" id="county_id"/>
+            <input type="hidden" id="province_id"/>
+            <input type="hidden" id="province_name"/>
+            <input type="hidden" id="city_id"/>
+            <input type="hidden" id="city_name"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="address"><div class="hr-4"></div>区域地址</label>
         <div class="col-sm-7">
@@ -136,6 +148,7 @@
     <input type="hidden" id="location_row_delById"/>
     <input type="hidden" id="location_btn_delByKeys"/>
     <input type="hidden" id="location_btn_getListSite"/>
+    <input type="hidden" id="location_btn_getAreaTree"/>
 </div>
 <div id="div_bind_area" style="display:none;padding:2px 2px 2px 0px">
     <div class="input-group">
@@ -161,7 +174,84 @@
         </tbody>
     </table>
 </div>
+<!-- 绑定区域 -->
+<div id="proxyAreaLayer" style="display: none;padding:6px;">
+    <ul id="proxyAreaTree" class="ztree">
+        <li style="margin-top:2px;"><span>获取数据失败</span></li>
+    </ul>
+</div>
 <script type="text/javascript">
+    var ztreeReqFlag = true;
+    var domTree = 'proxyAreaTree';
+    var tree_obj = null;
+    var settingArea = {
+        view : {
+            expandSpeed : 100,
+            showLine : true,
+            showIcon : true,
+            fontCss : {"color":"#000","outline":"none","text-decoration":"none","font-size":"14px"}
+        },
+        check : {
+            enable : true,
+            chkStyle : "checkbox",
+            chkboxType : {"Y":"p","N":"ps"}
+        },
+        data : {
+            simpleData : {
+                enable : true,
+                idKey : "kid",
+                pIdKey : "pid"
+            }
+        },
+        async : {
+            enable : true,
+            url : urlPrefix + '/location/getAreaTree',
+            cache : false,
+            type: "GET",
+            autoParam : ["kid"],
+            otherParam: ["accessToken",sessionStorage.getItem('accessToken'),"refreshToken",sessionStorage.getItem("refreshToken"),"token",function(){return $("#type").val()}],
+            dataFilter: function(treeId,parentNode,result){
+                layerFn.closeIndex(self.layerIndex);
+                var bl = layerFn.checkLogin(result);
+                if(bl){
+                    thisPage.ztreeGetError('未登录或登录超时');
+                    return;
+                }
+                if(result.code == AppKey.code.code200)return result.data;
+                if(result){
+                    if(result.code != AppKey.code.code201){
+                        layerFn.alert(result.msg,result.code);
+                    }
+                }
+                return '';
+            }
+        },
+        callback : {
+            beforeAsync : function(treeId,treeNode){
+                if(treeNode){
+                    if(verifyFn.inputCheck('#location_btn_getAreaTree','没有操作权限'))return false;
+                }
+                if(ztreeReqFlag){
+                    ztreeReqFlag = false;
+                    self.layerIndex = layerFn.loading('正在处理……');
+                }
+            },
+            onAsyncSuccess : function(data){
+                layerFn.closeIndex(self.layerIndex);
+            },
+            onAsyncError : function(){
+                layerFn.alert(AppKey.msg_error);
+                thisPage.ztreeGetError('连接服务器失败');
+            },
+            beforeClick : function(treeId,node,clickFlag){
+                return false;//true时点击选中文本
+            },
+            onClick : function(event,treeIdDom,node,clickFlag){},
+            beforeCheck : function(treeId,treeNode){},
+            onCheck : function(event,treeId,treeNode){}
+        }
+    };
+
     var scripts = [null,null];
     $('.page-content-area').ace_ajax('loadScripts',scripts,function(){
         var tableDom = '#tableListLocation';
@@ -179,7 +269,7 @@
                 tableDom : tableDom,
                 sAjaxSource: getList,
                 fnServerParams : function(params){
-                    params.push({"name":"name","value":$("#key_name").val()},{"name":"county_id","value":$("#key_county_id").val()});
+                    params.push({"name":"name","value":$("#key_name").val()},{"name":"siteName","value":$("#key_siteName").val()},{"name":"county_id","value":$("#key_county_id").val()});
                 },
                 aoColumns : [
                     {
@@ -268,6 +358,9 @@
                 },
                 createDropdown : function(){
                 },
+                initTree : function(){
+                    tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
+                },
                 addEvent : function(){
                     this.btnEvent();
                 },
@@ -304,7 +397,7 @@
                         thisPage.addBindArea();
                     });
                     $('#county_name').on('click',function(){
-                        thisPage.openAreaDialog();
+                        thisPage.showAreaTree();
                     });
                     $('#btnLongs').on('click',function(){
                         thisPage.openPage();
@@ -316,8 +409,111 @@
                 openPage : function(){
                     window.open('/location/index.html','_blank').location;
                 },
-                openAreaDialog : function(){
-
+                showAreaTree : function(){
+                    ztreeReqFlag = true;
+                    layerFn.addOrEdit('选择区域位置','#proxyAreaLayer',['500px','500px'],function(indexLayero,layero){
+                        var nodes = tree_obj.getCheckedNodes(true);
+                        var length = nodes.length;
+                        if(length != 3){
+                            var indexLevel0Total = 0;
+                            var indexLevel1Total = 0;
+                            var indexLevel2Total = 0;
+                            for(var i=0;i<nodes.length;i++){
+                                var level = nodes[i].level;
+                                if(level == 0){
+                                    indexLevel0Total++;
+                                }
+                                if(level == 1){
+                                    indexLevel1Total++;
+                                }
+                                if(level == 2){
+                                    indexLevel2Total++;
+                                }
+                            }
+                            if(indexLevel0Total > 1){
+                                layerFn.alert('仅能选一个省级', AppKey.code.code199);
+                                return;
+                            }
+                            if(indexLevel1Total > 1){
+                                layerFn.alert('仅能选一个市级', AppKey.code.code199);
+                                return;
+                            }
+                            if(indexLevel2Total > 1){
+                                layerFn.alert('仅能选一个区', AppKey.code.code199);
+                                return;
+                            }
+                            layerFn.alert('选择区域位置有误', AppKey.code.code199);
+                        }else{
+                            var indexLevel0Total = 0;
+                            var indexLevel1Total = 0;
+                            var indexLevel2Total = 0;
+                            for(var i=0;i<nodes.length;i++){
+                                var level = nodes[i].level;
+                                if(level == 0){
+                                    indexLevel0Total++;
+                                }
+                                if(level == 1){
+                                    indexLevel1Total++;
+                                }
+                                if(level == 2){
+                                    indexLevel2Total++;
+                                }
+                            }
+                            if(indexLevel0Total > 1){
+                                layerFn.alert('仅能选一个省级', AppKey.code.code199);
+                                return;
+                            }
+                            if(indexLevel1Total > 1){
+                                layerFn.alert('仅能选一个市级', AppKey.code.code199);
+                                return;
+                            }
+                            if(indexLevel2Total > 1){
+                                layerFn.alert('仅能选一个区', AppKey.code.code199);
+                                return;
+                            }
+                            var json = null;
+                            for(var i=0;i<nodes.length;i++){
+                                var obj = nodes[i];
+                                var level = obj.level;
+                                if(level == 2){
+                                    json = obj;
+                                    break;
+                                }
+                            }
+                            if(json == null){
+                                layerFn.alert('选择区域位置有误', AppKey.code.code199);
+                                return;
+                            }
+                            layer.close(indexLayero);
+                            if(nodes){
+                                var address = '';
+                                for(var i=0;i<nodes.length;i++){
+                                    var obj = nodes[i];
+                                    var level = obj.level;
+                                    if(level == 0){
+                                        $('#province_id').val(obj.kid);
+                                        $('#province_name').val(obj.name);
+                                        address += obj.name;
+                                        continue;
+                                    }
+                                    if(level == 1){
+                                        $('#city_id').val(obj.kid);
+                                        $('#city_name').val(obj.name);
+                                        address += obj.name;
+                                        continue;
+                                    }
+                                    if(level == 2){
+                                        $('#county_id').val(obj.kid);
+                                        $('#county_name').val(obj.name);
+                                        address += obj.name;
+                                        continue;
+                                    }
+                                }
+                                $('#address').val(address);
+                            }
+                        }
+                    });
+                    thisPage.initTree();//再次调用便是刷新树
                 },
                 getListSite : function(value){
                     var params = {};
@@ -344,6 +540,10 @@
                         }
                     });
                     thisPage.getListSite();
+                },
+                ztreeGetError : function(msg){
+                    msg = (msg == null || msg == '') ? '获取数据失败' : msg;
+                    $('#treeDom').html("<li style='margin-top:2px;'><span>"+msg+"</span></li>");
                 },
                 renderArea : function(data){
                     var html = '';
@@ -421,18 +621,25 @@
                         if(verifyFn.inputCheck('#location_btn_add','没有添加权限'))return;
                     }
                     layerFn.addOrEdit(title,'#div_location_edit',['500px','430px'],function(index,layero){
-                        //var editKey = winFn.getDomValue(inputEditKeyId);//用于某些值在新增时必填,编辑时可填可不填,填时则更新,否则不更新
-                        //if(editKey == null){}
+                        var editKey = winFn.getDomValue(inputEditKeyId);
                         if(verifyFn.inputCheck('#name','检测点名称不能为空'))return;
-                        if(verifyFn.inputCheck('#site_id','请选择位置地点'))return;
+                        if(editKey == null){
+                            if(verifyFn.inputCheck('#site_id','请选择位置地点'))return;
+                        }
                         if(verifyFn.inputCheck('#longs','经度不能为空'))return;
                         if(verifyFn.inputCheck('#lat','纬度不能为空'))return;
                         if(verifyFn.inputCheck('#county_name','选择监测区域'))return;
+                        if(verifyFn.inputCheck('#province_id','选择省级区域'))return;
+                        if(verifyFn.inputCheck('#city_id','选择市级区域'))return;
                         var params = {
                             name : winFn.getDomValue('#name'),
                             site_id : winFn.getDomValue('#site_id'),
                             longs : winFn.getDomValue('#longs'),
                             lat : winFn.getDomValue('#lat'),
+                            province_id : winFn.getDomValue('#province_id'),
+                            province_name : winFn.getDomValue('#province_name'),
+                            city_id : winFn.getDomValue('#city_id'),
+                            city_name : winFn.getDomValue('#city_name'),
                             county_id : winFn.getDomValue('#county_id'),
                             county_name : winFn.getDomValue('#county_name'),
                             address : winFn.getDomValue('#address'),
