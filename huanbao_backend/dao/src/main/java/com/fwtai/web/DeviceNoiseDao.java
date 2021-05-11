@@ -5,9 +5,9 @@ import com.fwtai.datasource.DaoHandle;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 监测设备访问数据库
@@ -54,5 +54,9 @@ public class DeviceNoiseDao{
 
     public Integer queryDeviceTotal(){
         return dao.queryForInteger("device_noise.queryDeviceTotal");
+    }
+
+    public List<HashMap<String, String>> getDeviceList(String value){
+        return dao.queryForListString("device_noise.getDeviceList",value);
     }
 }

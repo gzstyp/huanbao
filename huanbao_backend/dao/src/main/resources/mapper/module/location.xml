@@ -2,29 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="location">
 
-    <sql id="sql_column">
-        kid,
-        site_id,
-        name,
-        longs,
-        lat,
-        province_id,
-        province_name,
-        city_id,
-        city_name,
-        county_id,
-        county_name,
-        address,
-        area,
-        description,
-        create_time
-    </sql>
-
     <!-- 添加数据 -->
     <update id="add" parameterType="HashMap">
         INSERT INTO LOCATION (
         <trim suffixOverrides=",">
             <if test="kid != null">kid,</if>
+            <if test="device_id != null">device_id,</if>
             <if test="site_id != null">site_id,</if>
             <if test="name != null">name,</if>
             <if test="longs != null">longs,</if>
@@ -43,6 +26,7 @@
         ) VALUES (
         <trim suffixOverrides=",">
 			<if test="kid != null">#{kid},</if>
+			<if test="device_id != null">#{device_id},</if>
 			<if test="site_id != null">#{site_id},</if>
 			<if test="name != null">#{name},</if>
 			<if test="longs != null">#{longs},</if>
@@ -70,6 +54,7 @@
         INSERT INTO LOCATION (
         <trim suffixOverrides=",">
             <if test="kid != null">kid,</if>
+            <if test="device_id != null">device_id,</if>
             <if test="site_id != null">site_id,</if>
             <if test="name != null">name,</if>
             <if test="longs != null">longs,</if>
@@ -88,6 +73,7 @@
         ) VALUES (
         <trim suffixOverrides=",">
             <if test="kid != null">#{kid},</if>
+            <if test="device_id != null">#{device_id},</if>
             <if test="site_id != null">#{site_id},</if>
             <if test="name != null">#{name},</if>
             <if test="longs != null">#{longs},</if>
@@ -106,6 +92,7 @@
         )
         ON DUPLICATE KEY UPDATE
         <trim suffixOverrides=",">
+            <if test="device_id != null">device_id = #{device_id},</if>
             <if test="site_id != null">site_id = #{site_id},</if>
             <if test="name != null">name = #{name},</if>
             <if test="longs != null">longs = #{longs},</if>
@@ -130,6 +117,7 @@
             <trim suffixOverrides=",">
                 <if test="index==0">
                     <if test="item.kid != null">kid,</if>
+                    <if test="item.device_id != null">device_id,</if>
                     <if test="item.site_id != null">site_id,</if>
                     <if test="item.name != null">name,</if>
                     <if test="item.longs != null">longs,</if>
@@ -152,6 +140,7 @@
             (
             <trim suffixOverrides=",">
                 <if test="item.kid != null">#{item.kid},</if>
+                <if test="item.device_id != null">#{item.device_id},</if>
                 <if test="item.site_id != null">#{item.site_id},</if>
                 <if test="item.name != null">#{item.name},</if>
                 <if test="item.longs != null">#{item.longs},</if>
@@ -174,6 +163,7 @@
             <trim suffixOverrides=",">
                 <if test="index==0">
                 <if test="item.kid != null">kid = values(kid),</if>
+                <if test="item.device_id != null">device_id = values(device_id),</if>
                 <if test="item.site_id != null">site_id = values(site_id),</if>
                 <if test="item.name != null">name = values(name),</if>
                 <if test="item.longs != null">longs = values(longs),</if>
@@ -200,6 +190,7 @@
                 <trim suffixOverrides=",">
                     <if test="index==0">
                         <if test="item.kid != null">kid,</if>
+                        <if test="item.device_id != null">device_id,</if>
                         <if test="item.site_id != null">site_id,</if>
                         <if test="item.name != null">name,</if>
                         <if test="item.longs != null">longs,</if>
@@ -222,6 +213,7 @@
             (
             <trim suffixOverrides=",">
                 <if test="item.kid != null">#{item.kid},</if>
+                <if test="item.device_id != null">#{item.device_id},</if>
                 <if test="item.site_id != null">#{item.site_id},</if>
                 <if test="item.name != null">#{item.name},</if>
                 <if test="item.longs != null">#{item.longs},</if>
@@ -245,6 +237,7 @@
 	<update id="edit" parameterType="HashMap">
 		UPDATE LOCATION
 		<trim prefix="SET" suffixOverrides=",">
+            <if test="device_id != null">device_id = #{device_id},</if>
             <if test="site_id != null">site_id = #{site_id},</if>
             <if test="name != null">name = #{name},</if>
             <if test="longs != null">longs = #{longs},</if>
@@ -266,6 +259,7 @@
     <!-- 根据id查询对应的数据 -->
     <select id="queryById" parameterType="String" resultType="HashMap">
         SELECT
+            device_id,
             site_id,
             name,
             longs,
@@ -317,6 +311,7 @@
       ln.kid,
       ln.name,
       se.name siteName,
+      dne.flag_name,
       ln.longs,
       ln.lat,
       ln.county_name,
@@ -325,6 +320,7 @@
       ln.description
     FROM LOCATION ln
     left join site se on se.kid = ln.site_id
+    LEFT JOIN device_noise dne on dne.kid = ln.device_id
 		<include refid="sql_where_listData"/>
 		<choose>
     	<when test="order != null and column != null">
@@ -354,7 +350,7 @@
         <if test="value != null"> name LIKE CONCAT(#{value},'%') </if>
       </trim>
     </where>
-    LIMIT 20
+    LIMIT 30
   </select>
 
 </mapper>

@@ -77,6 +77,13 @@ public class LocationController{
         ToolClient.responseJson(locationService.getSiteList(value),response);
     }
 
+    /**获取设备标识名称*/
+    @PreAuthorize("hasAuthority('location_btn_getDeviceList')")
+    @GetMapping("/getDeviceList")
+    public void getDeviceList(final String value,final HttpServletResponse response){
+        ToolClient.responseJson(locationService.getDeviceList(value),response);
+    }
+
     @PreAuthorize("hasAuthority('location_btn_getAreaTree')")
     @GetMapping("/getAreaTree")
     public void getAreaTree(final Long kid,final HttpServletResponse response){
