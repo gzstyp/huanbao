@@ -6,10 +6,8 @@ import com.fwtai.service.core.UserService;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolJWT;
 import io.jsonwebtoken.JwtException;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +26,7 @@ import java.util.HashMap;
  * @Email service@yinlz.com
  * @官网 <url>http://www.yinlz.com</url>
 */
-@Api(tags = "账号|用户中心")
+//@Api(tags = "账号|用户中心")
 @RestController
 @RequestMapping(ConfigFile.api_v10 + "user")
 public class UserController{
@@ -51,7 +49,7 @@ public class UserController{
     }
 
     //放行对外提供注册接口url
-    @ApiOperation(value = "用户注册", notes = "对外提供注册接口")
+    //@ApiOperation(value = "用户注册", notes = "对外提供注册接口")
     @PostMapping(value = "/register")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "username", value = "登录账号(用户名|手机号)", dataType = "String", paramType = "query", required = true),

@@ -35,17 +35,14 @@ public class MonitorValueService{
         final PageFormData formData = new PageFormData(request);
         final String p_device_flag = "device_flag";
         final String p_location_id = "location_id";
-        final String p_volume = "volume";
-        final String validate = ToolClient.validateField(formData,p_device_flag,p_location_id,p_volume);
+        final String validate = ToolClient.validateField(formData,p_device_flag,p_location_id);
         if(validate != null)return validate;
         if(formData.getString("device_flag").length() > 64){
-            return ToolClient.createJsonFail("设备标识(MN设备唯一编码)过多");
+            return ToolClient.createJsonFail("设备标识过多");
         }
         if(formData.getString("location_id").length() > 32){
-            return ToolClient.createJsonFail("监测点id(location.kid)过多");
+            return ToolClient.createJsonFail("数据有误");
         }
-        final String fieldInteger = ToolClient.validateInteger(formData,p_volume);
-        if(fieldInteger != null)return fieldInteger;
         formData.put("kid",ToolString.getIdsChar32());
         return ToolClient.executeRows(monitorvalueDao.add(formData));
     }
@@ -55,17 +52,14 @@ public class MonitorValueService{
         final String p_kid = "kid";
         final String p_device_flag = "device_flag";
         final String p_location_id = "location_id";
-        final String p_volume = "volume";
-        final String validate = ToolClient.validateField(formData,p_device_flag,p_location_id,p_volume,p_kid);
+        final String validate = ToolClient.validateField(formData,p_device_flag,p_location_id,p_kid);
         if(validate != null)return validate;
         if(formData.getString("device_flag").length() > 64){
-            return ToolClient.createJsonFail("设备标识(MN设备唯一编码)过多");
+            return ToolClient.createJsonFail("设备标识过多");
         }
         if(formData.getString("location_id").length() > 32){
-            return ToolClient.createJsonFail("监测点id(location.kid)过多");
+            return ToolClient.createJsonFail("监测点位置有误");
         }
-        final String fieldInteger = ToolClient.validateInteger(formData,p_volume);
-        if(fieldInteger != null)return fieldInteger;
         final String exist_key = monitorvalueDao.queryExistById(formData.getString(p_kid));
         if(exist_key == null){
             return ToolClient.createJson(ConfigFile.code199,"数据已不存在,刷新重试");
