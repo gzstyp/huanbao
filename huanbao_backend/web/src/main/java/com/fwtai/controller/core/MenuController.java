@@ -1,4 +1,4 @@
-package com.fwtai.core;
+package com.fwtai.controller.core;
 
 import com.fwtai.service.core.MenuService;
 import com.fwtai.tool.ToolClient;

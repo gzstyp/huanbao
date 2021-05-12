@@ -8,6 +8,7 @@
         <trim suffixOverrides=",">
             <if test="kid != null">kid,</if>
             <if test="device_flag != null">device_flag,</if>
+            <if test="pw != null">pw,</if>
             <if test="device_name != null">device_name,</if>
             <if test="flag_name != null">flag_name,</if>
             <if test="model != null">model,</if>
@@ -20,6 +21,7 @@
         <trim suffixOverrides=",">
 			<if test="kid != null">#{kid},</if>
 			<if test="device_flag != null">#{device_flag},</if>
+			<if test="pw != null">#{pw},</if>
 			<if test="device_name != null">#{device_name},</if>
 			<if test="flag_name != null">#{flag_name},</if>
 			<if test="model != null">#{model},</if>
@@ -41,6 +43,7 @@
         <trim suffixOverrides=",">
             <if test="kid != null">kid,</if>
             <if test="device_flag != null">device_flag,</if>
+            <if test="pw != null">pw,</if>
             <if test="device_name != null">device_name,</if>
             <if test="flag_name != null">flag_name,</if>
             <if test="model != null">model,</if>
@@ -53,6 +56,7 @@
         <trim suffixOverrides=",">
             <if test="kid != null">#{kid},</if>
             <if test="device_flag != null">#{device_flag},</if>
+            <if test="pw != null">#{pw},</if>
             <if test="device_name != null">#{device_name},</if>
             <if test="flag_name != null">#{flag_name},</if>
             <if test="model != null">#{model},</if>
@@ -65,6 +69,7 @@
         ON DUPLICATE KEY UPDATE
         <trim suffixOverrides=",">
             <if test="device_flag != null">device_flag = #{device_flag},</if>
+            <if test="pw != null">pw = #{pw},</if>
             <if test="device_name != null">device_name = #{device_name},</if>
             <if test="flag_name != null">flag_name = #{flag_name},</if>
             <if test="model != null">model = #{model},</if>
@@ -75,99 +80,12 @@
         </trim>
     </update>
 
-    <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
-    <update id="updateEditBatch" parameterType="ArrayList">
-        INSERT IGNORE INTO DEVICE_NOISE (
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                    <if test="item.kid != null">kid,</if>
-                    <if test="item.device_flag != null">device_flag,</if>
-                    <if test="item.device_name != null">device_name,</if>
-                    <if test="item.flag_name != null">flag_name,</if>
-                    <if test="item.model != null">model,</if>
-                    <if test="item.company_name != null">company_name,</if>
-                    <if test="item.linkman != null">linkman,</if>
-                    <if test="item.phone != null">phone,</if>
-                    <if test="item.description != null">description</if>
-                </if>
-            </trim>
-        </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.device_flag != null">#{item.device_flag},</if>
-                <if test="item.device_name != null">#{item.device_name},</if>
-                <if test="item.flag_name != null">#{item.flag_name},</if>
-                <if test="item.model != null">#{item.model},</if>
-                <if test="item.company_name != null">#{item.company_name},</if>
-                <if test="item.linkman != null">#{item.linkman},</if>
-                <if test="item.phone != null">#{item.phone},</if>
-                <if test="item.description != null">#{item.description}</if>
-            </trim>
-            )
-        </foreach>
-        ON DUPLICATE KEY UPDATE
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                <if test="item.kid != null">kid = values(kid),</if>
-                <if test="item.device_flag != null">device_flag = values(device_flag),</if>
-                <if test="item.device_name != null">device_name = values(device_name),</if>
-                <if test="item.flag_name != null">flag_name = values(flag_name),</if>
-                <if test="item.model != null">model = values(model),</if>
-                <if test="item.company_name != null">company_name = values(company_name),</if>
-                <if test="item.linkman != null">linkman = values(linkman),</if>
-                <if test="item.phone != null">phone = values(phone),</if>
-                <if test="item.description != null">description = values(description)</if>
-                </if>
-            </trim>
-        </foreach>
-    </update>
-
-    <!-- 批量添加|插入-->
-    <update id="addBatch" parameterType="ArrayList">
-        INSERT INTO DEVICE_NOISE (
-            <foreach collection="list" item="item" index="index">
-                <trim suffixOverrides=",">
-                    <if test="index==0">
-                        <if test="item.kid != null">kid,</if>
-                        <if test="item.device_flag != null">device_flag,</if>
-                        <if test="item.device_name != null">device_name,</if>
-                        <if test="item.flag_name != null">flag_name,</if>
-                        <if test="item.model != null">model,</if>
-                        <if test="item.company_name != null">company_name,</if>
-                        <if test="item.linkman != null">linkman,</if>
-                        <if test="item.phone != null">phone,</if>
-                        <if test="item.description != null">description</if>
-                    </if>
-                </trim>
-            </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.device_flag != null">#{item.device_flag},</if>
-                <if test="item.device_name != null">#{item.device_name},</if>
-                <if test="item.flag_name != null">#{item.flag_name},</if>
-                <if test="item.model != null">#{item.model},</if>
-                <if test="item.company_name != null">#{item.company_name},</if>
-                <if test="item.linkman != null">#{item.linkman},</if>
-                <if test="item.phone != null">#{item.phone},</if>
-                <if test="item.description != null">#{item.description}</if>
-            </trim>
-            )
-        </foreach>
-    </update>
-
 	<!-- 编辑数据 -->
 	<update id="edit" parameterType="HashMap">
 		UPDATE DEVICE_NOISE
 		<trim prefix="SET" suffixOverrides=",">
             <if test="device_flag != null">device_flag = #{device_flag},</if>
+            <if test="pw != null">pw = #{pw},</if>
             <if test="device_name != null">device_name = #{device_name},</if>
             <if test="flag_name != null">flag_name = #{flag_name},</if>
             <if test="model != null">model = #{model},</if>
@@ -183,6 +101,7 @@
     <select id="queryById" parameterType="String" resultType="HashMap">
         SELECT
             device_flag,
+            pw,
             device_name,
             flag_name,
             model,
@@ -210,12 +129,12 @@
 	<!-- listData条件查询 -->
 	<sql id="sql_where_listData">
 		<trim prefix="WHERE" prefixOverrides="AND">
-            <if test="device_name != null">
-                AND device_name LIKE CONCAT('%',#{device_name},'%')
-            </if>
-            <if test="device_flag != null">
-                AND device_flag LIKE CONCAT('%',#{device_flag},'%')
-            </if>
+      <if test="device_name != null">
+          AND device_name LIKE CONCAT('%',#{device_name},'%')
+      </if>
+      <if test="device_flag != null">
+          AND device_flag LIKE CONCAT('%',#{device_flag},'%')
+      </if>
 		</trim>
 	</sql>
 
@@ -226,6 +145,7 @@
 			device_name,
 			flag_name,
 			device_flag,
+      pw,
 			model,
 			company_name,
 			linkman,
