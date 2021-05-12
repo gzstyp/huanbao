@@ -266,8 +266,8 @@
   </select>
 
   <!-- 查询是否标识是否存在,不存在拒绝接入 -->
-  <select id="getSiteName" resultType="String" parameterType="String">
+  <select id="getLocationId" resultType="String" parameterType="String">
     select ln.kid from device_noise dne,location ln
-    where dne.kid = ln.device_id and dne.device_flag = 'lhgc102458'
+    where dne.kid = ln.device_id and dne.device_flag = #{deviceFlag}
   </select>
 </mapper>

@@ -29,14 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 */
 @RestController
 @Api(tags = "监测点数据")
-@RequestMapping(ConfigFile.push_v10 +"monitorValue")
+@RequestMapping(ConfigFile.push_v10)
 public class MonitorValueController{
 
     @Resource
 	private ApiMonitorValueService apiMonitorValueService;
 
     /**添加*/
-    @ApiOperation(value = "添加操作", notes = "新建|新增|添加操作,bean实体form表单方式非json格式提交")
+    @ApiOperation(value = "推送数据操作", notes = "推送数据,非json格式提交")
     @PostMapping("/add")
     public void add(final MonitorValue monitorValue,final HttpServletResponse response){
         ToolClient.responseJson(apiMonitorValueService.add(monitorValue),response);

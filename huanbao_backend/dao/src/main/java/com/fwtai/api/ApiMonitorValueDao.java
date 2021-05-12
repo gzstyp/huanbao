@@ -51,7 +51,7 @@ public class ApiMonitorValueDao{
         return dao.queryForPage(pageFormData,"api_monitor_value.listData","api_monitor_value.listTotal");
     }
 
-    public String getSiteName(final String deviceFlag){
-        return dao.queryForString("api_monitor_value.getSiteName",deviceFlag);
+    public String getLocationId(final String deviceFlag){
+        return dao.queryForString("api_monitor_value.getLocationId",deviceFlag);
     }
 }

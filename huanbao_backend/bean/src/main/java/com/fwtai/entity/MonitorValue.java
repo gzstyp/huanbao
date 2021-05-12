@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public final class MonitorValue implements Serializable{
 
-    @ApiModelProperty(notes = "设备标识(MN设备唯一编码)",required = true,value = "设备标识(MN设备唯一编码)")
+    @ApiModelProperty(notes = "监测设备标识",required = true,value = "设备标识(MN设备唯一编码)")
     private String deviceFlag;
 
     @ApiModelProperty(notes = "数据时间",required = true,value = "数据时间精确到秒,格式:2021-5-12 13:14:16")
@@ -25,7 +25,7 @@ public final class MonitorValue implements Serializable{
     private String quality10;
 
     @ApiModelProperty(notes = "噪声值",required = true,value = "噪声值,格式:58.90")
-    private Integer volume;
+    private String volume;
 
     public String getDeviceFlag(){
         return deviceFlag;
@@ -75,11 +75,11 @@ public final class MonitorValue implements Serializable{
         this.quality10 = quality10;
     }
 
-    public Integer getVolume(){
+    public String getVolume(){
         return volume;
     }
 
-    public void setVolume(Integer volume){
+    public void setVolume(String volume){
         this.volume = volume;
     }
 }

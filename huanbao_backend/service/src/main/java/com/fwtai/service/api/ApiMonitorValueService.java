@@ -33,19 +33,22 @@ public class ApiMonitorValueService{
 
     public String add(final MonitorValue monitorValue){
         final PageFormData formData = ToolClient.beanToPageFormData(monitorValue);
-        final String p_device_flag = "device_flag";
+        final String p_device_flag = "deviceFlag";
+        final String p_data_time = "dataTime";
         final String p_volume = "volume";
-        final String validate = ToolClient.validateField(formData,p_device_flag,p_volume);
+        final String validate = ToolClient.validateField(formData,p_device_flag,p_volume,p_data_time);
         if(validate != null)return validate;
-        if(formData.getString("device_flag").length() > 64){
+        if(formData.getString("deviceFlag").length() > 64){
             return ToolClient.createJsonFail("设备标识过多");
         }
         final String device_flag = formData.getString(p_device_flag);
-        final String exist = apiMonitorValueDao.getSiteName(device_flag);//若系统不存在则不让数据接入
-        if(exist == null){
-            return ToolClient.createJsonFail("没有找到设备标识,拒绝接入");
+        final String locationId = apiMonitorValueDao.getLocationId(device_flag);//若系统不存在则不让数据接入
+        if(locationId == null){
+            return ToolClient.createJsonFail(device_flag+"设备标识不存在,拒绝接入");
         }
-        formData.put("location_id",exist);
+        formData.put("device_flag",formData.getString(p_device_flag));
+        formData.put("data_time",formData.getString(p_data_time));
+        formData.put("location_id",locationId);
         formData.put("kid",ToolString.getIdsChar32());
         return ToolClient.executeRows(apiMonitorValueDao.add(formData));
     }

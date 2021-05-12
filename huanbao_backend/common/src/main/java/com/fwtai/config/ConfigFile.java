@@ -21,7 +21,7 @@ public final class ConfigFile implements Serializable{
 
     public final static String URL_LOGOUT = "/exit";//注销退出接口
 
-    public final static String[] IGNORE_URLS = {"/","/error",URL_LOGIN_PAGE,URL_REGISTER,"/user/renewalToken","/**/notAuthorized","/user/logout","/webjars/**","/swagger-ui.html","/v2/api-docs","/swagge**","/**.ico","/style/**.css","/swagger-resources","/swagger-resources/**"};
+    public final static String[] IGNORE_URLS = {"/","/error",URL_LOGIN_PAGE,URL_REGISTER,"/user/renewalToken","/**/notAuthorized","/user/logout","/webjars/**","/swagger-ui.html","/v2/api-docs","/swagge**","/**.ico","/style/**.css","/swagger-resources","/swagger-resources/**","/push/v1.0/**"};
 
     public final static String ACCESS_TOKEN = "accessToken";
 
