@@ -57,12 +57,17 @@
         </div>
     </div>
 </div>
-<div id="div_device_noise_edit" style="display:none;padding:20px 0px;">
+<div id="div_device_noise_edit" style="display:none;padding:2px 0px;">
     <form class="form-horizontal" id="form_device_noise_edit" role="form">
         <label class="col-sm-3 control-label no-padding-right" for="device_flag"><div class="hr-4"></div>设备标识</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
             <input type="text" id="device_flag" placeholder="设备标识" class="form-control"/>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="pw"><div class="hr-4"></div>设备密码</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="pw" placeholder="设备密码" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="device_name"><div class="hr-4"></div>设备名称</label>
         <div class="col-sm-7">
@@ -77,27 +82,27 @@
         <label class="col-sm-3 control-label no-padding-right" for="model"><div class="hr-4"></div>设备型号</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="model" placeholder="设备型号" class="form-control"/>
+            <input type="text" id="model" placeholder="设备型号(选填)" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="company_name"><div class="hr-4"></div>厂家名称</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="company_name" placeholder="厂家名称" class="form-control"/>
+            <input type="text" id="company_name" placeholder="厂家名称(选填)" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="linkman"><div class="hr-4"></div>联系人</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="linkman" placeholder="厂家联系人" class="form-control"/>
+            <input type="text" id="linkman" placeholder="厂家联系人(选填)" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="phone"><div class="hr-4"></div>联系电话</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="phone" placeholder="厂家联系电话" class="form-control"/>
+            <input type="text" id="phone" placeholder="厂家联系电话(选填)" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="description"><div class="hr-4"></div>备注描述</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="description" placeholder="备注描述" class="form-control"/>
+            <input type="text" id="description" placeholder="备注描述(选填)" class="form-control"/>
         </div>
     </form>
 </div>
@@ -151,16 +156,12 @@
                         sTitle : "设备标识"
                     },
                     {
-                        mData : "model",
-                        sTitle : "设备型号"
+                        mData : "pw",
+                        sTitle : "设备密码"
                     },
                     {
                         mData : "company_name",
                         sTitle : "厂家名称"
-                    },
-                    {
-                        mData : "linkman",
-                        sTitle : "厂家联系人"
                     },
                     {
                         mData : "phone",
@@ -176,7 +177,7 @@
                         mData : "_kid_",
                         sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
                         bSortable : false,
-                        sWidth : "12%"
+                        sWidth : "8%"
                     }
                 ],
                 columnDefs : [
@@ -318,6 +319,7 @@
                         if(verifyFn.inputCheck('#model','设备型号不能为空'))return;
                         var params = {
                             device_flag : winFn.getDomValue('#device_flag'),
+                            pw : winFn.getDomValue('#pw'),
                             device_name : winFn.getDomValue('#device_name'),
                             flag_name : winFn.getDomValue('#flag_name'),
                             model : winFn.getDomValue('#model'),
