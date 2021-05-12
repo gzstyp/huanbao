@@ -39,7 +39,7 @@ public class ApiMonitorValueService{
         final String validate = ToolClient.validateField(formData,p_device_flag,p_volume,p_data_time);
         if(validate != null)return validate;
         if(formData.getString("deviceFlag").length() > 64){
-            return ToolClient.createJsonFail("设备标识过多");
+            return ToolClient.createJsonFail("设备标识内容过多");
         }
         final String device_flag = formData.getString(p_device_flag);
         final String locationId = apiMonitorValueDao.getLocationId(device_flag);//若系统不存在则不让数据接入
