@@ -248,7 +248,11 @@
           thisPage.initTree();//若再次调用便是刷新树
         },
         initDom : function(){
-          thisPage.getListMap({});
+          var params = {//大于等于min到小于max
+            min : 60,
+            max : 65,
+          };
+          thisPage.getListMap(params);
         },
         initTree : function(){
           tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
@@ -257,7 +261,7 @@
           $('#btnSearch').on('click',function(){
             var params = {
               siteIds : $('#site_id').val(),
-              countyIds : $('#county_id').val(),
+              countyIds : $('#county_id').val()
             };
             thisPage.getListMap(params);
           });
@@ -265,12 +269,16 @@
             var params = {//大于等于min到小于max
               min : 60,
               max : 65,
+              siteIds : $('#site_id').val(),
+              countyIds : $('#county_id').val()
             };
             thisPage.getListMap(params);
           });
           $('#btn65').on('click',function(){
             var params = {
-              min : 65
+              min : 65,
+              siteIds : $('#site_id').val(),
+              countyIds : $('#county_id').val()
             };
             thisPage.getListMap(params);
           });
