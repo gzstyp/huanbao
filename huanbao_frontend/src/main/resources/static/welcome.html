@@ -17,7 +17,8 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <input type="text" id="key_name" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
+                      <input type="text" id="site_label" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
+                      <input type="hidden" id="site_id" class="form-control"/>
                     </div>
                   </td>
                   <td class="hidden-480" style="padding: 0px 6px;">
@@ -75,6 +76,30 @@
             </div>
         </div>
     </div>
+</div>
+<div id="div_bind_area" style="display:none;padding:2px 2px 2px 0px">
+  <div class="input-group">
+    <input type="text" id="siteName" class="form-control search-query" placeholder="位置地点名称关键字查询"/>
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-inverse btn-white" id="areaSearch">
+        <span class="ace-icon fa fa-search bigger-110"></span>
+        查询
+      </button>
+    </span>
+  </div>
+  <table id="listArea" class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+      <td>选项</td>
+      <td>位置地点名称</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td colspan="2" style="height:37px;text-align:center;">正在加载……</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 <script type="text/javascript">
     function windowShow() {
@@ -136,7 +161,7 @@
     function closeHeatmap(){
         heatmapOverlay.hide();
     }
-
+    var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
     $(function(){
       thisPage = {
         init : function(){
@@ -144,27 +169,77 @@
           this.initDom();
         },
         initDom : function(){
-          thisPage.getListMap({});
+          thisPage.getListMap();
         },
         addEvent : function(){
           $('#btnSearch').on('click',function(){
-            var params = {};
-            thisPage.getListMap(params);
+            thisPage.getListMap();
           });
           $('#btn6065').on('click',function(){
-            var params = {};
-            thisPage.getListMap(params);
+            thisPage.getListMap();
           });
           $('#btn65').on('click',function(){
-            var params = {};
-            thisPage.getListMap(params);
+            thisPage.getListMap();
+          });
+          $('#areaSearch').on('click',function(){
+            var value = winFn.getDomValue('#siteName');
+            thisPage.getListSite(value);
+          });
+          $('#site_label').on('click',function(){
+            thisPage.addBindArea();
           });
         },
-        getListMap : function(params){
+        getListMap : function(){
+          var params = {
+            site_id : $('#site_id').val(),
+          }
           this.renderMap(this.tableRow('正在查询……'));
           layerFn.ajaxGetResult('/monitorValue/getListMap',params,function(data){
             thisPage.renderTableHtml(data);
           });
+        },
+        addBindArea : function(){
+          layerFn.winDom('选择地点位置','#div_bind_area',['550px','450px'],function(index,layero){
+            var siteKid = $("input[name='siteKid']:checked").val();
+            var alt = $("input[name='siteKid']:checked").attr('alt');
+            if(siteKid != null && siteKid.length > 0){
+              $('#site_label').val(alt);
+              $('#site_id').val(siteKid);
+              layerFn.closeIndex(index);
+            }else{
+              layerFn.alert('请选择地点位置', AppKey.code.code199);
+            }
+          });
+          thisPage.getListSite();
+        },
+        getListSite : function(value){
+          var params = {};
+          if(value != null && value.length > 0){
+            params = {
+              value : value
+            };
+          }
+          layerFn.queryGetHandleHint(urlGetSiteList,params,function(data){
+            thisPage.renderArea(data);
+          });
+        },
+        renderArea : function(data){
+          var html = '';
+          if(AppKey.code.code200 == data.code){
+            data = data.data;
+            for(var i=0;i<data.length;i++){
+              var obj = data[i];
+              html += '<tr>';
+              html += '<td class="tableArea"><input type="radio" alt="'+obj.name+'" name="siteKid" value="'+obj.kid+'"/></td>';
+              html += '<td>'+obj.name+'</td>';
+              html += '</tr>';
+            }
+          }else if(AppKey.code.code201 == data.code){
+            html = '<td colspan="2" style="height:37px;text-align:center;">没有查到数据,请换个关键字试试</td>';
+          }else{
+            html = '<td colspan="2" style="height:37px;text-align:center;">'+data.msg+'</td>';
+          }
+          $('#listArea tbody').empty().html(html);
         },
         renderTableHtml : function(data){
           var html = '';
