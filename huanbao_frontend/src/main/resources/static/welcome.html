@@ -9,8 +9,8 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="row">
-            <div class="col-xs-12">
-              <table class="no-border" style="display:inline;margin-top:10px;">
+            <div class="col-xs-12" style="padding-top:5px;">
+              <table class="no-border" style="display:inline;">
                 <tr>
                   <td style="padding: 0px 6px;">
                     区域
@@ -56,7 +56,7 @@
                   </td>
                 </tr>
               </table>
-              <div style="width:176px;background:#fff;position:absolute;right:0px;height:800px;z-index:80" id="sideRight">
+              <div style="width:176px;background:#fff;position:absolute;right:0px;z-index:80" id="sideRight">
                 <table id="listArea" class="table table-striped table-bordered table-hover">
                   <thead>
                   <tr>
@@ -80,8 +80,8 @@
     function windowShow() {
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
-        $('#container').css({"width":(width-238)+"px","height":(height-134)+"px","min-height":(height-134)+"px"});
-        $('#sideRight').css({"height":(height-134)+"px","min-height":(height-134)+"px"});
+        $('#container').css({"width":(width-238)+"px","height":(height-132)+"px","min-height":(height-132)+"px"});
+        $('#sideRight').css({"height":(height-132)+"px","min-height":(height-132)+"px"});
     }
     var scripts = [null, null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
@@ -92,41 +92,24 @@
     $(window).resize(function () {
         windowShow();
     }).resize();
-    var map = new BMap.Map("container");          // 创建地图实例
-    var point = new BMap.Point(106.703243,26.570824);
-    map.centerAndZoom(point,15);             // 初始化地图，设置中心点坐标和地图级别
-    map.setCurrentCity("贵阳市");		//设置当前显示城市
-    map.enableScrollWheelZoom(); // 允许滚轮缩放
-    var points = [//todo 圆形中心的颜色越深说明噪音越大
-      {"lng": "106.717184", "lat": "26.571257", "count": "80"},/*尚义小学*/
-      //{"lng": "106.688367", "lat": "26.568522", "count": "60"},
-      //{"lng": "106.690959", "lat": "26.567427", "count": "60"},
-      //{"lng": "106.690371", "lat": "26.566345", "count": "60"},
-      {"lng": "106.68768", "lat": "26.567528", "count": "60"}/*兰花广场*/
-    ];//这里面添加经纬度
 
-    if(!isSupportCanvas()){
+    //todo 圆形中心的颜色越深说明噪音越大
+    function initMap(lng,lat,data){
+      var map = new BMap.Map("container");          // 创建地图实例
+      var point = new BMap.Point(lng,lat);
+      map.centerAndZoom(point,15);             // 初始化地图，设置中心点坐标和地图级别
+      map.setCurrentCity("贵阳市");		//设置当前显示城市
+      map.enableScrollWheelZoom(); // 允许滚轮缩放
+      if(!isSupportCanvas()){
         alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+      }
+      heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
+      map.addOverlay(heatmapOverlay);
+      heatmapOverlay.setDataSet({data:data,max:90});/*最大值,可以调整,值越小显示的颜色越多，显示的圆圈就越多，它跟 count 的值有关 */
     }
 
-    //详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
-    //参数说明如下:
-    /* visible 热力图是否显示,默认为true
-     * opacity 热力的透明度,1-100
-     * radius 势力图的每个点的半径大小
-     * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
-     *
-    {
-            .2:'rgb(0, 255, 255)',
-            .5:'rgb(0, 110, 255)',
-            .8:'rgb(100, 0, 255)'
-        }
-    其中 key 表示插值的位置, 0~1.
-            value 为颜色值.
-     */
-    heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
-    map.addOverlay(heatmapOverlay);
-    heatmapOverlay.setDataSet({data:points,max:90});/*最大值,可以调整,值越小显示的颜色越多，显示的圆圈就越多，它跟 count 的值有关 */
+    initMap(106.703243,26.570824,[]);
+
     //closeHeatmap();
     //判断浏览区是否支持canvas
     function isSupportCanvas(){
@@ -135,12 +118,6 @@
     }
 
     function setGradient(){
-        /*格式如下所示:
-            {
-                0:'rgb(102, 255, 0)',
-                .5:'rgb(255, 170, 0)',
-                1:'rgb(255, 0, 0)'
-       }*/
         var gradient = {};
         var colors = document.querySelectorAll("input[type='color']");
         colors = [].slice.call(colors, 0);
@@ -193,6 +170,7 @@
           var html = '';
           if(AppKey.code.code200 == data.code){
             data = data.data;
+            initMap(106.703243,26.570824,data);
             for(var i=0;i<data.length;i++){
               var obj = data[i];
               html += '<tr>';
