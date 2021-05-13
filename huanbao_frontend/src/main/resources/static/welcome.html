@@ -399,8 +399,10 @@
               html += '</tr>';
             }
           }else if(AppKey.code.code201 == data.code){
+            initMap(106.703243,26.570824,[]);
             html += this.tableRow('没有查到数据');
           }else{
+            initMap(106.703243,26.570824,[]);
             html += this.tableRow(data.msg);
           }
           this.renderMap(html);
