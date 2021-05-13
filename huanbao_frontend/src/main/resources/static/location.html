@@ -462,6 +462,10 @@
                     layerFn.addOrEdit('选择区域位置','#proxyAreaLayer',['500px','500px'],function(indexLayero,layero){
                         var nodes = tree_obj.getCheckedNodes(true);
                         var length = nodes.length;
+                        if(length == 0){
+                          layerFn.alert('选择区域位置有误', AppKey.code.code199);
+                          return;
+                        }
                         if(length != 3){
                             var indexLevel0Total = 0;
                             var indexLevel1Total = 0;
