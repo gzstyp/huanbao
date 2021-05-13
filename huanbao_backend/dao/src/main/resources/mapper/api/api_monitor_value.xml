@@ -237,6 +237,6 @@
   <!-- 查询是否标识是否存在,不存在拒绝接入 -->
   <select id="getLocationId" resultType="String" parameterType="String">
     select ln.kid from device_noise dne,location ln
-    where dne.kid = ln.device_id and dne.device_flag = #{deviceFlag}
+    where dne.kid = ln.device_id and dne.device_flag = #{deviceFlag} LIMIT 1
   </select>
 </mapper>
