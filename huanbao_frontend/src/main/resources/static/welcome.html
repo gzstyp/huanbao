@@ -5,10 +5,6 @@
         width:1366px;
         margin-left:-4px;
     }
-    .tableArea{
-      width:40px;
-      text-align:center;
-    }
 </style>
 <div class="row">
     <div class="col-xs-12">
@@ -173,6 +169,8 @@
         heatmapOverlay.hide();
     }
     var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
+    var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
+    var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
 
     var ztreeReqFlag = true;
     var domTree = 'proxyAreaTree';
@@ -198,7 +196,7 @@
       },
       async : {
         enable : true,
-        url : urlPrefix + '/location/getAreaTree',
+        url : urlGetAreaTree,
         cache : false,
         type: "GET",
         autoParam : ["kid"],
@@ -250,20 +248,31 @@
           thisPage.initTree();//若再次调用便是刷新树
         },
         initDom : function(){
-          thisPage.getListMap();
+          thisPage.getListMap({});
         },
         initTree : function(){
           tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
         },
         addEvent : function(){
           $('#btnSearch').on('click',function(){
-            thisPage.getListMap();
+            var params = {
+              siteIds : $('#site_id').val(),
+              countyIds : $('#county_id').val(),
+            };
+            thisPage.getListMap(params);
           });
           $('#btn6065').on('click',function(){
-            thisPage.getListMap();
+            var params = {//大于等于min到小于max
+              min : 60,
+              max : 65,
+            };
+            thisPage.getListMap(params);
           });
           $('#btn65').on('click',function(){
-            thisPage.getListMap();
+            var params = {
+              min : 65
+            };
+            thisPage.getListMap(params);
           });
           $('#areaSearch').on('click',function(){
             var value = winFn.getDomValue('#siteName');
@@ -281,26 +290,38 @@
           tree_obj.cancelSelectedNode();
           tree_obj.checkAllNodes(false);//仅对 chkStyle = "checkbox"有效
         },
-        getListMap : function(){
-          var params = {
-            site_id : $('#site_id').val(),
-          }
+        getListMap : function(params){
           this.renderMap(this.tableRow('正在查询……'));
-          layerFn.ajaxGetResult('/monitorValue/getListMap',params,function(data){
+          layerFn.ajaxGetResult(urlGetListMap,params,function(data){
             thisPage.renderTableHtml(data);
           });
         },
         addBindArea : function(){
-          layerFn.winDom('选择地点位置','#div_bind_area',['550px','450px'],function(index,layero){
-            var siteKid = $("input[name='siteKid']:checked").val();
-            var alt = $("input[name='siteKid']:checked").attr('alt');
-            if(siteKid != null && siteKid.length > 0){
-              $('#site_label').val(alt);
-              $('#site_id').val(siteKid);
-              layerFn.closeIndex(index);
-            }else{
-              layerFn.alert('请选择地点位置', AppKey.code.code199);
+          layerFn.addOrEdit('选择地点位置','#div_bind_area',['550px','450px'],function(indexLayero,layero){
+            var values = '';
+            var names = '';
+            $("input[name='siteKid']:checked").each(function(){
+              var v = $(this).val();
+              var name = $(this).attr('alt');
+              if(values.length > 0){
+                values = values + ',' + v;
+                names = names + ',' + name;
+              }else{
+                values = v;
+                names = name;
+              }
+            });
+            if(values != null){
+              $('#site_id').val(values);
+              $('#site_label').val(names);
+              layerFn.closeIndex(indexLayero);
             }
+          },'<span style="color:#f84009;">重置</span>',function(){
+            $('#site_id').val('');
+            $('#site_label').val('');
+            $("input[name='siteKid']:checked").each(function(){
+              var v = $(this).attr("checked",false);
+            });
           });
           thisPage.getListSite();
         },
@@ -354,7 +375,7 @@
             for(var i=0;i<data.length;i++){
               var obj = data[i];
               html += '<tr>';
-              html += '<td class="tableArea"><input type="radio" alt="'+obj.name+'" name="siteKid" value="'+obj.kid+'"/></td>';
+              html += '<td style="width:46px;text-align:center;"><label><input name="siteKid" value="'+obj.kid+'" alt="'+obj.name+'" type="checkbox" class="ace"/><span class="lbl"></span></label></td>';
               html += '<td>'+obj.name+'</td>';
               html += '</tr>';
             }

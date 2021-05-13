@@ -256,7 +256,7 @@
     <include refid="sql_where_listData"/>
     LIMIT 1
   </select>
-  <!-- 首页右边的列表 -->
+  <!-- 首页右边的列表,大于等于min到小于max -->
   <select id="getListTable" resultType="HashMap" parameterType="HashMap">
     select se.name siteName,avg(mv.volume) count,se.lng,se.lat from (
     select mv.location_id,max(mv.create_time) max from monitor_value mv group by mv.location_id) lt
@@ -265,17 +265,27 @@
     left join site se on se.kid = ln.site_id
     <where>
       <trim prefix="AND" prefixOverrides="AND">
-        <if test="siteId != null">
-          se.kid = #{siteId}
+        <if test="siteIds != null">
+          and se.kid in
+          <foreach item="item" collection="siteIds" open="(" separator="," close=")">
+            #{item}
+          </foreach>
         </if>
-        <if test="countyId != null">
+        <if test="countyIds != null">
           and ln.county_id in
-          <foreach item="item" collection="ids" open="(" separator="," close=")">
+          <foreach item="item" collection="countyIds" open="(" separator="," close=")">
             #{item}
           </foreach>
         </if>
       </trim>
     </where>
-    group by se.name,se.lng,se.lat limit 30
+    group by se.name,se.lng,se.lat
+    <if test="min != null and max != null">
+      <![CDATA[ having avg(mv.volume) >= #{min} and avg(mv.volume) < #{max} ]]>
+    </if>
+    <if test="min != null and max == null">
+      <![CDATA[ having avg(mv.volume) >= #{min}]]>
+    </if>
+    limit 20
   </select>
 </mapper>

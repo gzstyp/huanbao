@@ -115,6 +115,20 @@ public class MonitorValueService{
     }
 
     public String getListMap(final PageFormData formData){
+        final String siteIds = formData.getString("siteIds");
+        final String countyIds = formData.getString("countyIds");
+        if(siteIds != null){
+            final ArrayList<String> isds = ToolString.keysToList(siteIds);
+            if(isds != null && isds.size() > 0){
+                formData.put("siteIds",isds);
+            }
+        }
+        if(countyIds != null){
+            final ArrayList<String> isds = ToolString.keysToList(countyIds);
+            if(isds != null && isds.size() > 0){
+                formData.put("countyIds",isds);
+            }
+        }
         return ToolClient.queryJson(monitorvalueDao.getListTable(formData));
     }
 }
