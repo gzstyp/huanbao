@@ -113,4 +113,8 @@ public class MonitorValueService{
             return ToolClient.dataTableException(formData.get("sEcho"));
         }
     }
+
+    public String getListMap(final PageFormData formData){
+        return ToolClient.queryJson(monitorvalueDao.getListTable(formData));
+    }
 }

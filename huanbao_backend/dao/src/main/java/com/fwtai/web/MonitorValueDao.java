@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 监测点数据访问数据库
@@ -49,5 +50,9 @@ public class MonitorValueDao{
 
     public HashMap<String,Object> listData(final PageFormData pageFormData){
         return dao.queryForPage(pageFormData,"monitor_value.listData","monitor_value.listTotal");
+    }
+
+    public List<HashMap<String,Object>> getListTable(final PageFormData formData){
+        return dao.queryForListHashMap("monitor_value.getListTable",formData);
     }
 }

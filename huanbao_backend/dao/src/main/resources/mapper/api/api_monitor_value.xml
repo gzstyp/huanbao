@@ -5,16 +5,12 @@
     create_time,
     data_time,
     device_flag,
-    gradient,
     humidity,
     kid,
     location_id,
-    opacity,
     quality10,
     quality25,
-    radius,
     temperature,
-    visible,
     volume
   </sql>
   <!-- 添加数据 -->
@@ -23,32 +19,24 @@
     <trim suffixOverrides=",">
       <if test="data_time != null">data_time,</if>
       <if test="device_flag != null">device_flag,</if>
-      <if test="gradient != null">gradient,</if>
       <if test="humidity != null">humidity,</if>
       <if test="kid != null">kid,</if>
       <if test="location_id != null">location_id,</if>
-      <if test="opacity != null">opacity,</if>
       <if test="quality10 != null">quality10,</if>
       <if test="quality25 != null">quality25,</if>
-      <if test="radius != null">radius,</if>
       <if test="temperature != null">temperature,</if>
-      <if test="visible != null">visible,</if>
       <if test="volume != null">volume</if>
     </trim>
     ) VALUES (
     <trim suffixOverrides=",">
       <if test="data_time != null">STR_TO_DATE(#{data_time},'%Y-%m-%d %H:%i:%s'),</if>
       <if test="device_flag != null">#{device_flag},</if>
-      <if test="gradient != null">#{gradient},</if>
       <if test="humidity != null">#{humidity},</if>
       <if test="kid != null">#{kid},</if>
       <if test="location_id != null">#{location_id},</if>
-      <if test="opacity != null">#{opacity},</if>
       <if test="quality10 != null">#{quality10},</if>
       <if test="quality25 != null">#{quality25},</if>
-      <if test="radius != null">#{radius},</if>
       <if test="temperature != null">#{temperature},</if>
-      <if test="visible != null">#{visible},</if>
       <if test="volume != null">#{volume}</if>
     </trim>
     )
@@ -62,32 +50,24 @@
     <trim suffixOverrides=",">
       <if test="data_time != null">data_time,</if>
       <if test="device_flag != null">device_flag,</if>
-      <if test="gradient != null">gradient,</if>
       <if test="humidity != null">humidity,</if>
       <if test="kid != null">kid,</if>
       <if test="location_id != null">location_id,</if>
-      <if test="opacity != null">opacity,</if>
       <if test="quality10 != null">quality10,</if>
       <if test="quality25 != null">quality25,</if>
-      <if test="radius != null">radius,</if>
       <if test="temperature != null">temperature,</if>
-      <if test="visible != null">visible,</if>
       <if test="volume != null">volume</if>
     </trim>
     ) VALUES (
     <trim suffixOverrides=",">
       <if test="data_time != null">#{data_time},</if>
       <if test="device_flag != null">#{device_flag},</if>
-      <if test="gradient != null">#{gradient},</if>
       <if test="humidity != null">#{humidity},</if>
       <if test="kid != null">#{kid},</if>
       <if test="location_id != null">#{location_id},</if>
-      <if test="opacity != null">#{opacity},</if>
       <if test="quality10 != null">#{quality10},</if>
       <if test="quality25 != null">#{quality25},</if>
-      <if test="radius != null">#{radius},</if>
       <if test="temperature != null">#{temperature},</if>
-      <if test="visible != null">#{visible},</if>
       <if test="volume != null">#{volume}</if>
     </trim>
     )
@@ -95,15 +75,11 @@
     <trim suffixOverrides=",">
       <if test="data_time != null">data_time = #{data_time},</if>
       <if test="device_flag != null">device_flag = #{device_flag},</if>
-      <if test="gradient != null">gradient = #{gradient},</if>
       <if test="humidity != null">humidity = #{humidity},</if>
       <if test="location_id != null">location_id = #{location_id},</if>
-      <if test="opacity != null">opacity = #{opacity},</if>
       <if test="quality10 != null">quality10 = #{quality10},</if>
       <if test="quality25 != null">quality25 = #{quality25},</if>
-      <if test="radius != null">radius = #{radius},</if>
       <if test="temperature != null">temperature = #{temperature},</if>
-      <if test="visible != null">visible = #{visible},</if>
       <if test="volume != null">volume = #{volume}</if>
     </trim>
   </update>
@@ -115,16 +91,12 @@
         <if test="index==0">
           <if test="item.data_time != null">data_time,</if>
           <if test="item.device_flag != null">device_flag,</if>
-          <if test="item.gradient != null">gradient,</if>
           <if test="item.humidity != null">humidity,</if>
           <if test="item.kid != null">kid,</if>
           <if test="item.location_id != null">location_id,</if>
-          <if test="item.opacity != null">opacity,</if>
           <if test="item.quality10 != null">quality10,</if>
           <if test="item.quality25 != null">quality25,</if>
-          <if test="item.radius != null">radius,</if>
           <if test="item.temperature != null">temperature,</if>
-          <if test="item.visible != null">visible,</if>
           <if test="item.volume != null">volume</if>
         </if>
       </trim>
@@ -135,16 +107,12 @@
       <trim suffixOverrides=",">
         <if test="item.data_time != null">#{item.data_time},</if>
         <if test="item.device_flag != null">#{item.device_flag},</if>
-        <if test="item.gradient != null">#{item.gradient},</if>
         <if test="item.humidity != null">#{item.humidity},</if>
         <if test="item.kid != null">#{item.kid},</if>
         <if test="item.location_id != null">#{item.location_id},</if>
-        <if test="item.opacity != null">#{item.opacity},</if>
         <if test="item.quality10 != null">#{item.quality10},</if>
         <if test="item.quality25 != null">#{item.quality25},</if>
-        <if test="item.radius != null">#{item.radius},</if>
         <if test="item.temperature != null">#{item.temperature},</if>
-        <if test="item.visible != null">#{item.visible},</if>
         <if test="item.volume != null">#{item.volume}</if>
       </trim>
       )
@@ -155,16 +123,12 @@
         <if test="index==0">
           <if test="item.data_time != null">data_time = values(data_time),</if>
           <if test="item.device_flag != null">device_flag = values(device_flag),</if>
-          <if test="item.gradient != null">gradient = values(gradient),</if>
           <if test="item.humidity != null">humidity = values(humidity),</if>
           <if test="item.kid != null">kid = values(kid),</if>
           <if test="item.location_id != null">location_id = values(location_id),</if>
-          <if test="item.opacity != null">opacity = values(opacity),</if>
           <if test="item.quality10 != null">quality10 = values(quality10),</if>
           <if test="item.quality25 != null">quality25 = values(quality25),</if>
-          <if test="item.radius != null">radius = values(radius),</if>
           <if test="item.temperature != null">temperature = values(temperature),</if>
-          <if test="item.visible != null">visible = values(visible),</if>
           <if test="item.volume != null">volume = values(volume)</if>
         </if>
       </trim>
@@ -178,16 +142,12 @@
         <if test="index==0">
           <if test="item.data_time != null">data_time,</if>
           <if test="item.device_flag != null">device_flag,</if>
-          <if test="item.gradient != null">gradient,</if>
           <if test="item.humidity != null">humidity,</if>
           <if test="item.kid != null">kid,</if>
           <if test="item.location_id != null">location_id,</if>
-          <if test="item.opacity != null">opacity,</if>
           <if test="item.quality10 != null">quality10,</if>
           <if test="item.quality25 != null">quality25,</if>
-          <if test="item.radius != null">radius,</if>
           <if test="item.temperature != null">temperature,</if>
-          <if test="item.visible != null">visible,</if>
           <if test="item.volume != null">volume</if>
         </if>
       </trim>
@@ -198,16 +158,12 @@
       <trim suffixOverrides=",">
         <if test="item.data_time != null">#{item.data_time},</if>
         <if test="item.device_flag != null">#{item.device_flag},</if>
-        <if test="item.gradient != null">#{item.gradient},</if>
         <if test="item.humidity != null">#{item.humidity},</if>
         <if test="item.kid != null">#{item.kid},</if>
         <if test="item.location_id != null">#{item.location_id},</if>
-        <if test="item.opacity != null">#{item.opacity},</if>
         <if test="item.quality10 != null">#{item.quality10},</if>
         <if test="item.quality25 != null">#{item.quality25},</if>
-        <if test="item.radius != null">#{item.radius},</if>
         <if test="item.temperature != null">#{item.temperature},</if>
-        <if test="item.visible != null">#{item.visible},</if>
         <if test="item.volume != null">#{item.volume}</if>
       </trim>
       )

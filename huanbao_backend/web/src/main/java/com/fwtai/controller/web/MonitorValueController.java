@@ -70,6 +70,11 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.listData(new PageFormData(request)),response);
     }
 
+    @GetMapping("/getListMap")
+    public void getListMap(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getListMap(new PageFormData(request)),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);

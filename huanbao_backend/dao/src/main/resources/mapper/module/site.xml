@@ -1,199 +1,181 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="site">
-
-    <sql id="sql_column">
-        kid,
-        pid,
-        name,
-        sort
-    </sql>
-
-    <!-- 添加数据 -->
-    <update id="add" parameterType="HashMap">
-        INSERT INTO SITE (
-        <trim suffixOverrides=",">
-            <if test="kid != null">kid,</if>
-            <if test="pid != null">pid,</if>
-            <if test="name != null">name,</if>
-            <if test="sort != null">sort</if>
-        </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-			<if test="kid != null">#{kid},</if>
-			<if test="pid != null">#{pid},</if>
-			<if test="name != null">#{name},</if>
-			<if test="sort != null">#{sort}</if>
-        </trim>
-        )
-    </update>
-
-    <select id="queryExistById" resultType="String" parameterType="String">
-        SELECT kid FROM SITE WHERE kid = #{kid} LIMIT 1
-    </select>
-
-    <!-- 基于主键kid的存在就更新,否则新增操作 -->
-    <update id="updateOrEdit" parameterType="HashMap">
-        INSERT INTO SITE (
-        <trim suffixOverrides=",">
-            <if test="kid != null">kid,</if>
-            <if test="pid != null">pid,</if>
-            <if test="name != null">name,</if>
-            <if test="sort != null">sort</if>
-        </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            <if test="kid != null">#{kid},</if>
-            <if test="pid != null">#{pid},</if>
-            <if test="name != null">#{name},</if>
-            <if test="sort != null">#{sort}</if>
-        </trim>
-        )
-        ON DUPLICATE KEY UPDATE
-        <trim suffixOverrides=",">
-            <if test="pid != null">pid = #{pid},</if>
-            <if test="name != null">name = #{name},</if>
-            <if test="sort != null">sort = #{sort}</if>
-        </trim>
-    </update>
-
-    <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
-    <update id="updateEditBatch" parameterType="ArrayList">
-        INSERT IGNORE INTO SITE (
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                    <if test="item.kid != null">kid,</if>
-                    <if test="item.pid != null">pid,</if>
-                    <if test="item.name != null">name,</if>
-                    <if test="item.sort != null">sort,</if>
-                    <if test="item.create_time != null">create_time</if>
-                </if>
-            </trim>
-        </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.pid != null">#{item.pid},</if>
-                <if test="item.name != null">#{item.name},</if>
-                <if test="item.sort != null">#{item.sort},</if>
-                <if test="item.create_time != null">#{item.create_time}</if>
-            </trim>
-            )
-        </foreach>
-        ON DUPLICATE KEY UPDATE
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                <if test="item.kid != null">kid = values(kid),</if>
-                <if test="item.pid != null">pid = values(pid),</if>
-                <if test="item.name != null">name = values(name),</if>
-                <if test="item.sort != null">sort = values(sort),</if>
-                <if test="item.create_time != null">create_time = values(create_time)</if>
-                </if>
-            </trim>
-        </foreach>
-    </update>
-
-    <!-- 批量添加|插入-->
-    <update id="addBatch" parameterType="ArrayList">
-        INSERT INTO SITE (
-            <foreach collection="list" item="item" index="index">
-                <trim suffixOverrides=",">
-                    <if test="index==0">
-                        <if test="item.kid != null">kid,</if>
-                        <if test="item.pid != null">pid,</if>
-                        <if test="item.name != null">name,</if>
-                        <if test="item.sort != null">sort,</if>
-                        <if test="item.create_time != null">create_time</if>
-                    </if>
-                </trim>
-            </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.pid != null">#{item.pid},</if>
-                <if test="item.name != null">#{item.name},</if>
-                <if test="item.sort != null">#{item.sort},</if>
-                <if test="item.create_time != null">#{item.create_time}</if>
-            </trim>
-            )
-        </foreach>
-    </update>
-
-	<!-- 编辑数据 -->
-	<update id="edit" parameterType="HashMap">
-		UPDATE SITE
-		<trim prefix="SET" suffixOverrides=",">
-            <if test="pid != null">pid = #{pid},</if>
-            <if test="name != null">name = #{name},</if>
-            <if test="sort != null">sort = #{sort}</if>
-		</trim>
-		WHERE kid = #{kid} LIMIT 1
-	</update>
-
-    <!-- 根据id查询对应的数据 -->
-    <select id="queryById" parameterType="String" resultType="HashMap">
-        SELECT
-            pid,
-            name,
-            sort,
-            DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time
-        FROM SITE WHERE kid = #{kid} LIMIT 1
-    </select>
-
-	<!-- 行删除 -->
-	<delete id="delById" parameterType="String">
-		DELETE FROM SITE WHERE kid = #{kid} LIMIT 1
-	</delete>
-
-	<!-- 删除|批量删除,物理删除-->
-	<delete id="delByKeys" parameterType="ArrayList">
-		DELETE FROM SITE WHERE
-			kid IN
-		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-            #{item}
-		</foreach>
-	</delete>
-
-	<!-- listData条件查询 -->
-	<sql id="sql_where_listData">
-		<trim prefix="WHERE" prefixOverrides="AND">
+  <sql id="sql_column">
+    create_time,
+    kid,
+    lat,
+    lng,
+    name
+  </sql>
+  <!-- 添加数据 -->
+  <update id="add" parameterType="HashMap">
+    INSERT INTO SITE (
+    <trim suffixOverrides=",">
+      <if test="kid != null">kid,</if>
+      <if test="lat != null">lat,</if>
+      <if test="lng != null">lng,</if>
+      <if test="name != null">name</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="kid != null">#{kid},</if>
+      <if test="lat != null">#{lat},</if>
+      <if test="lng != null">#{lng},</if>
+      <if test="name != null">#{name}</if>
+    </trim>
+    )
+  </update>
+  <!-- 编辑数据 -->
+  <update id="edit" parameterType="HashMap">
+    UPDATE SITE
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="lat != null">lat = #{lat},</if>
+      <if test="lng != null">lng = #{lng},</if>
+      <if test="name != null">name = #{name}</if>
+    </trim>
+    WHERE kid = #{kid} LIMIT 1
+  </update>
+  <select id="queryExistById" resultType="String" parameterType="String">
+    SELECT kid FROM SITE WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 基于主键kid的存在就更新,否则新增操作 -->
+  <update id="updateOrEdit" parameterType="HashMap">
+    INSERT INTO SITE (
+    <trim suffixOverrides=",">
+      <if test="kid != null">kid,</if>
+      <if test="lat != null">lat,</if>
+      <if test="lng != null">lng,</if>
+      <if test="name != null">name</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="kid != null">#{kid},</if>
+      <if test="lat != null">#{lat},</if>
+      <if test="lng != null">#{lng},</if>
+      <if test="name != null">#{name}</if>
+    </trim>
+    )
+    ON DUPLICATE KEY UPDATE
+    <trim suffixOverrides=",">
+      <if test="lat != null">lat = #{lat},</if>
+      <if test="lng != null">lng = #{lng},</if>
+      <if test="name != null">name = #{name}</if>
+    </trim>
+  </update>
+  <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
+  <update id="updateEditBatch" parameterType="ArrayList">
+    INSERT IGNORE INTO SITE (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid,</if>
+          <if test="item.lat != null">lat,</if>
+          <if test="item.lng != null">lng,</if>
+          <if test="item.name != null">name</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.lat != null">#{item.lat},</if>
+        <if test="item.lng != null">#{item.lng},</if>
+        <if test="item.name != null">#{item.name}</if>
+      </trim>
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid = values(kid),</if>
+          <if test="item.lat != null">lat = values(lat),</if>
+          <if test="item.lng != null">lng = values(lng),</if>
+          <if test="item.name != null">name = values(name)</if>
+        </if>
+      </trim>
+    </foreach>
+  </update>
+  <!-- 批量添加|插入-->
+  <update id="addBatch" parameterType="ArrayList">
+    INSERT INTO SITE (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid,</if>
+          <if test="item.lat != null">lat,</if>
+          <if test="item.lng != null">lng,</if>
+          <if test="item.name != null">name</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.lat != null">#{item.lat},</if>
+        <if test="item.lng != null">#{item.lng},</if>
+        <if test="item.name != null">#{item.name}</if>
+      </trim>
+      )
+    </foreach>
+  </update>
+  <!-- 根据id查询对应的数据 -->
+  <select id="queryById" parameterType="String" resultType="HashMap">
+    SELECT
+      lat,
+      lng,
+      name
+    FROM SITE WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 行删除 -->
+  <delete id="delById" parameterType="String">
+    DELETE FROM SITE WHERE kid = #{kid} LIMIT 1
+  </delete>
+  <!-- 删除|批量删除,物理删除-->
+  <delete id="delByKeys" parameterType="ArrayList">
+    DELETE FROM SITE WHERE kid IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <!-- listData条件查询 -->
+  <sql id="sql_where_listData">
+    <trim prefix="WHERE" prefixOverrides="AND">
       <if test="name != null">
-          AND name LIKE CONCAT('%',#{name},'%')
+        AND name LIKE CONCAT('%',#{name},'%')
       </if>
-		</trim>
-	</sql>
-
-	<!-- 列表数据 -->
-	<select id="listData" parameterType="HashMap" resultType="HashMap">
-		SELECT
+    </trim>
+  </sql>
+  <!-- 列表数据 -->
+  <select id="listData" parameterType="HashMap" resultType="HashMap">
+    SELECT
       kid,
-			name,
-			sort,
+      name,
+      lng,
+      lat,
       DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time
-		FROM SITE
-		<include refid="sql_where_listData"/>
-		<choose>
-    	<when test="order != null and column != null">
-    		ORDER BY ${column} ${order}
-    	</when>
-    	<otherwise>
-        </otherwise>
-        </choose>
-        <if test="section != null and pageSize != null">
-        	LIMIT #{section},#{pageSize}
-		</if>
-	</select>
-
-	<!-- 总条数总记录数 -->
-	<select id="listTotal" parameterType="HashMap" resultType="Integer">
-		SELECT COUNT(1) TOTAL FROM SITE
-		<include refid="sql_where_listData"/>
-        LIMIT 1
-	</select>
+    FROM SITE
+    <include refid="sql_where_listData"/>
+    <choose>
+      <when test="order != null and column != null">
+        ORDER BY ${column} ${order}
+      </when>
+      <otherwise>
+      </otherwise>
+    </choose>
+    <if test="section != null and pageSize != null">
+      LIMIT #{section},#{pageSize}
+    </if>
+  </select>
+  <!-- 总条数总记录数 -->
+  <select id="listTotal" parameterType="HashMap" resultType="Integer">
+    SELECT COUNT(1) TOTAL FROM SITE
+    <include refid="sql_where_listData"/>
+    LIMIT 1
+  </select>
 </mapper>

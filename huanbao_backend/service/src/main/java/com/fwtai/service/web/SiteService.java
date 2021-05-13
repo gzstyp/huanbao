@@ -2,18 +2,17 @@ package com.fwtai.service.web;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.config.ConfigFile;
-import com.fwtai.web.SiteDao;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolString;
+import com.fwtai.web.SiteDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  * @作者 田应平
  * @版本 v1.0
  * @QQ号码 444141300
- * @创建日期 2021-05-10 14:37:15
+ * @创建日期 2021-05-13 13:13:55
  * @官网 <url>http://www.yinlz.com</url>
 */
 @Service
@@ -34,12 +33,20 @@ public class SiteService{
 
     public String add(final HttpServletRequest request){
         final PageFormData formData = new PageFormData(request);
+        final String p_lat = "lat";
+        final String p_lng = "lng";
         final String p_name = "name";
-        final String p_sort = "sort";
-        final String validate = ToolClient.validateField(formData,p_name,p_sort);
+        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name);
         if(validate != null)return validate;
-        final String fieldInteger = ToolClient.validateInteger(formData,p_sort);
-        if(fieldInteger != null)return fieldInteger;
+        if(formData.getString("lat").length() > 20){
+            return ToolClient.createJsonFail("纬度内容字数太长");
+        }
+        if(formData.getString("lng").length() > 20){
+            return ToolClient.createJsonFail("经度内容字数太长");
+        }
+        if(formData.getString("name").length() > 128){
+            return ToolClient.createJsonFail("位置地点名称字数太长");
+        }
         formData.put("kid",ToolString.getIdsChar32());
         return ToolClient.executeRows(siteDao.add(formData));
     }
@@ -47,12 +54,20 @@ public class SiteService{
     public String edit(final HttpServletRequest request){
         final PageFormData formData = new PageFormData(request);
         final String p_kid = "kid";
+        final String p_lat = "lat";
+        final String p_lng = "lng";
         final String p_name = "name";
-        final String p_sort = "sort";
-        final String validate = ToolClient.validateField(formData,p_name,p_sort,p_kid);
+        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name,p_kid);
         if(validate != null)return validate;
-        final String fieldInteger = ToolClient.validateInteger(formData,p_sort);
-        if(fieldInteger != null)return fieldInteger;
+        if(formData.getString("lat").length() > 20){
+            return ToolClient.createJsonFail("纬度字数太长");
+        }
+        if(formData.getString("lng").length() > 20){
+            return ToolClient.createJsonFail("经度字数太长");
+        }
+        if(formData.getString("name").length() > 128){
+            return ToolClient.createJsonFail("位置地点名称字数太长");
+        }
         final String exist_key = siteDao.queryExistById(formData.getString(p_kid));
         if(exist_key == null){
             return ToolClient.createJson(ConfigFile.code199,"数据已不存在,刷新重试");
