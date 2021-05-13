@@ -57,7 +57,7 @@
                 </tr>
               </table>
               <div style="width:176px;background:#fff;position:absolute;right:0px;z-index:80" id="sideRight">
-                <table id="listArea" class="table table-striped table-bordered table-hover">
+                <table id="rightTable" class="table table-striped table-bordered table-hover">
                   <thead>
                   <tr>
                     <td>位置地点名称</td>
@@ -189,7 +189,7 @@
           return '<td colspan="2" style="height:37px;text-align:center;">'+msg+'</td>';
         },
         renderMap : function(html){
-          $('#listArea tbody').empty().html(html);
+          $('#rightTable tbody').empty().html(html);
         },
         infoTips : function(siteName,value){
           var html = "名称:"+siteName+"<br/>噪音值:"+value;
