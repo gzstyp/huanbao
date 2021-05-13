@@ -188,19 +188,32 @@
       </if>
     </trim>
   </sql>
+  <select id="queryById" parameterType="String" resultType="HashMap">
+    SELECT
+      DATE_FORMAT(data_time,'%Y-%m-%d %H:%i:%s') data_time,
+      DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time,
+      device_flag,
+      humidity,
+      location_id,
+      quality10,
+      quality25,
+      temperature,
+      volume
+    FROM MONITOR_VALUE WHERE kid = #{kid} LIMIT 1
+  </select>
   <!-- 列表数据 -->
   <select id="listData" parameterType="HashMap" resultType="HashMap">
     SELECT
       kid,
       location_id,
       device_flag,
-      data_time,
       volume,
       temperature,
       quality25,
       quality10,
       humidity,
-      DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') data_time
+      DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time,
+      DATE_FORMAT(data_time,'%Y-%m-%d %H:%i:%s') data_time
     FROM MONITOR_VALUE
     <include refid="sql_where_listData"/>
     <choose>

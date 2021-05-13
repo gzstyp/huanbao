@@ -188,7 +188,7 @@
   <select id="queryById" parameterType="String" resultType="HashMap">
     SELECT
       DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time,
-      data_time,
+      DATE_FORMAT(data_time,'%Y-%m-%d %H:%i:%s') data_time,
       device_flag,
       humidity,
       location_id,
@@ -230,7 +230,6 @@
       mv.quality25,
       mv.quality10,
       mv.humidity,
-      DATE_FORMAT(mv.data_time,'%Y-%m-%d %H:%i:%s') data_time,
       DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i:%s') create_time
     FROM MONITOR_VALUE mv
     left join location ln on ln.kid = mv.location_id

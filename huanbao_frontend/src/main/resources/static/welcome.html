@@ -10,54 +10,52 @@
     <div class="col-xs-12">
         <div class="row">
             <div class="col-xs-12">
-              <div class="clearfix">
-                <table class="no-border" style="display:inline">
-                  <tr>
-                    <td style="padding: 0px 6px;">
-                      区域
-                    </td>
-                    <td>
-                      <div class="input-group">
-                        <input type="text" id="key_name" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
-                      </div>
-                    </td>
-                    <td class="hidden-480" style="padding: 0px 6px;">
-                      位置地点
-                    </td>
-                    <td>
-                      <div class="input-group">
-                        <input type="text" id="key_county_id" class="form-control search-query hidden-480" placeholder="选择位置地点名称" style="width:140px"/>
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-inverse btn-white" id="btnSearch">
-                              <span class="ace-icon fa fa-search bigger-110"></span>
-                              查询
+              <table class="no-border" style="display:inline;margin-top:10px;">
+                <tr>
+                  <td style="padding: 0px 6px;">
+                    区域
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <input type="text" id="key_name" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
+                    </div>
+                  </td>
+                  <td class="hidden-480" style="padding: 0px 6px;">
+                    位置地点
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <input type="text" id="key_county_id" class="form-control search-query hidden-480" placeholder="选择位置地点名称" style="width:140px"/>
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btnSearch">
+                            <span class="ace-icon fa fa-search bigger-110"></span>
+                            查询
+                        </button>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btn6065">
+                          <span class="ace-icon fa fa-battery-half bigger-110"></span>
+                          超标
+                        </button>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btn65">
+                          <span class="ace-icon fa fa-battery-3 bigger-110"></span>
+                          严重超标
                           </button>
                         </span>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="input-group">
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-inverse btn-white" id="btn6065">
-                            <span class="ace-icon fa fa-battery-half bigger-110"></span>
-                            超标
-                          </button>
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="input-group">
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-inverse btn-white" id="btn65">
-                            <span class="ace-icon fa fa-battery-3 bigger-110"></span>
-                            严重超标
-                            </button>
-                          </span>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
               <div style="width:176px;background:#fff;position:absolute;right:0px;height:800px;z-index:80" id="sideRight">
                 <table id="listArea" class="table table-striped table-bordered table-hover">
                   <thead>
