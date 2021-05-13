@@ -70,14 +70,6 @@
                   <tr>
                     <td colspan="2" style="height:37px;text-align:center;">正在加载……</td>
                   </tr>
-                  <tr>
-                    <td>尚义小学</td>
-                    <td>45</td>
-                  </tr>
-                  <tr>
-                    <td>兰花广场</td>
-                    <td>55</td>
-                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -169,4 +161,65 @@
     function closeHeatmap(){
         heatmapOverlay.hide();
     }
+
+    $(function(){
+      thisPage = {
+        init : function(){
+          this.addEvent();
+          this.initDom();
+        },
+        initDom : function(){
+          thisPage.getListMap({});
+        },
+        addEvent : function(){
+          $('#btnSearch').on('click',function(){
+            var params = {};
+            thisPage.getListMap(params);
+          });
+          $('#btn6065').on('click',function(){
+            var params = {};
+            thisPage.getListMap(params);
+          });
+          $('#btn65').on('click',function(){
+            var params = {};
+            thisPage.getListMap(params);
+          });
+        },
+        getListMap : function(params){
+          this.renderMap(this.tableRow('正在查询……'));
+          layerFn.ajaxGetResult('/monitorValue/getListMap',params,function(data){
+            thisPage.renderTableHtml(data);
+          });
+        },
+        renderTableHtml : function(data){
+          var html = '';
+          if(AppKey.code.code200 == data.code){
+            data = data.data;
+            for(var i=0;i<data.length;i++){
+              var obj = data[i];
+              html += '<tr>';
+              html += '<td onclick="thisPage.infoTips(\''+obj.siteName+'\',\''+obj.count+'\')" title="'+obj.siteName+'"><div style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;width:100px;">'+obj.siteName+'</div></td>';
+              html += '<td>'+obj.count+'</td>';
+              html += '</tr>';
+            }
+          }else if(AppKey.code.code201 == data.code){
+            html += this.tableRow('没有查到数据');
+          }else{
+            html += this.tableRow(data.msg);
+          }
+          this.renderMap(html);
+        },
+        tableRow : function(msg){
+          return '<td colspan="2" style="height:37px;text-align:center;">'+msg+'</td>';
+        },
+        renderMap : function(html){
+          $('#listArea tbody').empty().html(html);
+        },
+        infoTips : function(siteName,value){
+          var html = "名称:"+siteName+"<br/>噪音值:"+value;
+          layerFn.alert(html);
+        }
+      };
+      thisPage.init();
+    });
 </script>

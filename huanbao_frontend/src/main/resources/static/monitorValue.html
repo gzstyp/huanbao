@@ -61,11 +61,6 @@
             <div class="hr-4"></div>
                 <input type="text" id="temperature" placeholder="温度" class="form-control" maxlength="10"/>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="gradient"><div class="hr-4"></div>渐变区间</label>
-        <div class="col-sm-7">
-            <div class="hr-4"></div>
-                <input type="text" id="gradient" placeholder="json格式的热力图的渐变区间" class="form-control"/>
-        </div>
         <label class="col-sm-3 control-label no-padding-right" for="humidity"><div class="hr-4"></div>湿度</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
@@ -75,11 +70,6 @@
         <div class="col-sm-7">
             <div class="hr-4"></div>
                 <input type="text" id="location_id" placeholder="选择监测点地点位置名称" class="form-control" maxlength="32"/>
-        </div>
-        <label class="col-sm-3 control-label no-padding-right" for="opacity"><div class="hr-4"></div>透明度</label>
-        <div class="col-sm-7">
-            <div class="hr-4"></div>
-                <input type="text" id="opacity" placeholder="热力的透明度(1-100)" class="form-control"/>
         </div>
         <label class="col-sm-3 control-label no-padding-right" for="quality10"><div class="hr-4"></div>规格pm10</label>
         <div class="col-sm-7">
@@ -91,40 +81,11 @@
             <div class="hr-4"></div>
                 <input type="text" id="quality25" placeholder="空气质量规格pm2.5" class="form-control" maxlength="10"/>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="radius"><div class="hr-4"></div>半径大小</label>
-        <div class="col-sm-7">
-            <div class="hr-4"></div>
-                <input type="text" id="radius" placeholder="热力图的每个点的半径大小" class="form-control"/>
-        </div>
       <label class="col-sm-3 control-label no-padding-right" for="volume"><div class="hr-4"></div>噪音音量值</label>
       <div class="col-sm-7">
         <div class="hr-4"></div>
         <input type="text" id="volume" placeholder="噪音音量值" class="form-control" oninput="value=value.replace(/[^\d.]/g,'')"/>
       </div>
-        <label class="col-sm-3 control-label no-padding-right" for="visible"><div class="hr-4"></div>热力图选项</label>
-        <div class="col-sm-7">
-            <div class="hr-4"></div>
-            <div class="input-group">
-                <span class="input-group-btn">
-            <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle col-sm-12" style="margin-left:0.01em">
-                <span id="dropdownLabelvisible">是否显示</span>
-                <i class="ace-icon fa fa-angle-down"></i>
-            </button>
-            <ul class="dropdown-menu col-sm-12" style="margin-left:-1px;width:275px;min-width:275px;max-width:275px">
-                <li>
-                    <a id="visible_" href="javascript:winFn.dropdown('#visible','','#dropdownLabelvisible','是否显示');">是否显示</a>
-                </li>
-                <li>
-                    <a id="visible0" href="javascript:winFn.dropdown('#visible',1,'#dropdownLabelvisible','是');">是</a>
-                </li>
-                <li>
-                    <a id="visible1" href="javascript:winFn.dropdown('#visible',0,'#dropdownLabelvisible','否');">否</a>
-                </li>
-            </ul>
-            <input id="visible" type="hidden"/>
-        </span>
-            </div>
-        </div>
     </form>
 </div>
 <div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
@@ -154,16 +115,9 @@
                 tableDom : tableDom,
                 sAjaxSource: getList,
                 fnServerParams : function(params){
-                    params.push({"name":"device_flag","value":$("#key_device_flag").val()},{"name":"visible","value":$("#key_visible").val()});
+                    params.push({"name":"device_flag","value":$("#key_device_flag").val()});
                 },
                 aoColumns : [
-                    {
-                        bSortable: false,
-                        mData : "kid",
-                        sWidth : "38px",
-                        sClass : "center",
-                        sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
-                    },
                     {
                         mData : "locationName",
                         sTitle : "监测点名称"
@@ -172,61 +126,48 @@
                         mData : "device_flag",
                         sTitle : "设备标识"
                     },
-                  {
-                    mData: "siteName",
-                    sTitle: "区域名称"
-                  },{
-                    mData: "flagName",
-                    sTitle: "设备标识名称"
-                  },
+                    {
+                      mData: "siteName",
+                      sTitle: "区域名称"
+                    },
+                    {
+                      mData: "flagName",
+                      sTitle: "设备标识名称"
+                    },
                     {
                         mData : "data_time",
-                        sTitle : "数据时间"
+                        sTitle : "数据时间",
+                        sWidth : "10%"
                     },
                     {
                         mData : "volume",
-                        sTitle : "噪音音量值"
+                        sTitle : "噪音值",
+                      sWidth : "5%"
                     },
                     {
                         mData : "temperature",
-                        sTitle : "温度"
+                        sTitle : "温度",
+                      sWidth : "4%"
                     },
                     {
                         mData : "quality25",
-                        sTitle : "空气质量pm2.5"
+                        sTitle : "空气质量pm2.5",
+                      sWidth : "9%"
                     },
                     {
                         mData : "quality10",
-                        sTitle : "空气质量pm10"
+                        sTitle : "空气质量pm10",
+                      sWidth : "9%"
                     },
                     {
                         mData : "humidity",
-                        sTitle : "湿度"
-                    },
-                    {
-                        mData : "_kid_",
-                        sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
-                        bSortable : false,
-                        sWidth : "8%"
+                        sTitle : "湿度",
+                      sWidth : "4%"
                     }
                 ],
                 columnDefs : [
                     {
-                        targets : 0,//指定的列
-                        render : function(value,type,row,meta){
-                            return '<label title="选择|取消"><input type="checkbox" name="kid" value="'+value+'" style="cursor:pointer;text-decoration:none;outline:none;"/><span class="lbl"></span></label>';
-                        }
-                    },
-                    {
-                        targets : -1,
-                        render : function(value,type,row,meta){
-                            var html = "<a href='javascript:thisPage.rowEdit("+meta.row+");' style='outline:none;text-decoration: none;color:#3b8cff;margin-left:6px;display:none' permission='monitorValue_row_edit'>编辑</a>"+
-                                "<a class='hidden-xs' href='javascript:thisPage.rowDel("+meta.row+");' style='outline:none;text-decoration: none;color:#f00;margin-left:6px;display:none' permission='monitorValue_row_delById'>删除</a>";
-                            return html;
-                        }
-                    },
-                    {
-                        targets: [1,2,3,4,5,6,7,8,9,10,11],
+                        targets: [0,1,2,3],
                         render: function (value,type,row,meta){
                             return pageDataTable.formatColumn(value);
                         }
@@ -313,7 +254,6 @@
                 },
                 resetForm : function(){
                     winFn.clearFormData('#form_monitor_value_edit');
-                    winFn.addDropdown('#dropdownLabelvisible','选择选项');
                 },
                 edit : function(kid){
                     var title = '添加';
@@ -337,31 +277,24 @@
                     }else{
                         if(verifyFn.inputCheck('#monitorValue_btn_add','没有添加权限'))return;
                     }
-                    layerFn.addOrEdit(title,'#div_monitor_value_edit',['500px','520px'],function(index,layero){
+                    layerFn.addOrEdit(title,'#div_monitor_value_edit',['500px','360px'],function(index,layero){
                         var editKey = winFn.getDomValue(inputEditKeyId);
                         if(editKey == null){
                           if(verifyFn.inputCheck('#device_flag','设备标识不能为空'))return;
                         }
                         if(verifyFn.inputCheck('#data_time','数据时间精确到秒,为空时系统时间不能为空'))return;
-                        if(verifyFn.inputCheck('#gradient','热力图的渐变区间不能为空'))return;
                         if(verifyFn.inputCheck('#location_id','请选择监测点位置'))return;
-                        if(verifyFn.inputCheck('#opacity','热力的透明度,1-100不能为空'))return;
                         if(verifyFn.inputCheck('#quality10','空气质量规格pm10不能为空'))return;
                         if(verifyFn.inputCheck('#quality25','空气质量规格pm2.5不能为空'))return;
-                        if(verifyFn.inputCheck('#radius','半径大小不能为空'))return;
                         if(verifyFn.inputCheck('#volume','噪音音量值不能为空'))return;
                         var params = {
                             device_flag : winFn.getDomValue('#device_flag'),
                             temperature : winFn.getDomValue('#temperature'),
                             data_time : winFn.getDomValue('#data_time'),
-                            gradient : winFn.getDomValue('#gradient'),
                             humidity : winFn.getDomValue('#humidity'),
                             location_id : winFn.getDomValue('#location_id'),
-                            opacity : winFn.getDomValue('#opacity'),
                             quality10 : winFn.getDomValue('#quality10'),
                             quality25 : winFn.getDomValue('#quality25'),
-                            radius : winFn.getDomValue('#radius'),
-                            visible : winFn.getDomValue('#visible'),
                             volume : winFn.getDomValue('#volume'),
                             kid : winFn.getDomValue(inputEditKeyId)
                         };
@@ -374,9 +307,6 @@
                         $.each(map.data,function(k,v){
                             try{
                                 $('#'+k).val(v);
-                                if(k == 'visible'){
-                                    winFn.editDropdown('#dropdownLabelvisible','visible'+v);
-                                }
                             }catch(e){}
                         });
                     }

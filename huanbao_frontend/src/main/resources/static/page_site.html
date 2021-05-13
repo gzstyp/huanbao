@@ -51,15 +51,36 @@
 </div>
 <div id="div_site_edit" style="display:none;padding:20px 0px;">
     <form class="form-horizontal" id="form_site_edit" role="form">
-        <label class="col-sm-3 control-label no-padding-right" for="name"><div class="hr-4"></div>位置地点</label>
+        <label class="col-sm-3 control-label no-padding-right" for="name"><div class="hr-4"></div>地点名称</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
-            <input type="text" id="name" placeholder="位置地点名称" class="form-control" maxlength="20"/>
+            <input type="text" id="name" placeholder="位置地点名称,如兰花广场" class="form-control" maxlength="64"/>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="sort"><div class="hr-4"></div>排序</label>
+        <label class="col-sm-3 control-label no-padding-right" for="lng"><div class="hr-4"></div>位置经度</label>
         <div class="col-sm-7">
-            <div class="hr-4"></div>
-            <input type="text" id="sort" placeholder="排序" class="form-control" oninput="value=value.replace(/[^\d]/g,'')"/>
+          <div class="hr-4"></div>
+          <div class="input-group">
+            <input type="text" id="lng" class="form-control search-query hidden-480" maxlength="20" placeholder="经度" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-inverse btn-white" id="btnLongs">
+                    <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
+                    经度
+                </button>
+            </span>
+          </div>
+        </div>
+        <label class="col-sm-3 control-label no-padding-right" for="lat"><div class="hr-4"></div>位置纬度</label>
+        <div class="col-sm-7">
+          <div class="hr-4"></div>
+          <div class="input-group">
+            <input type="text" id="lat" class="form-control search-query hidden-480" maxlength="20" placeholder="纬度" oninput="value=value.replace(/[^\d.]/g,'')"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-inverse btn-white" id="btnLat">
+                  <span class="ace-icon fa fa-asl-interpreting bigger-110"></span>
+                  纬度
+                </button>
+            </span>
+          </div>
         </div>
     </form>
 </div>
@@ -105,18 +126,25 @@
                         sTitle : "位置地点名称"
                     },
                     {
-                        mData : "sort",
-                        sTitle : "排序"
+                        mData : "lng",
+                        sTitle : "经度",
+                        sWidth : "10%"
+                    },
+                    {
+                        mData : "lat",
+                        sTitle : "纬度",
+                        sWidth : "10%"
                     },
                     {
                         mData : "create_time",
-                        sTitle : "创建时间"
+                        sTitle : "创建时间",
+                        sWidth : "15%"
                     },
                     {
                         mData : "_kid_",
                         sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
                         bSortable : false,
-                        sWidth : "40%"
+                        sWidth : "10%"
                     }
                 ],
                 columnDefs : [
@@ -135,7 +163,7 @@
                         }
                     },
                     {
-                        targets: [1,2,3],
+                        targets: [1,2,3,4],
                         render: function (value,type,row,meta){
                             return pageDataTable.formatColumn(value);
                         }
@@ -187,6 +215,15 @@
                     $('#btnDel').on('click',function(){
                         thisPage.delKeys();
                     });
+                    $('#btnLongs').on('click',function(){
+                      thisPage.openPage();
+                    });
+                    $('#btnLat').on('click',function(){
+                      thisPage.openPage();
+                    });
+                },
+                openPage : function(){
+                  window.open('http://api.map.baidu.com/lbsapi/getpoint/index.html','_blank').location;
                 },
                 /*批量删除*/
                 delKeys : function(){
@@ -245,14 +282,14 @@
                     }else{
                         if(verifyFn.inputCheck('#site_btn_add','没有添加权限'))return;
                     }
-                    layerFn.addOrEdit(title,'#div_site_edit',['400px','201px'],function(index,layero){
-                        //var editKey = winFn.getDomValue(inputEditKeyId);//用于某些值在新增时必填,编辑时可填可不填,填时则更新,否则不更新
-                        //if(editKey == null){}
+                    layerFn.addOrEdit(title,'#div_site_edit',['400px','230px'],function(index,layero){
                         if(verifyFn.inputCheck('#name','位置地点名称不能为空'))return;
-                        if(verifyFn.inputCheck('#sort','排序不能为空'))return;
+                        if(verifyFn.inputCheck('#lng','请输入经度'))return;
+                        if(verifyFn.inputCheck('#lat','纬度不能为空'))return;
                         var params = {
                             name : winFn.getDomValue('#name'),
-                            sort : winFn.getDomValue('#sort'),
+                            lng : winFn.getDomValue('#lng'),
+                            lat : winFn.getDomValue('#lat'),
                             kid : winFn.getDomValue(inputEditKeyId)
                         };
                         layerFn.submit(url,params,function(data){
