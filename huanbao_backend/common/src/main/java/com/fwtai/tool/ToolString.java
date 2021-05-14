@@ -704,6 +704,17 @@ public final class ToolString implements Serializable {
         return fsv.getHomeDirectory().getPath();
     }
 
+    //验证排序关键字
+    public static boolean checkOrderKey(final String key){
+        final String[] keys = {"ASC","DESC"};
+        for(final String value : keys){
+            if(key.equalsIgnoreCase(value)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 	/**
 	 * 替换关键字,防止SQL注入过滤
 	 * @param sqlKey
@@ -716,12 +727,12 @@ public final class ToolString implements Serializable {
         //去掉'|"|;|\字符
         sqlKey = sqlKey.replaceAll("'","").replaceAll("\"","").replaceAll(";", "").replaceAll("--", "").replace( "\\", "");
         //转换成小写
-        sqlKey = sqlKey.toLowerCase();
+        final String key = sqlKey.toLowerCase();
         //非法字符
         final String[] keywords = {"master","truncate","insert","select","delete","update","declare","alert","drop"};
         //判断是否包含非法字符
         for(final String keyword : keywords){
-            if(sqlKey.contains(keyword)){
+            if(key.contains(keyword)){
                 return null;
             }
         }

@@ -745,11 +745,14 @@ public final class ToolClient implements Serializable{
         final int pageSize = rows > 100 ? ConfigFile.size_default : rows;
         pageFormData.put(ConfigFile.section,(current - 1) * pageSize);//读取区间
         pageFormData.put(ConfigFile.pageSize,pageSize);//每页大小
-        final String _column = ToolString.sqlInject(column);
-        final String _sort = ToolString.sqlInject(sort);
-        if(_column != null && _sort != null){
-            pageFormData.put("column",_column);//排序字段 order by name desc
-            pageFormData.put("order",_sort);//排序关键字(升序|降序)
+        if(sort != null && column != null){
+            final boolean orderKey = ToolString.checkOrderKey(sort);
+            final String _column = orderKey ? ToolString.sqlInject(column) : null;
+            final String _sort = orderKey ? ToolString.sqlInject(sort) : null;
+            if(_column != null && _sort != null){
+                pageFormData.put("column",_column);//排序字段 order by name desc
+                pageFormData.put("order",_sort);//排序关键字(升序|降序)
+            }
         }
         return pageFormData;
     }
@@ -963,13 +966,17 @@ public final class ToolClient implements Serializable{
             params.remove("current");
             params.put(ConfigFile.section,(currentPage - 1) * pageSize);//读取区间
             params.put(ConfigFile.pageSize,pageSize);//每页大小
-            if(order != null){
-                params.remove("order");
-                params.put("order",ToolString.isBlank(order)?null:ToolString.sqlInject(order));//排序关键字
-            }
-            if(column != null){
-                params.remove("column");
-                params.put("column",ToolString.isBlank(column)?null:ToolString.sqlInject(column));//排序的字段 order by name desc
+            params.remove("order");
+            params.remove("column");
+            if(order != null && column != null){
+                final boolean b = ToolString.checkOrderKey(order);
+                if(!b) return null;
+                final String _order = ToolString.sqlInject(order);
+                final String _column = ToolString.sqlInject(column);
+                if(_order != null && _column != null){
+                    params.put("order",_order);//排序关键字
+                    params.put("column",_column);//排序的字段 order by name desc
+                }
             }
             return params;
         } catch (final Exception e){
