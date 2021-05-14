@@ -438,8 +438,10 @@
             for(var i=0;i<data.length;i++){
               var obj = data[i];
               html += '<tr>';
-              html += '<td onclick="thisPage.infoTips(\''+obj.siteName+'\',\''+obj.count+'\')" title="'+obj.siteName+'"><div style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;width:100px;">'+obj.siteName+'</div></td>';
-              html += '<td>'+obj.count+'</td>';
+              var volume = obj.count+"000000";
+              volume = volume.substring(0,5)
+              html += '<td onclick="thisPage.infoTips(\''+obj.siteName+'\',\''+volume+'\')" title="'+obj.siteName+'"><div style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;width:100px;">'+obj.siteName+'</div></td>';
+              html += '<td>'+volume+'</td>';
               html += '</tr>';
             }
           }else if(AppKey.code.code201 == data.code){
