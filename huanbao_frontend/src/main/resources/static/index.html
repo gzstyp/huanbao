@@ -12,7 +12,7 @@
     		<span>噪音数据智能分析平台</span>
     	</div>
 	</div>
-	<div class="contentBox">
+	<div class="contentBox" id="contentBox">
 		<div class="leftBox">
 			<span>5G</span>
 			<br/>
@@ -36,6 +36,26 @@
         <span>地址：贵阳市云岩区未来方舟F4组团</span>
     </div>
 <script src="js/jquery-1.12.4.min.js"></script>
+  <script type="text/javascript">
+    function fnGetHeight(){
+      var viewportheight = 0;
+      if (typeof window.innerWidth != 'undefined'){
+        viewportheight = window.innerHeight;
+      }else if (typeof document.documentElement != 'undefined' && typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0){
+        viewportheight = document.documentElement.clientHeight;
+      }else {
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+      }
+      return viewportheight;
+    }
+    function windowShow() {
+      var height = fnGetHeight();
+      $('#contentBox').css({"height":(height-97)+"px","min-height":(height-97)+"px"});
+    }
+    $(window).resize(function(){
+      windowShow();
+    }).resize();
+  </script>
 <script src="js/jquery.xdomainrequest.min.js"></script>
 <script src="js/layer/layer.js"></script>
 <script src="js/page.common.js"></script>
