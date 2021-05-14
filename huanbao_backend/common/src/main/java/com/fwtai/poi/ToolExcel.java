@@ -2,13 +2,13 @@ package com.fwtai.poi;
 
 import com.fwtai.bean.PageFormData;
 import com.fwtai.tool.ToolString;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -179,12 +179,12 @@ public final class ToolExcel{
 			if(ToolString.isBlank(cell)){
 				continue;//读取为空时处理
 			}
-            switch (cell.getCellTypeEnum()){
+            switch (cell.getCellType()){
                 case STRING:
                     map.put(fields.get(j),cell.getStringCellValue());
                     break;
                 case NUMERIC:
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    if (DateUtil.isCellDateFormatted(cell)) {
                         final Date date = cell.getDateCellValue();
                         final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                         final String value = formatter.format(date);
@@ -336,12 +336,12 @@ public final class ToolExcel{
 			if (ToolString.isBlank(cell)){
 				continue;
 			}
-            switch (cell.getCellTypeEnum()){
+            switch (cell.getCellType()){
                 case STRING:
                     pageData.put(fields.get(j),cell.getStringCellValue());
                     break;
                 case NUMERIC:
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    if (DateUtil.isCellDateFormatted(cell)) {
                         final Date date = cell.getDateCellValue();
                         final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                         final String value = formatter.format(date);
@@ -438,12 +438,12 @@ public final class ToolExcel{
                                 if(ToolString.isBlank(cell)){
                                     continue;//读取为空时处理
                                 }
-                                switch (cell.getCellTypeEnum()){
+                                switch (cell.getCellType()){
                                     case STRING:
                                         map.put(fields.get(j),cell.getStringCellValue());
                                         break;
                                     case NUMERIC:
-                                        if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                                        if (DateUtil.isCellDateFormatted(cell)) {
                                             final Date date = cell.getDateCellValue();
                                             final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                                             final String value = formatter.format(date);
@@ -581,7 +581,7 @@ public final class ToolExcel{
 		// 创建两种单元格格式
         final XSSFCellStyle csHead = wb.createCellStyle();
         csHead.setFillPattern(FillPatternType.SOLID_FOREGROUND);//设置前景填充样式
-        csHead.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);//前景填充色
+        csHead.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());//前景填充色
         final XSSFCellStyle csContent = wb.createCellStyle();
 		// 创建两种字体
 		final Font fontHead = wb.createFont();
@@ -1482,7 +1482,7 @@ public final class ToolExcel{
         final XSSFCellStyle csHead = wb.createCellStyle();
 		final XSSFCellStyle csContent = wb.createCellStyle();
         csHead.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        csHead.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        csHead.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());
 		// 创建两种字体
 		final Font fontHead = wb.createFont();
 		final Font fontContent = wb.createFont();

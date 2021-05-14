@@ -11,7 +11,7 @@
     <artifactId>common</artifactId>
     <properties>
         <jwt.version>0.11.2</jwt.version>
-        <poi.version>3.17</poi.version>
+        <poi.version>4.1.2</poi.version>
     </properties>
     <dependencies>
         <dependency>
