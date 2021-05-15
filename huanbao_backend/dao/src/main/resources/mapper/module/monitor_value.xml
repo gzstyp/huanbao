@@ -229,7 +229,6 @@
       mv.temperature,
       mv.quality25,
       mv.quality10,
-      mv.humidity,
       DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i:%s') create_time
     FROM MONITOR_VALUE mv
     left join location ln on ln.kid = mv.location_id
@@ -241,6 +240,7 @@
         ORDER BY ${column} ${order}
       </when>
       <otherwise>
+        ORDER BY mv.create_time DESC
       </otherwise>
     </choose>
     <if test="section != null and pageSize != null">
