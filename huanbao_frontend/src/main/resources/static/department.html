@@ -1,0 +1,336 @@
+<meta charset="utf-8"/>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="clearfix">
+          <div style="display:flex;justify-content:space-between;">
+            <div style="width:49.8%;">
+              <table class="no-border" style="display:inline">
+                <tr permission='department_btn_listData' style="display:none">
+                  <td class="hidden-480" style="padding: 0px 6px;">
+                    部门名称
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <input type="text" id="key_name" class="form-control search-query hidden-480" placeholder="部门名称" style="width:140px"/>
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btnSearch" permission='department_btn_listData' style="display:none">
+                          <span class="ace-icon fa fa-search bigger-110"></span>
+                          搜索
+                        </button>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btnAdd" permission='department_btn_add' style="display:none">
+                          <span class="ace-icon glyphicon glyphicon-plus bigger-110"></span>
+                          添加
+                        </button>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-inverse btn-white" id="btnDel" permission='department_btn_delByKeys' style="display:none">
+                          <span class="fa fa-trash red2 bigger-110"></span>
+                          删除
+                        </button>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table id="tableListDept" class="table table-striped table-bordered table-hover"></table>
+            </div>
+            <div style="background-color:#2294ec;width:49.8%;">
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+<div id="div_sys_dept_edit" style="display:none;padding:2px 0px;">
+  <form class="form-horizontal" id="form_sys_dept_edit" role="form">
+    <label class="col-sm-3 control-label no-padding-right" for="name">
+      <div class="hr-4"></div>
+      部门名称</label>
+    <div class="col-sm-7">
+      <div class="hr-4"></div>
+      <input type="text" id="name" placeholder="部门名称" class="form-control" maxlength="128"/>
+    </div>
+    <label class="col-sm-3 control-label no-padding-right" for="pName"><div class="hr-4"></div>上级部门</label>
+    <div class="col-sm-7">
+      <div class="hr-4"></div>
+      <input type="text" id="pName" placeholder="上级部门名称" readonly class="form-control"/>
+    </div>
+    <label class="col-sm-3 control-label no-padding-right" for="sort">
+      <div class="hr-4"></div>
+      排序</label>
+    <div class="col-sm-7">
+      <div class="hr-4"></div>
+      <input type="text" id="sort" placeholder="部门排序,值越小越靠前" class="form-control" oninput="value=value.replace(/[^\d]/g,'')"/>
+    </div>
+  </form>
+</div>
+<div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
+<input type="hidden" id="sys_dept_edit_keyId"/>
+<div style="display:none;">
+    <input type="hidden" id="department_btn_listData"/>
+    <input type="hidden" id="department_btn_add"/>
+    <input type="hidden" id="department_row_edit"/>
+    <input type="hidden" id="department_row_queryById"/>
+    <input type="hidden" id="department_row_delById"/>
+    <input type="hidden" id="department_btn_delByKeys"/>
+</div>
+<script type="text/javascript">
+    var scripts = [null,null];
+    $('.page-content-area').ace_ajax('loadScripts',scripts,function(){
+        var tableDom = '#tableListDept';
+        var inputEditKeyId = '#sys_dept_edit_keyId';
+        $(function(){
+            var urlRoute = '/department/';/*请求controller层的url*/
+            var getList = urlRoute + 'listData';/*获取数据列表*/
+            var urlAdd = urlRoute + 'add';/*添加*/
+            var urlEdit = urlRoute + 'edit';/*编辑*/
+            var urlQueryById = urlRoute + 'queryById';/*根据id查询对应的数据*/
+            var urlDelById = urlRoute + 'delById';/*根据id删除对应的数据*/
+            var urlDelByKeys = urlRoute + 'delByKeys';/*批量删除*/
+            var thisTable = pageDataTable.initDataTable({
+                tableDom : tableDom,
+                sAjaxSource: getList,
+                fnServerParams : function(params){
+                    params.push({"name":"name","value":$("#key_name").val()});
+                },
+                aoColumns : [
+                    {
+                        bSortable: false,
+                        mData : "kid",
+                        sWidth : "38px",
+                        sClass : "center",
+                        sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
+                    },
+                    {
+                      mData : "name",
+                      sTitle : "部门名称",
+                      sWidth : "35%"
+                    },
+                    {
+                      mData : "pName",
+                      sTitle : "上级部门",
+                      sWidth : "35%"
+                    },
+                    {
+                        mData : "_kid_",
+                        sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
+                        bSortable : false,
+                        sWidth : "30%"
+                    }
+                ],
+                columnDefs : [
+                    {
+                        targets : 0,//指定的列
+                        render : function(value,type,row,meta){
+                            return '<label title="选择|取消"><input type="checkbox" name="kid" value="'+value+'" style="cursor:pointer;text-decoration:none;outline:none;"/><span class="lbl"></span></label>';
+                        }
+                    },
+                    {
+                        targets : -1,
+                        render : function(value,type,row,meta){
+                            var html = "<a href='javascript:thisPage.rowEdit("+meta.row+");' style='outline:none;text-decoration: none;color:#3b8cff;margin-left:6px;display:none' permission='department_row_edit'>编辑</a>"+
+                                "<a class='hidden-xs' href='javascript:thisPage.rowDel("+meta.row+");' style='outline:none;text-decoration: none;color:#f00;margin-left:6px;display:none' permission='department_row_delById'>删除</a>"+
+                                "<a class='hidden-xs' href='javascript:thisPage.rowNode("+meta.row+");' style='outline:none;text-decoration: none;color:#1186ec;margin-left:6px;display:none' permission='department_btn_add'>添加下级部门</a>";
+                            return html;
+                        }
+                    },
+                    {
+                        targets: [1,2],
+                        render: function (value,type,row,meta){
+                            return pageDataTable.formatColumn(value);
+                        }
+                    },
+                    {
+                        "visible":false,//列的隐藏显示
+                        "targets": []//指定列
+                    }
+                ]
+            });
+            pageDataTable.buttons(thisTable);
+            pageDataTable.action(thisTable);
+            pageDataTable.select(thisTable,tableDom);
+            pageDataTable.tooltip();
+            var thisJquery = $(tableDom).dataTable();
+            thisPage = {
+                init : function(){
+                    this.addEvent();
+                },
+                initDom : function(){
+                },
+                createDropdown : function(){
+                },
+                addEvent : function(){
+                    this.btnEvent();
+                },
+                btnEvent : function(){
+                    $(tableDom +' tbody').on('dblclick','tr',function(){
+                        if(verifyFn.inputRequired('#department_row_edit')){
+                            return;
+                        }
+                        thisPage.trDblclick(thisTable.row(this).data());
+                    });
+                    $('#btnAdd').on('click',function(){
+                        thisPage.edit();
+                    });
+                    //搜索按钮
+                    $('#btnSearch').on('click',function(){
+                        thisPage.search();
+                    });
+                    //按钮组-自定义显示列
+                    $('#iconColumn').parent().parent().on('click',function(){
+                        pageDataTable.columnCustom(thisTable,tableDom,'#divKeyColumns');
+                    });
+                    //按钮组-搜索
+                    $('#iconRefresh').parent().parent().on('click',function(){
+                        thisPage.search();
+                    });
+                    $('#btnDel').on('click',function(){
+                        thisPage.delKeys();
+                    });
+                },
+                /*批量删除*/
+                delKeys : function(){
+                    if(verifyFn.inputCheck('#department_btn_delByKeys','没有删除操作权限'))return;
+                    var kids = '';
+                    var index = 0;
+                    $(tableDom + ' tbody input:checked').each(function(){
+                        index ++;
+                        var value = this.value;
+                        if(value != null && value != ''){
+                            if(kids.length > 0)
+                                kids += ",";
+                            kids += value;
+                        }
+                    });
+                    if(kids == ''){
+                        layerFn.alert('请选择要删除的数据!',AppKey.code.code199);
+                        return;
+                    }
+                    layerFn.confirm('将要删除['+index+']条数据且是无法恢复,确定要继续吗?',function(){
+                        layerFn.delBatchHint(urlDelByKeys,kids,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+                trDblclick : function(data){
+                    thisPage.edit(data.kid);
+                },
+                search : function(){
+                    if(verifyFn.inputCheck('#department_btn_listData','没有操作权限'))return;
+                    $(tableDom + ' input[type=checkbox]').prop('checked',false);
+                    thisTable.draw();
+                },
+                resetForm : function(){
+                    winFn.clearFormData('#form_sys_dept_edit');
+                },
+                edit : function(kid){
+                    var title = '添加';
+                    if(kid != null && kid.length >0){
+                        if(verifyFn.inputCheck('#department_row_queryById','没有操作权限'))return;
+                        title = '编辑';
+                        winFn.setDomValue(inputEditKeyId,kid);
+                        layerFn.queryByIdHint(urlQueryById,kid,function(data){
+                            thisPage.openDialog(title,kid,data);
+                        });
+                    }else{
+                        winFn.setDomValue(inputEditKeyId,'');
+                        thisPage.openDialog(title);
+                    }
+                },
+                openDialog : function(title,kid,map){
+                    var url = urlAdd;
+                    if(kid != null && kid.length >0){
+                        url = urlEdit;
+                        if(verifyFn.inputCheck('#department_row_edit','没有编辑权限'))return;
+                    }else{
+                        if(verifyFn.inputCheck('#department_btn_add','没有添加权限'))return;
+                    }
+                    layerFn.addOrEdit(title,'#div_sys_dept_edit',['400px','210px'],function(index,layero){
+                        if(verifyFn.inputCheck('#name','部门名称不能为空'))return;
+                        var params = {
+                            name : winFn.getDomValue('#name'),
+                            sort : winFn.getDomValue('#sort'),
+                            kid : winFn.getDomValue(inputEditKeyId)
+                        };
+                        layerFn.submit(url,params,function(data){
+                            thisPage.complete(data,index,true);
+                        });
+                    });
+                    thisPage.resetForm();//清空
+                    if(map != null){
+                        $.each(map.data,function(k,v){
+                            try{
+                                $('#'+k).val(v);
+                            }catch(e){}
+                        });
+                    }
+                },
+                rowEdit : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    thisPage.edit(row.kid);
+                },
+                rowDel : function(index){
+                    var row = thisJquery.fnGetData(index);
+                    if(verifyFn.inputCheck('#department_row_delById','没有删除操作权限'))return;
+                    layerFn.confirm('删除后无法恢复,确定要删除吗?',function(){
+                        layerFn.delByIdHint(urlDelById,row.kid,function(data){
+                            thisPage.complete(data,null,true);
+                        });
+                    });
+                },
+              rowNode : function(index){
+                var row = thisJquery.fnGetData(index);
+                layerFn.addOrEdit('在['+row.name+']添加下级部门','#div_sys_dept_edit',['400px','210px'],function(index,layero){
+                  if(verifyFn.inputRequired('#name')){
+                    layerFn.alert('下级部门名称不能为空',AppKey.code.code199);
+                    return;
+                  }
+                  var params = {
+                    name : winFn.getDomValue('#name'),
+                    pid : row.kid,
+                    sort : winFn.getDomValue('#sort')
+                  };
+                  if (verifyFn.inputRequired('#department_btn_add')){
+                    layerFn.alert('没有添加权限',AppKey.code.code199);
+                    return;
+                  }
+                  layerFn.submit(urlAdd,params,function(data){
+                    thisPage.complete(data,index,true);
+                  });
+                });
+                thisPage.resetForm();
+              },
+              complete : function(data,index,search){
+                try{
+                  if(index){
+                    layerFn.closeIndex(index);
+                  }
+                  if(search){
+                    thisPage.search();
+                  }
+                  if(data){
+                    layerFn.handleResult(data.msg,data.code);
+                  }
+                }catch(e){}
+              }
+            };
+            thisPage.init();
+        });
+    });
+</script>
