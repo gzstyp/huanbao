@@ -4,11 +4,13 @@ import com.fwtai.bean.JwtUser;
 import com.fwtai.config.ConfigFile;
 import com.fwtai.entity.User;
 import com.fwtai.service.core.MenuService;
+import com.fwtai.service.core.SyeLogService;
 import com.fwtai.service.core.UserService;
 import com.fwtai.tool.ToolAttack;
 import com.fwtai.tool.ToolBean;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolJWT;
+import com.fwtai.tool.ToolString;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -65,17 +67,20 @@ public final class LoginAuthentication extends UsernamePasswordAuthenticationFil
             return null;
         }
         final UserService userService = ToolBean.getBean(request,UserService.class);
+        final SyeLogService syeLogService = ToolBean.getBean(request,SyeLogService.class);
+        final HashMap<String,Object> param = new HashMap<>();
+        param.put("ip",ip);
+        param.put("kid",ToolString.getIdsChar32());
+        param.put("user_name",username);
         if(userService.checkLogin(username,password)){
             toolAttack.loginSucceed(ip);
+            param.put("result",1);
+            syeLogService.addLoginLog(param);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
         }else{
             toolAttack.loginFailed(ip);
-            /*final boolean bl = toolAttack.getCount(ip) > 4;
-            if(blocked || bl){
-                final String msg = "帐号或密码错误次数过多,IP<br/>"+ip+"<br/>已被系统屏蔽,请30分钟后重试!";
-                ToolClient.responseJson(ToolClient.createJson(ConfigFile.code198,msg),response);
-                return null;
-            }*/
+            param.put("result",0);
+            syeLogService.addLoginLog(param);
             //在此处理锁定功能!!!
             final User user = userService.queryUser(username);
             if(user != null){

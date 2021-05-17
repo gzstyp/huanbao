@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys_log">
+  <sql id="sql_column">
+    create_time,
+    ip,
+    kid,
+    result,
+    user_name
+  </sql>
+  <!-- 添加数据 -->
+  <update id="add" parameterType="HashMap">
+    INSERT INTO SYS_LOG (
+    <trim suffixOverrides=",">
+      <if test="ip != null">ip,</if>
+      <if test="kid != null">kid,</if>
+      <if test="result != null">result,</if>
+      <if test="user_name != null">user_name</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="ip != null">#{ip},</if>
+      <if test="kid != null">#{kid},</if>
+      <if test="result != null">#{result},</if>
+      <if test="user_name != null">#{user_name}</if>
+    </trim>
+    )
+  </update>
+  <!-- 编辑数据 -->
+  <update id="edit" parameterType="HashMap">
+    UPDATE SYS_LOG
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="ip != null">ip = #{ip},</if>
+      <if test="result != null">result = #{result},</if>
+      <if test="user_name != null">user_name = #{user_name}</if>
+    </trim>
+    WHERE kid = #{kid} LIMIT 1
+  </update>
+  <select id="queryExistById" resultType="String" parameterType="String">
+    SELECT kid FROM SYS_LOG WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 基于主键kid的存在就更新,否则新增操作 -->
+  <update id="updateOrEdit" parameterType="HashMap">
+    INSERT INTO SYS_LOG (
+    <trim suffixOverrides=",">
+      <if test="ip != null">ip,</if>
+      <if test="kid != null">kid,</if>
+      <if test="result != null">result,</if>
+      <if test="user_name != null">user_name</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="ip != null">#{ip},</if>
+      <if test="kid != null">#{kid},</if>
+      <if test="result != null">#{result},</if>
+      <if test="user_name != null">#{user_name}</if>
+    </trim>
+    )
+    ON DUPLICATE KEY UPDATE
+    <trim suffixOverrides=",">
+      <if test="ip != null">ip = #{ip},</if>
+      <if test="result != null">result = #{result},</if>
+      <if test="user_name != null">user_name = #{user_name}</if>
+    </trim>
+  </update>
+  <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
+  <update id="updateEditBatch" parameterType="ArrayList">
+    INSERT IGNORE INTO SYS_LOG (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.ip != null">ip,</if>
+          <if test="item.kid != null">kid,</if>
+          <if test="item.result != null">result,</if>
+          <if test="item.user_name != null">user_name</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.ip != null">#{item.ip},</if>
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.result != null">#{item.result},</if>
+        <if test="item.user_name != null">#{item.user_name}</if>
+      </trim>
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.ip != null">ip = values(ip),</if>
+          <if test="item.kid != null">kid = values(kid),</if>
+          <if test="item.result != null">result = values(result),</if>
+          <if test="item.user_name != null">user_name = values(user_name)</if>
+        </if>
+      </trim>
+    </foreach>
+  </update>
+  <!-- 批量添加|插入-->
+  <update id="addBatch" parameterType="ArrayList">
+    INSERT INTO SYS_LOG (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.ip != null">ip,</if>
+          <if test="item.kid != null">kid,</if>
+          <if test="item.result != null">result,</if>
+          <if test="item.user_name != null">user_name</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.ip != null">#{item.ip},</if>
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.result != null">#{item.result},</if>
+        <if test="item.user_name != null">#{item.user_name}</if>
+      </trim>
+      )
+    </foreach>
+  </update>
+  <!-- 根据id查询对应的数据 -->
+  <select id="queryById" parameterType="String" resultType="HashMap">
+    SELECT
+      ip,
+      result,
+      user_name
+    FROM SYS_LOG WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 行删除 -->
+  <delete id="delById" parameterType="String">
+    DELETE FROM SYS_LOG WHERE kid = #{kid} LIMIT 1
+  </delete>
+  <!-- 删除|批量删除,物理删除-->
+  <delete id="delByKeys" parameterType="ArrayList">
+    DELETE FROM SYS_LOG WHERE kid IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <!-- listData条件查询 -->
+  <sql id="sql_where_listData">
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="user_name != null">
+        AND user_name LIKE CONCAT('%',#{user_name},'%')
+      </if>
+      <if test="result != null">
+        AND result LIKE CONCAT('%',#{result},'%')
+      </if>
+    </trim>
+  </sql>
+  <!-- 列表数据 -->
+  <select id="listData" parameterType="HashMap" resultType="HashMap">
+    SELECT
+      kid,
+      user_name,
+      result,
+      ip,
+    DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time
+    FROM SYS_LOG
+    <include refid="sql_where_listData"/>
+    <choose>
+      <when test="order != null and column != null">
+        ORDER BY ${column} ${order}
+      </when>
+      <otherwise>
+      </otherwise>
+    </choose>
+    <if test="section != null and pageSize != null">
+      LIMIT #{section},#{pageSize}
+    </if>
+  </select>
+  <!-- 总条数总记录数 -->
+  <select id="listTotal" parameterType="HashMap" resultType="Integer">
+    SELECT COUNT(1) TOTAL FROM SYS_LOG
+    <include refid="sql_where_listData"/>
+    LIMIT 1
+  </select>
+</mapper>

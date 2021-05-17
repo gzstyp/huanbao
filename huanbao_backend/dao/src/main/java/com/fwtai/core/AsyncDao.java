@@ -4,6 +4,7 @@ import com.fwtai.datasource.DaoHandle;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * 异步处理
@@ -25,5 +26,9 @@ public class AsyncDao{
         dao.execute("sys_user.updateTimes",username);/*更新登录次数*/
         dao.execute("sys_user.updateErrorTime",username);/*登录成功把时间设置为当前默认时间*/
         dao.execute("sys_user.updateErrorCount",username);/*登录成功把登录错误次数更改为0*/
+    }
+
+    public void addLoginLog(final HashMap<String,Object> params){
+        dao.execute("sys_log.add",params);
     }
 }

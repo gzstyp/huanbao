@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,6 +37,22 @@ public class AsyncService{
             public void run(){
                 try {
                     asyncDao.updateSucceed(username);
+                } catch (final Exception ignored){
+                }finally{
+                    threadPool.shutdown();//释放线程池
+                }
+            }
+        });
+    }
+
+    @Async
+    public void addLoginLog(final HashMap<String,Object> params){
+        final ExecutorService threadPool = Executors.newCachedThreadPool();//todo 看类名就是缓存的线程池,它是不固定的,可以放很多个线程
+        threadPool.execute(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    asyncDao.addLoginLog(params);
                 } catch (final Exception ignored){
                 }finally{
                     threadPool.shutdown();//释放线程池
