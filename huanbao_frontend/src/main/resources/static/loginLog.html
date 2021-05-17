@@ -128,7 +128,13 @@
                     {
                         mData : "create_time",
                         sTitle : "登录时间"
-                    }
+                    },
+                  {
+                    mData : "_kid_",
+                    sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
+                    bSortable : false,
+                    sWidth : "8%"
+                  }
                 ],
                 columnDefs : [
                     {
@@ -140,7 +146,7 @@
                         }
                     },
                     {
-                        targets: [0,1,2,3],
+                        targets: [0,1,2,3,4],
                         render: function (value,type,row,meta){
                             return pageDataTable.formatColumn(value);
                         }
