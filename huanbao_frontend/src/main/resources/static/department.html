@@ -46,10 +46,10 @@
               </table>
               <table id="tableListDept" class="table table-striped table-bordered table-hover"></table>
             </div>
-            <div style="background-color:#2294ec;width:49.8%;">
-
-
-
+            <div style="width:49.8%;border:1px solid #c9c9c9;border-radius:4px;">
+              <ul id="proxyAreaTree" class="ztree">
+                <li style="margin-top:2px;"><span>正在加载……</span></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -95,6 +95,62 @@
     $('.page-content-area').ace_ajax('loadScripts',scripts,function(){
         var tableDom = '#tableListDept';
         var inputEditKeyId = '#sys_dept_edit_keyId';
+
+      var domTree = 'proxyAreaTree';
+      var tree_obj = null;
+      var settingArea = {
+        view : {
+          expandSpeed : 100,
+          showLine : true,
+          showIcon : true,
+          fontCss : {"color":"#000","outline":"none","text-decoration":"none","font-size":"14px"}
+        },
+        data : {
+          simpleData : {
+            enable : true,
+            idKey : "kid",
+            pIdKey : "pid"
+          }
+        },
+        async : {
+          enable : true,
+          url : urlPrefix + '/department/getListTree',
+          cache : false,
+          type: "GET",
+          autoParam : ["kid"],
+          otherParam: ["accessToken",sessionStorage.getItem('accessToken'),"refreshToken",sessionStorage.getItem("refreshToken"),"token",function(){return $("#type").val()}],
+          dataFilter: function(treeId,parentNode,result){
+            var bl = layerFn.checkLogin(result);
+            if(bl){
+              thisPage.ztreeGetError('未登录或登录超时');
+              return;
+            }
+            if(result.code == AppKey.code.code200)return result.data;
+            if(result){
+              if(result.code != AppKey.code.code201){
+                layerFn.alert(result.msg,result.code);
+              }
+            }
+            return '';
+          }
+        },
+        callback : {
+          beforeAsync : function(treeId,treeNode){
+            if(treeNode){}
+          },
+          onAsyncSuccess : function(data){},
+          onAsyncError : function(){
+            thisPage.ztreeGetError('连接服务器失败');
+          },
+          beforeClick : function(treeId,node,clickFlag){
+            return false;//true时点击选中文本
+          },
+          onClick : function(event,treeIdDom,node,clickFlag){},
+          beforeCheck : function(treeId,treeNode){},
+          onCheck : function(event,treeId,treeNode){}
+        }
+      };
+
         $(function(){
             var urlRoute = '/department/';/*请求controller层的url*/
             var getList = urlRoute + 'listData';/*获取数据列表*/
@@ -169,7 +225,8 @@
             var thisJquery = $(tableDom).dataTable();
             thisPage = {
                 init : function(){
-                    this.addEvent();
+                  this.addEvent();
+                  thisPage.initTree();
                 },
                 initDom : function(){
                 },
@@ -328,6 +385,13 @@
                     layerFn.handleResult(data.msg,data.code);
                   }
                 }catch(e){}
+              },
+              initTree : function(){
+                tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
+              },
+              ztreeGetError : function(msg){
+                msg = (msg == null || msg == '') ? '获取数据失败' : msg;
+                $('#treeDom').html("<li style='margin-top:2px;'><span>"+msg+"</span></li>");
               }
             };
             thisPage.init();
