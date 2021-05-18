@@ -160,7 +160,6 @@ public class MonitorValueService{
                 formData.put("min",map.getOrDefault("ve",65));
             }
         }
-        System.out.println(formData);
         return ToolClient.queryJson(monitorvalueDao.getListTable(formData));
     }
 
