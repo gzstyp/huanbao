@@ -260,10 +260,12 @@
                 openDialog : function(title,kid,map){
                     var url = urlAdd;
                     if(kid != null && kid.length >0){
+                      $("#ky").attr("disabled","disabled");
                         url = urlEdit;
                         if(verifyFn.inputCheck('#params_row_edit','没有编辑权限'))return;
                     }else{
-                        if(verifyFn.inputCheck('#params_btn_add','没有添加权限'))return;
+                      $("#ky").removeAttr("disabled");
+                      if(verifyFn.inputCheck('#params_btn_add','没有添加权限'))return;
                     }
                     layerFn.addOrEdit(title,'#div_params_edit',['450px','278px'],function(index,layero){
                         if(verifyFn.inputCheck('#name','参数名称不能为空'))return;
