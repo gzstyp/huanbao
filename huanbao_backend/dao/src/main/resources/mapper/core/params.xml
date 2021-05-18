@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="params">
+  <sql id="sql_column">
+    kid,
+    ky,
+    name,
+    remarks,
+    ve
+  </sql>
+  <!-- 添加数据 -->
+  <update id="add" parameterType="HashMap">
+    INSERT INTO PARAMS (
+    <trim suffixOverrides=",">
+      <if test="kid != null">kid,</if>
+      <if test="ky != null">ky,</if>
+      <if test="name != null">name,</if>
+      <if test="remarks != null">remarks,</if>
+      <if test="ve != null">ve</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="kid != null">#{kid},</if>
+      <if test="ky != null">#{ky},</if>
+      <if test="name != null">#{name},</if>
+      <if test="remarks != null">#{remarks},</if>
+      <if test="ve != null">#{ve}</if>
+    </trim>
+    )
+  </update>
+  <!-- 编辑数据 -->
+  <update id="edit" parameterType="HashMap">
+    UPDATE PARAMS
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="ky != null">ky = #{ky},</if>
+      <if test="name != null">name = #{name},</if>
+      <if test="remarks != null">remarks = #{remarks},</if>
+      <if test="ve != null">ve = #{ve}</if>
+    </trim>
+    WHERE kid = #{kid} LIMIT 1
+  </update>
+  <select id="queryExistById" resultType="String" parameterType="String">
+    SELECT kid FROM PARAMS WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 基于主键kid的存在就更新,否则新增操作 -->
+  <update id="updateOrEdit" parameterType="HashMap">
+    INSERT INTO PARAMS (
+    <trim suffixOverrides=",">
+      <if test="kid != null">kid,</if>
+      <if test="ky != null">ky,</if>
+      <if test="name != null">name,</if>
+      <if test="remarks != null">remarks,</if>
+      <if test="ve != null">ve</if>
+    </trim>
+    ) VALUES (
+    <trim suffixOverrides=",">
+      <if test="kid != null">#{kid},</if>
+      <if test="ky != null">#{ky},</if>
+      <if test="name != null">#{name},</if>
+      <if test="remarks != null">#{remarks},</if>
+      <if test="ve != null">#{ve}</if>
+    </trim>
+    )
+    ON DUPLICATE KEY UPDATE
+    <trim suffixOverrides=",">
+      <if test="ky != null">ky = #{ky},</if>
+      <if test="name != null">name = #{name},</if>
+      <if test="remarks != null">remarks = #{remarks},</if>
+      <if test="ve != null">ve = #{ve}</if>
+    </trim>
+  </update>
+  <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
+  <update id="updateEditBatch" parameterType="ArrayList">
+    INSERT IGNORE INTO PARAMS (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid,</if>
+          <if test="item.ky != null">ky,</if>
+          <if test="item.name != null">name,</if>
+          <if test="item.remarks != null">remarks,</if>
+          <if test="item.ve != null">ve</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.ky != null">#{item.ky},</if>
+        <if test="item.name != null">#{item.name},</if>
+        <if test="item.remarks != null">#{item.remarks},</if>
+        <if test="item.ve != null">#{item.ve}</if>
+      </trim>
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid = values(kid),</if>
+          <if test="item.ky != null">ky = values(ky),</if>
+          <if test="item.name != null">name = values(name),</if>
+          <if test="item.remarks != null">remarks = values(remarks),</if>
+          <if test="item.ve != null">ve = values(ve)</if>
+        </if>
+      </trim>
+    </foreach>
+  </update>
+  <!-- 批量添加|插入-->
+  <update id="addBatch" parameterType="ArrayList">
+    INSERT INTO PARAMS (
+    <foreach collection="list" item="item" index="index">
+      <trim suffixOverrides=",">
+        <if test="index==0">
+          <if test="item.kid != null">kid,</if>
+          <if test="item.ky != null">ky,</if>
+          <if test="item.name != null">name,</if>
+          <if test="item.remarks != null">remarks,</if>
+          <if test="item.ve != null">ve</if>
+        </if>
+      </trim>
+    </foreach>
+    ) VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      <trim suffixOverrides=",">
+        <if test="item.kid != null">#{item.kid},</if>
+        <if test="item.ky != null">#{item.ky},</if>
+        <if test="item.name != null">#{item.name},</if>
+        <if test="item.remarks != null">#{item.remarks},</if>
+        <if test="item.ve != null">#{item.ve}</if>
+      </trim>
+      )
+    </foreach>
+  </update>
+  <!-- 根据id查询对应的数据 -->
+  <select id="queryById" parameterType="String" resultType="HashMap">
+    SELECT
+      ky,
+      name,
+      remarks,
+      ve
+    FROM PARAMS WHERE kid = #{kid} LIMIT 1
+  </select>
+  <!-- 行删除 -->
+  <delete id="delById" parameterType="String">
+    DELETE FROM PARAMS WHERE kid = #{kid} LIMIT 1
+  </delete>
+  <!-- 删除|批量删除,物理删除-->
+  <delete id="delByKeys" parameterType="ArrayList">
+    DELETE FROM PARAMS WHERE kid IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <!-- listData条件查询 -->
+  <sql id="sql_where_listData">
+    <trim prefix="WHERE" prefixOverrides="AND">
+      <if test="name != null">
+        AND name LIKE CONCAT('%',#{name},'%')
+      </if>
+    </trim>
+  </sql>
+  <!-- 列表数据 -->
+  <select id="listData" parameterType="HashMap" resultType="HashMap">
+    SELECT
+      kid,
+      name,
+      ky,
+      ve,
+      remarks
+    FROM PARAMS
+    <include refid="sql_where_listData"/>
+    <choose>
+      <when test="order != null and column != null">
+        ORDER BY ${column} ${order}
+      </when>
+      <otherwise>
+      </otherwise>
+    </choose>
+    <if test="section != null and pageSize != null">
+      LIMIT #{section},#{pageSize}
+    </if>
+  </select>
+  <!-- 总条数总记录数 -->
+  <select id="listTotal" parameterType="HashMap" resultType="Integer">
+    SELECT COUNT(1) TOTAL FROM PARAMS
+    <include refid="sql_where_listData"/>
+    LIMIT 1
+  </select>
+</mapper>
