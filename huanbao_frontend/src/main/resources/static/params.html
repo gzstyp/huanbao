@@ -265,12 +265,6 @@
                     }else{
                         if(verifyFn.inputCheck('#params_btn_add','没有添加权限'))return;
                     }
-                    var height = 240;
-                    var lines = 4;
-                    if(lines > 3){
-                        height = height + (lines - 3) * 40;
-                    }
-                    height = height + 38;/*单个文本域高度非图文编辑*/
                     layerFn.addOrEdit(title,'#div_params_edit',['450px','278px'],function(index,layero){
                         if(verifyFn.inputCheck('#name','参数名称不能为空'))return;
                         if(verifyFn.inputCheck('#ky','参数键key不能为空'))return;
