@@ -75,6 +75,12 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getListMap(new PageFormData(request)),response);
     }
 
+    /**获取刷新间隔*/
+    @GetMapping("/getRefreshValue")
+    public void getRefreshValue(final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getRefreshValue(),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);

@@ -43,6 +43,9 @@
                           <span class="ace-icon fa fa-battery-half bigger-110"></span>
                           超标
                         </button>
+                        <input type="hidden" id="min" />
+                        <input type="hidden" id="max" />
+                        <input type="hidden" id="refresh" value="60000"/>
                       </span>
                     </div>
                   </td>
@@ -164,12 +167,8 @@
     }
 
     setInterval(function(){
-      var params = {//大于等于min到小于max
-        min : 60,
-        max : 65,
-      };
-      thisPage.getListMap(params);
-    },60000);
+      thisPage.getListMap();
+    },$('#refresh').val());
 
     function openInfo(content,e,map,opts) {
       var p = e.target;
@@ -200,6 +199,19 @@
         heatmapOverlay.show();
     }
 
+    function initValue(min,max){
+      if(min != null && min != ''){
+        $('#min').val(min);
+      }else{
+        $('#min').val('');
+      }
+      if(max != null && max != ''){
+        $('#max').val(max);
+      }else{
+        $('#max').val('');
+      }
+    }
+
     //隐藏 热力图
     function closeHeatmap(){
         heatmapOverlay.hide();
@@ -207,6 +219,7 @@
     var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
     var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
     var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
+    var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
 
     var ztreeReqFlag = true;
     var domTree = 'proxyAreaTree';
@@ -284,39 +297,32 @@
           thisPage.initTree();//若再次调用便是刷新树
         },
         initDom : function(){
-          var params = {//大于等于min到小于max
-            min : 60,
-            max : 65,
-          };
-          thisPage.getListMap(params);
+          initValue(60,65);
+          thisPage.getRefreshValue();
+          thisPage.getListMap();
+        },
+        getRefreshValue : function(){
+          layerFn.ajaxGetResult(urlGetRefreshValue,{},function(data){
+            if(AppKey.code.code200 == data.code){
+              $('#refresh').val(data.data);
+            }
+          });
         },
         initTree : function(){
           tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
         },
         addEvent : function(){
           $('#btnSearch').on('click',function(){
-            var params = {
-              siteIds : $('#site_id').val(),
-              countyIds : $('#county_id').val()
-            };
-            thisPage.getListMap(params);
+            initValue();
+            thisPage.getListMap();
           });
           $('#btn6065').on('click',function(){
-            var params = {//大于等于min到小于max
-              min : 60,
-              max : 65,
-              siteIds : $('#site_id').val(),
-              countyIds : $('#county_id').val()
-            };
-            thisPage.getListMap(params);
+            initValue(60,65);
+            thisPage.getListMap();
           });
           $('#btn65').on('click',function(){
-            var params = {
-              min : 65,
-              siteIds : $('#site_id').val(),
-              countyIds : $('#county_id').val()
-            };
-            thisPage.getListMap(params);
+            initValue(65);
+            thisPage.getListMap();
           });
           $('#areaSearch').on('click',function(){
             var value = winFn.getDomValue('#siteName');
@@ -334,7 +340,13 @@
           tree_obj.cancelSelectedNode();
           tree_obj.checkAllNodes(false);//仅对 chkStyle = "checkbox"有效
         },
-        getListMap : function(params){
+        getListMap : function(){
+          var params = {//大于等于min到小于max
+            min : $('#min').val(),
+            max : $('#max').val(),
+            siteIds : $('#site_id').val(),
+            countyIds : $('#county_id').val()
+          };
           this.renderMap(this.tableRow('正在查询……'));
           layerFn.ajaxGetResult(urlGetListMap,params,function(data){
             thisPage.renderTableHtml(data);

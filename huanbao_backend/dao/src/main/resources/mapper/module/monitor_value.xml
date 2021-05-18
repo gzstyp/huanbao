@@ -288,4 +288,18 @@
     </if>
     limit 20
   </select>
+
+  <!--大于小于-->
+  <select id="queryMapGreaterLess" resultType="HashMap">
+      select ky,ve from params where ky in ('overproof','severityover')
+  </select>
+  <!--大于-->
+  <select id="queryMapGreaterValue" resultType="HashMap">
+      select ve from params where ky = 'overbreak'
+  </select>
+
+  <!-- 获取刷新间隔 -->
+  <select id="getRefreshValue" resultType="Integer">
+      select ve from params where ky = 'refresh'
+  </select>
 </mapper>

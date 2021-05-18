@@ -129,6 +129,43 @@ public class MonitorValueService{
                 formData.put("countyIds",isds);
             }
         }
+        final String min = formData.getString("min");
+        final String max = formData.getString("max");
+        formData.remove("min");
+        formData.remove("max");
+        if(min != null){
+            if(max != null){
+                final List<HashMap<String,Object>> list = monitorvalueDao.queryMapGreaterLess();
+                final HashMap<String,Object> map = new HashMap<>();
+                for(int i = 0; i < list.size(); i++){
+                    final HashMap<String,Object> object = list.get(i);
+                    final String ky = (String)object.get("ky");
+                    final Object ve = object.get("ve");
+                    switch (ky){
+                        case "overproof":
+                            map.put("overproof",ve);
+                            break;
+                        case "severityover":
+                            map.put("severityover",ve);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                formData.put("min",map.get("overproof"));
+                formData.put("max",map.get("severityover"));
+            }
+            if(max == null){
+                final HashMap<String,Object> map = monitorvalueDao.queryMapGreaterValue();
+                formData.put("min",map.getOrDefault("ve",65));
+            }
+        }
+        System.out.println(formData);
         return ToolClient.queryJson(monitorvalueDao.getListTable(formData));
+    }
+
+    public String getRefreshValue(){
+        final Integer result = monitorvalueDao.getRefreshValue();
+        return ToolClient.queryJson(result);
     }
 }

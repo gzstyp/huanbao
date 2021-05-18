@@ -55,4 +55,16 @@ public class MonitorValueDao{
     public List<HashMap<String,Object>> getListTable(final PageFormData formData){
         return dao.queryForListHashMap("monitor_value.getListTable",formData);
     }
+
+    public List<HashMap<String,Object>> queryMapGreaterLess(){
+        return dao.queryForListHashMap("monitor_value.queryMapGreaterLess");
+    }
+
+    public HashMap<String,Object> queryMapGreaterValue(){
+        return dao.queryForHashMap("monitor_value.queryMapGreaterValue");
+    }
+
+    public Integer getRefreshValue(){
+        return dao.queryForInteger("monitor_value.getRefreshValue");
+    }
 }
