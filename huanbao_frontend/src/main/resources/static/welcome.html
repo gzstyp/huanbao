@@ -153,7 +153,7 @@
         map.addOverlay(marker);
         addClickHandler(html,map,marker,opts);
       }*/
-      heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
+      var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
       map.addOverlay(heatmapOverlay);
       heatmapOverlay.setDataSet({data:data,max:65});/*最大值,可以调整,值越小显示的颜色越多，显示的圆圈就越多，它跟 count 的值有关 */
     }
@@ -184,21 +184,6 @@
         return !!(elem.getContext && elem.getContext('2d'));
     }
 
-    function setGradient(){
-        var gradient = {};
-        var colors = document.querySelectorAll("input[type='color']");
-        colors = [].slice.call(colors, 0);
-        colors.forEach(function(ele){
-            gradient[ele.getAttribute("data-key")] = ele.value;
-        });
-        heatmapOverlay.setOptions({"gradient": gradient});
-    }
-
-    //显示热力图
-    function openHeatmap(){
-        heatmapOverlay.show();
-    }
-
     function initValue(min,max){
       if(min != null && min != ''){
         $('#min').val(min);
@@ -212,10 +197,6 @@
       }
     }
 
-    //隐藏 热力图
-    function closeHeatmap(){
-        heatmapOverlay.hide();
-    }
     var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
     var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
     var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
