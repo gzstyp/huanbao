@@ -142,17 +142,16 @@
         enableMessage : true
       };
       if(!isSupportCanvas()){
-        alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~');
+        alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能!');
         return;
       }
-      /*for (i = 0; i < data.length; i++) {
-        var marker = new BMap.Marker(new BMap.Point(data[i].lng,data[i].lat));
-        var html = '<hr style="height:1px;color:#999;margin-top:6px;" />';
-        html += '监测点:'+data[i].siteName;
-        html += '<br/>噪音大小:'+data[i].count;
+      for (i = 0; i < data.length; i++) {
+        var marker = new BMap.Marker(new BMap.Point(data[i].lng,data[i].lat),{
+          icon : new BMap.Icon('/images/circle.png',new BMap.Size(36,36))
+        });
         map.addOverlay(marker);
-        addClickHandler(html,map,marker,opts);
-      }*/
+        addClickHandler(data[i].kid,map,marker,opts);
+      }
       var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
       map.addOverlay(heatmapOverlay);
       heatmapOverlay.setDataSet({data:data,max:65});/*最大值,可以调整,值越小显示的颜色越多，显示的圆圈就越多，它跟 count 的值有关 */
@@ -160,9 +159,9 @@
 
     initMap(106.703243,26.570824,[]);
 
-    function addClickHandler(content,map,marker,opts){
+    function addClickHandler(kid,map,marker,opts){
       marker.addEventListener("click", function(e) {
-        openInfo(content,e,map,opts)
+        openInfo(kid,e,map,opts)
       });
     }
 
@@ -170,14 +169,25 @@
       thisPage.getListMap();
     },$('#refresh').val());
 
-    function openInfo(content,e,map,opts) {
+    var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
+    var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
+    var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
+    var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
+    var urlGetAgo10Hour = '/monitorValue/getAgo10Hour';/*获取监测点过去10小时的噪音数据*/
+
+    function openInfo(kid,e,map,opts) {
+      layerFn.queryGetHandleHint(urlGetAgo10Hour,{kid:kid},function(data){
+        console.log(data);
+      });
+
+      var html = '<hr style="height:1px;color:#999;margin-top:6px;" />';
+      html += '过去10小时噪音情况:'+kid;
       var p = e.target;
       var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-      var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象
+      var infoWindow = new BMap.InfoWindow(html,opts); // 创建信息窗口对象
       map.openInfoWindow(infoWindow, point); //开启信息窗口
     }
 
-    //closeHeatmap();
     //判断浏览区是否支持canvas
     function isSupportCanvas(){
         var elem = document.createElement('canvas');
@@ -196,11 +206,6 @@
         $('#max').val('');
       }
     }
-
-    var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
-    var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
-    var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
-    var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
 
     var ztreeReqFlag = true;
     var domTree = 'proxyAreaTree';

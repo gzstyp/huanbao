@@ -67,4 +67,8 @@ public class MonitorValueDao{
     public Integer getRefreshValue(){
         return dao.queryForInteger("monitor_value.getRefreshValue");
     }
+
+    public List<HashMap<String,Object>> getAgo10Hour(final String kid){
+        return dao.queryForListHashMap("monitor_value.getAgo10Hour",kid);
+    }
 }

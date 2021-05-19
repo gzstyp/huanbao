@@ -258,7 +258,7 @@
   </select>
   <!-- 首页右边的列表,大于等于min到小于max -->
   <select id="getListTable" resultType="HashMap" parameterType="HashMap">
-    select se.name siteName,avg(mv.volume) count,se.lng,se.lat from (
+    select se.name siteName,avg(mv.volume) count,se.lng,se.lat,se.kid from (
     select mv.location_id,max(mv.create_time) max from monitor_value mv group by mv.location_id) lt
     left join monitor_value mv on mv.location_id = lt.location_id and lt.max = mv.create_time
     left join location ln on ln.kid = mv.location_id
@@ -279,14 +279,23 @@
         </if>
       </trim>
     </where>
-    group by se.name,se.lng,se.lat
+    group by se.name,se.lng,se.lat,se.kid
     <if test="min != null and max != null">
       <![CDATA[ having avg(mv.volume) >= #{min} and avg(mv.volume) < #{max} ]]>
     </if>
     <if test="min != null and max == null">
       <![CDATA[ having avg(mv.volume) >= #{min}]]>
     </if>
-    limit 20
+    limit 24
+  </select>
+
+  <!-- 获取监测点过去10小时的噪音数据 -->
+  <select id="getAgo10Hour" resultType="HashMap" parameterType="String">
+    select RIGHT(lft.createtime,2) createtime,LEFT(avg(lft.volume),5) volume from (select location_id,DATE_FORMAT(create_time,'%Y-%m-%d %H') createtime,volume from monitor_value
+    group by location_id,createtime,volume) lft
+    left join location ln on ln.kid = lft.location_id
+    where lft.createtime >= DATE_SUB(NOW(),INTERVAL 10 HOUR) and ln.site_id = #{kid}
+    group by createtime order by createtime
   </select>
 
   <!--大于小于-->

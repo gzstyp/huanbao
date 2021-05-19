@@ -81,6 +81,12 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getRefreshValue(),response);
     }
 
+    /**获取监测点过去10小时的噪音数据*/
+    @GetMapping("/getAgo10Hour")
+    public void getAgo10Hour(final String kid,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getAgo10Hour(kid),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);
