@@ -1568,7 +1568,7 @@ var refreshFlag = true;
             msg = (msg == null || msg == '' || msg == undefined)?'连接服务器失败,请稍后重试':msg;
             this.alert(msg);
         },
-        handleResult : function(msg,code){
+        handleResult : function(msg,code,time){
             msg = (msg == null || msg == '' || msg == undefined)?'操作错误':msg;
             code = parseInt(code);
             var imagerUrl = AppKey.iconDir+'warn.png';
@@ -1589,7 +1589,8 @@ var refreshFlag = true;
                     content = '<div><img src='+imagerUrl+' style='+img_style+'/>'+msg+'</div>';
                     break;
             }
-            var exitIndex = top.layer.alert(content,{title:AppKey.title,closeBtn:1,shade:0,time:1500,anim:2,offset:'rb',btn:null,});
+            time = (time == null || time == '') ? 2500 : time;
+            var exitIndex = top.layer.alert(content,{title:AppKey.title,closeBtn:1,shade:0,time:time,anim:2,offset:'rb',btn:null,});
             layerFn.EscLayer(exitIndex);
         },
         handleTop : function(msg,code){
@@ -1961,7 +1962,7 @@ var refreshFlag = true;
             return top.layer.open({
                 type : 1,
                 title : title,
-                content : $(domDivId),//这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                content : $(domDivId),
                 area : area,
                 btn : [AppKey.close],
                 time : time,

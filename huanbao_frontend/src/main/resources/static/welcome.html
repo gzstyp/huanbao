@@ -111,14 +111,15 @@
     <li style="margin-top:2px;"><span>获取数据失败</span></li>
   </ul>
 </div>
+<div id="div_echarts" style="height:260px;width:380px;display:none;padding-left:20px;"></div>
 <script type="text/javascript">
-    function windowShow() {
+    function windowShow(){
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
         $('#container').css({"width":(width-238)+"px","height":(height-132)+"px","min-height":(height-132)+"px"});
         $('#sideRight').css({"height":(height-132)+"px","min-height":(height-132)+"px"});
     }
-    var scripts = [null, null];
+    var scripts = [null,null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
       $(function($){
           windowShow();
@@ -151,7 +152,7 @@
           icon : new BMap.Icon('images/circle.png',new BMap.Size(36,36))
         });
         map.addOverlay(marker);
-        addClickHandler(obj.kid,obj.siteName,obj.count,map,marker,opts);
+        addClickHandler(obj.kid,obj.siteName,marker);
       }
       var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
       map.addOverlay(heatmapOverlay);
@@ -160,9 +161,9 @@
 
     initMap(106.703243,26.570824,[]);
 
-    function addClickHandler(kid,siteName,count,map,marker,opts){
+    function addClickHandler(kid,siteName,marker){
       marker.addEventListener("click", function(e){
-        openInfo(kid,siteName,count,e,map,opts);
+        openInfo(kid,siteName);
       });
     }
 
@@ -176,28 +177,26 @@
     var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
     var urlGetAgo10Hour = '/monitorValue/getAgo10Hour';/*获取监测点过去10小时的噪音数据*/
 
-    function openInfo(kid,siteName,count,e,map,opts) {
+    function openInfo(kid,siteName) {
       layerFn.queryGetHandleHint(urlGetAgo10Hour,{kid:kid},function(data){
         if(AppKey.code.code200 == data.code){
-          var html = '<hr style="height:1px;color:#999;margin-top:6px;"/>';
-          html += siteName+'过去10小时噪音情况:';
-          html += '<br/>';
           var list = data.data;
+          var hours = [];
+          var values = [];
           for(var i=0;i<list.length;i++){
             var obj = list[i];
-            html += '时间:'+obj.createtime+',噪音:'+obj.volume+'<br/>';
+            hours.push(obj.createtime);
+            values.push(obj.volume);
           }
-          var p = e.target;
-          var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-          var infoWindow = new BMap.InfoWindow(html,opts); // 创建信息窗口对象
-          map.openInfoWindow(infoWindow,point); //开启信息窗口
+          toECharts(hours,values);
+          layerFn.viewDialog(siteName+'过去10小时噪音情况','#div_echarts',['380px','360px']);
         }else{
-          layerFn.handleResult(data.msg,data.code);
+          layerFn.handleResult(data.msg,data.code,3000);
         }
       });
     }
     var colors = ['#5793f3'];
-    function toECharts(){
+    function toECharts(hours,values){
       var myChart = echarts.init(document.getElementById('div_echarts'));
       var option = {
         color: colors,
@@ -208,8 +207,8 @@
           }
         },
         grid: {
-          top: 70,
-          bottom: 50
+          top:34,
+          bottom:18
         },
         xAxis: [
           {
@@ -230,7 +229,7 @@
                 }
               }
             },
-            data: ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+            data: hours
           },
           {
             type: 'category',
@@ -252,7 +251,7 @@
                 }
               }
             },
-            data: ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+            data: hours
           }
         ],
         yAxis: [
@@ -265,7 +264,7 @@
             type: 'line',
             xAxisIndex: 1,
             smooth: true,
-            data: [67.61,67.56,67.59,66.50,62.50,68.76,70.26,67.39,63.89,60.84]
+            data: values
           }
         ]
       };
