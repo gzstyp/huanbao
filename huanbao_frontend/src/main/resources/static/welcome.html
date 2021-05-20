@@ -120,9 +120,9 @@
     }
     var scripts = [null, null];
     $('.page-content-area').ace_ajax('loadScripts', scripts, function(){
-        $(function($){
-            windowShow();
-        });
+      $(function($){
+          windowShow();
+      });
     });
     $(window).resize(function () {
         windowShow();
@@ -136,8 +136,8 @@
       map.setCurrentCity("贵阳市");		//设置当前显示城市
       map.enableScrollWheelZoom(); // 允许滚轮缩放
       var opts = {
-        width : 360,
-        height : 210,
+        width : 256,
+        height : 270,
         title : "<span style='width:100%;text-align:center;color:#0aaf19;display:inline-block;font-weight:bold;'>监测点信息</span>",
         enableMessage : true
       };
@@ -146,11 +146,12 @@
         return;
       }
       for (i = 0; i < data.length; i++) {
-        var marker = new BMap.Marker(new BMap.Point(data[i].lng,data[i].lat),{
-          icon : new BMap.Icon('/images/circle.png',new BMap.Size(36,36))
+        var obj = data[i];
+        var marker = new BMap.Marker(new BMap.Point(obj.lng,obj.lat),{
+          icon : new BMap.Icon('images/circle.png',new BMap.Size(36,36))
         });
         map.addOverlay(marker);
-        addClickHandler(data[i].kid,map,marker,opts);
+        addClickHandler(obj.kid,obj.siteName,obj.count,map,marker,opts);
       }
       var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
       map.addOverlay(heatmapOverlay);
@@ -159,9 +160,9 @@
 
     initMap(106.703243,26.570824,[]);
 
-    function addClickHandler(kid,map,marker,opts){
-      marker.addEventListener("click", function(e) {
-        openInfo(kid,e,map,opts)
+    function addClickHandler(kid,siteName,count,map,marker,opts){
+      marker.addEventListener("click", function(e){
+        openInfo(kid,siteName,count,e,map,opts);
       });
     }
 
@@ -175,17 +176,100 @@
     var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
     var urlGetAgo10Hour = '/monitorValue/getAgo10Hour';/*获取监测点过去10小时的噪音数据*/
 
-    function openInfo(kid,e,map,opts) {
+    function openInfo(kid,siteName,count,e,map,opts) {
       layerFn.queryGetHandleHint(urlGetAgo10Hour,{kid:kid},function(data){
-        console.log(data);
+        if(AppKey.code.code200 == data.code){
+          var html = '<hr style="height:1px;color:#999;margin-top:6px;"/>';
+          html += siteName+'过去10小时噪音情况:';
+          html += '<br/>';
+          var list = data.data;
+          for(var i=0;i<list.length;i++){
+            var obj = list[i];
+            html += '时间:'+obj.createtime+',噪音:'+obj.volume+'<br/>';
+          }
+          var p = e.target;
+          var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+          var infoWindow = new BMap.InfoWindow(html,opts); // 创建信息窗口对象
+          map.openInfoWindow(infoWindow,point); //开启信息窗口
+        }else{
+          layerFn.handleResult(data.msg,data.code);
+        }
       });
-
-      var html = '<hr style="height:1px;color:#999;margin-top:6px;" />';
-      html += '过去10小时噪音情况:'+kid;
-      var p = e.target;
-      var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-      var infoWindow = new BMap.InfoWindow(html,opts); // 创建信息窗口对象
-      map.openInfoWindow(infoWindow, point); //开启信息窗口
+    }
+    var colors = ['#5793f3'];
+    function toECharts(){
+      var myChart = echarts.init(document.getElementById('div_echarts'));
+      var option = {
+        color: colors,
+        tooltip: {
+          trigger: 'none',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        grid: {
+          top: 70,
+          bottom: 50
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return '时间点:' + params.value + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                }
+              }
+            },
+            data: ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+          },
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            axisLine: {
+              onZero: false,
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisPointer: {
+              label: {
+                formatter: function (params) {
+                  return '噪音值:' + params.seriesData[0].data;
+                  //return '时间1点:' + params.value + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                  //return '时间1点:' + params.seriesData[0].data;
+                }
+              }
+            },
+            data: ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            type: 'line',
+            xAxisIndex: 1,
+            smooth: true,
+            data: [67.61,67.56,67.59,66.50,62.50,68.76,70.26,67.39,63.89,60.84]
+          }
+        ]
+      };
+      myChart.setOption(option);
     }
 
     //判断浏览区是否支持canvas
