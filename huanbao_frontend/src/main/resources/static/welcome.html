@@ -189,8 +189,7 @@
             values.push(obj.volume);
           }
           toECharts(hours,values);
-          var value = object.count;
-          layerFn.viewDialog(object.siteName+'过去10小时噪音(当前:'+value+')','#div_echarts',['380px','360px']);
+          layerFn.viewDialog(object.siteName+'过去10小时噪音(当前:'+object.count+')','#div_echarts',['380px','360px']);
         }else{
           layerFn.handleResult(data.msg,data.code,3000);
         }
