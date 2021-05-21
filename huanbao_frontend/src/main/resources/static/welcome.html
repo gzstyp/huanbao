@@ -152,7 +152,7 @@
           icon : new BMap.Icon('images/circle.png',new BMap.Size(36,36))
         });
         map.addOverlay(marker);
-        addClickHandler(obj.kid,obj.siteName,marker);
+        addClickHandler(obj,marker);
       }
       var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
       map.addOverlay(heatmapOverlay);
@@ -161,9 +161,9 @@
 
     initMap(106.703243,26.570824,[]);
 
-    function addClickHandler(kid,siteName,marker){
+    function addClickHandler(obj,marker){
       marker.addEventListener("click", function(e){
-        openInfo(kid,siteName);
+        openInfo(obj);
       });
     }
 
@@ -177,8 +177,8 @@
     var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
     var urlGetAgo10Hour = '/monitorValue/getAgo10Hour';/*获取监测点过去10小时的噪音数据*/
 
-    function openInfo(kid,siteName) {
-      layerFn.queryGetHandleHint(urlGetAgo10Hour,{kid:kid},function(data){
+    function openInfo(object) {
+      layerFn.queryGetHandleHint(urlGetAgo10Hour,{kid:object.kid},function(data){
         if(AppKey.code.code200 == data.code){
           var list = data.data;
           var hours = [];
@@ -189,7 +189,8 @@
             values.push(obj.volume);
           }
           toECharts(hours,values);
-          layerFn.viewDialog(siteName+'过去10小时噪音情况','#div_echarts',['380px','360px']);
+          var value = object.count;
+          layerFn.viewDialog(object.siteName+'过去10小时噪音(当前:'+value+')','#div_echarts',['380px','360px']);
         }else{
           layerFn.handleResult(data.msg,data.code,3000);
         }
