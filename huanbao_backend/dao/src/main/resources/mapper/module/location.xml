@@ -347,7 +347,7 @@
     SELECT kid,name from site
     <where>
       <trim prefix="AND" prefixOverrides="AND">
-        <if test="value != null"> name LIKE CONCAT(#{value},'%') </if>
+        <if test="value != null"> name LIKE CONCAT('%',#{value},'%')</if>
       </trim>
     </where>
     LIMIT 30

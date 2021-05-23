@@ -181,7 +181,7 @@
     SELECT kid,flag_name from device_noise
     <where>
       <trim prefix="AND" prefixOverrides="AND">
-        <if test="value != null"> flag_name LIKE CONCAT(#{value},'%') </if>
+        <if test="value != null"> flag_name LIKE CONCAT('%',#{value},'%') </if>
       </trim>
     </where>
     LIMIT 30
