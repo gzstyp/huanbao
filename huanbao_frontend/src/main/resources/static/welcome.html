@@ -189,7 +189,7 @@
             values.push(obj.volume);
           }
           toECharts(hours,values);
-          layerFn.viewDialog(object.siteName+'过去10小时噪音(当前:'+object.count+')','#div_echarts',['380px','360px']);
+          layerFn.viewDialog(object.siteName+'最近10小时噪音(当前:'+object.count+')','#div_echarts',['380px','360px']);
         }else{
           layerFn.handleResult(data.msg,data.code,3000);
         }
@@ -520,7 +520,10 @@
               var obj = data[i];
               html += '<tr>';
               var volume = obj.count+"000000";
-              volume = volume.substring(0,5)
+              volume = volume.substring(0,5);
+              if(volume.indexOf(".") == -1){
+                volume = volume.substring(0,2)+".00";
+              }
               html += '<td onclick="thisPage.infoTips(\''+obj.siteName+'\',\''+volume+'\')" title="'+obj.siteName+'"><div style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;width:100px;">'+obj.siteName+'</div></td>';
               html += '<td>'+volume+'</td>';
               html += '</tr>';
