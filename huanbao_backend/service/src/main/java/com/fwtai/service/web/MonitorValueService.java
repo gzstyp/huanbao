@@ -3,10 +3,12 @@ package com.fwtai.service.web;
 import com.fwtai.bean.PageFormData;
 import com.fwtai.config.ConfigFile;
 import com.fwtai.tool.ToolClient;
+import com.fwtai.tool.ToolImage;
 import com.fwtai.tool.ToolString;
 import com.fwtai.web.MonitorValueDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +27,12 @@ import java.util.List;
 */
 @Service
 public class MonitorValueService{
+
+    @Value("${upload_dir_window}")
+    private String dir_window;
+
+    @Value("${upload_dir_linux}")
+    private String dir_linux;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -160,7 +168,17 @@ public class MonitorValueService{
                 formData.put("min",map.getOrDefault("ve",65));
             }
         }
-        return ToolClient.queryJson(monitorvalueDao.getListTable(formData));
+        final List<HashMap<String,Object>> list = monitorvalueDao.getListTable(formData);
+        final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;//删除 /oss/bt_backup 目录下所有最近更改时间超过2天的文件;find /oss/bt_backup -mtime +2 -name "*.tar.gz" | xargs -I {} rm -rf {}
+        list.forEach(map->{
+            final String value = (String)map.get("count");
+            final String icon = ToolString.getIdsChar32();
+            final String png = ToolImage.getPng(baseDir,icon,value);
+            if(png != null){
+                map.put("icon",icon+".png");
+            }
+        });
+        return ToolClient.queryJson(list);
     }
 
     public String getRefreshValue(){

@@ -149,7 +149,7 @@
       for (i = 0; i < data.length; i++) {
         var obj = data[i];
         var marker = new BMap.Marker(new BMap.Point(obj.lng,obj.lat),{
-          icon : new BMap.Icon('images/circle.png',new BMap.Size(36,36)),
+          icon : new BMap.Icon('/png/'+obj.icon,new BMap.Size(31,30)),
           title : obj.siteName
         });
         map.addOverlay(marker);
