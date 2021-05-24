@@ -91,12 +91,12 @@
 <div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
 <input type="hidden" id="monitor_value_edit_keyId"/>
 <div style="display:none;">
-    <input type="hidden" id="monitorValue_btn_listData"/>
-    <input type="hidden" id="monitorValue_btn_add"/>
-    <input type="hidden" id="monitorValue_row_edit"/>
-    <input type="hidden" id="monitorValue_row_queryById"/>
-    <input type="hidden" id="monitorValue_row_delById"/>
-    <input type="hidden" id="monitorValue_btn_delByKeys"/>
+  <input type="hidden" id="monitorValue_btn_listData"/>
+  <input type="hidden" id="monitorValue_btn_add"/>
+  <input type="hidden" id="monitorValue_row_edit"/>
+  <input type="hidden" id="monitorValue_row_queryById"/>
+  <input type="hidden" id="monitorValue_row_delById"/>
+  <input type="hidden" id="monitorValue_btn_delByKeys"/>
 </div>
 <script type="text/javascript">
     var scripts = [null,null];
@@ -118,6 +118,14 @@
                     params.push({"name":"device_flag","value":$("#key_device_flag").val()});
                 },
                 aoColumns : [
+                  {
+                    bSortable: false,
+                    mData : "kid",
+                    sWidth : "38px",
+                    sClass : "center",
+                    visible :false,/*不显示*/
+                    sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
+                  },
                     {
                         mData : "locationName",
                         sTitle : "监测点名称"
@@ -158,18 +166,25 @@
                         mData : "quality10",
                         sTitle : "空气pm10",
                       sWidth : "9%"
-                    }
+                    },
+                  {
+                    mData : "_kid_",
+                    sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
+                    bSortable : false,
+                    visible : false,/*不显示*/
+                    sWidth : "8%"
+                  }
                 ],
                 columnDefs : [
                     {
-                        targets: [0,1,2,3,4,5,6,7,8],
-                        render: function (value,type,row,meta){
+                        targets : [0,1,2,3,4,5,6,7,8,9,10],
+                        render : function (value,type,row,meta){
                             return pageDataTable.formatColumn(value);
                         }
                     },
                     {
-                        "visible":false,//列的隐藏显示
-                        "targets": []//指定列
+                        visible : false,//列的隐藏显示
+                        targets : []//指定列
                     }
                 ]
             });
