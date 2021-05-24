@@ -104,6 +104,10 @@
                     params.push({"name":"user_name","value":$("#key_user_name").val()},{"name":"result","value":$("#key_result").val()});
                 },
                 aoColumns : [
+                  {
+                    mData : "kid",
+                    visible :false
+                  },
                     {
                         mData : "user_name",
                         sTitle : "登录账号"
