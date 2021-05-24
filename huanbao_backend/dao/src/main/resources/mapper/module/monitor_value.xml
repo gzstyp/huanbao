@@ -286,6 +286,7 @@
     <if test="min != null and max == null">
       <![CDATA[ having avg(mv.volume) >= #{min}]]>
     </if>
+    ORDER BY se.name
     limit 24
   </select>
 

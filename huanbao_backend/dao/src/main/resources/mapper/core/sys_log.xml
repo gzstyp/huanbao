@@ -169,6 +169,7 @@
         ORDER BY ${column} ${order}
       </when>
       <otherwise>
+        ORDER BY create_time DESC
       </otherwise>
     </choose>
     <if test="section != null and pageSize != null">
