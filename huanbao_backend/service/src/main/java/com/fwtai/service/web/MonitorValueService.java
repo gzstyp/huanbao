@@ -1,5 +1,6 @@
 package com.fwtai.service.web;
 
+import com.fwtai.bean.ImagePng;
 import com.fwtai.bean.PageFormData;
 import com.fwtai.config.ConfigFile;
 import com.fwtai.tool.ToolClient;
@@ -172,10 +173,13 @@ public class MonitorValueService{
         final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;//删除 /oss/bt_backup 目录下所有最近更改时间超过2天的文件;find /oss/bt_backup -mtime +2 -name "*.tar.gz" | xargs -I {} rm -rf {}
         list.forEach(map->{
             final String value = (String)map.get("count");
+            final String siteName = (String)map.get("siteName");
             final String icon = ToolString.getIdsChar32();
-            final String png = ToolImage.getPng(baseDir,icon,value);
+            //final ImagePng png = ToolImage.getPng(baseDir,icon,siteName+"("+value+")");
+            final ImagePng png = ToolImage.getPng(baseDir,icon,value);
             if(png != null){
-                map.put("icon",icon+".png");
+                map.put("icon",png.getIcon()+".png");
+                map.put("width",png.getWidth());
             }
         });
         return ToolClient.queryJson(list);
