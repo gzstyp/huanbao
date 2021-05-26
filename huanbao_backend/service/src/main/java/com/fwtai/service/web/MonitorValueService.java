@@ -196,4 +196,19 @@ public class MonitorValueService{
         }
         return ToolClient.queryJson(monitorvalueDao.getAgo10Hour(kid));
     }
+
+    public String getStatistics(final String kid){
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择要查看的位置点");
+        }
+        final List<HashMap<String,Object>> toNow = monitorvalueDao.get0toNow(kid);//获取展示凌晨到现在的24小时实时监测数据
+        final List<HashMap<String,Object>> total60 = monitorvalueDao.getTotal60(kid);//统计图统计噪音超过60
+        if(toNow == null || toNow.size() <= 0){
+            return ToolClient.queryEmpty();
+        }
+        final HashMap<String,Object> result = new HashMap<>();
+        result.put("toNow",toNow);
+        result.put("total60",total60);
+        return ToolClient.queryJson(result);
+    }
 }

@@ -133,7 +133,7 @@ public final class ToolClient implements Serializable{
 	 * @QQ号码 444141300
 	 * @主页 http://www.fwtai.com
 	*/
-	private static String queryEmpty(){
+	public static String queryEmpty(){
         return createJson(ConfigFile.code201,ConfigFile.msg201);
 	}
 
