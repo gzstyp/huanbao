@@ -298,6 +298,28 @@
     where lft.createtime >= DATE_SUB(NOW(),INTERVAL 10 HOUR) and ln.site_id = #{kid}
     group by createtime order by createtime
   </select>
+  
+  <!--获取展示凌晨到现在的24小时实时监测数据-->
+  <select id="get0toNow" resultType="HashMap" parameterType="HashMap">
+    select lft.createtime,LEFT(avg(lft.volume),5) volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
+    where 
+    <![CDATA[ mv.create_time >= curdate() and mv.create_time < date_sub(curdate(),interval -1 day) ]]>
+    ) lft
+    left join location ln on ln.kid = lft.location_id
+    where ln.site_id = #{kid}
+    group by lft.createtime order by lft.createtime
+  </select>
+  
+  <!-- 统计图统计噪音超过60 -->
+  <select id="getTotal60" resultType="HashMap" parameterType="HashMap">
+    select RIGHT(lft.createtime,5) createtime,LEFT(avg(lft.volume),5) volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
+    where
+    <![CDATA[ mv.create_time >= curdate() and mv.create_time < date_sub(curdate(),interval -1 day) ]]>
+    ) lft
+    left join location ln on ln.kid = lft.location_id
+    where ln.site_id = #{kid}
+    group by lft.createtime having avg(lft.volume) > 60 order by lft.createtime
+  </select>
 
   <!--大于小于-->
   <select id="queryMapGreaterLess" resultType="HashMap">
