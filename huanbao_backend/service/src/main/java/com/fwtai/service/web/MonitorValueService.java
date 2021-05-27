@@ -113,6 +113,20 @@ public class MonitorValueService{
         if(validate != null)return validate;
         final String fieldInteger = ToolClient.validateInteger(formData,p_iColumns);
         if(fieldInteger != null)return fieldInteger;
+        final String date_start = formData.getString("date_start");
+        final String date_end = formData.getString("date_end");
+        if(date_start != null){
+            final boolean b = ToolString.checkDateTime(date_start);
+            if(!b){
+                return ToolClient.createJsonFail("日期格式有误");
+            }
+        }
+        if(date_end != null){
+            final boolean b = ToolString.checkDateTime(date_end);
+            if(!b){
+                return ToolClient.createJsonFail("日期格式有误");
+            }
+        }
         try {
             formData = ToolClient.dataTableMysql(formData);
             if(formData == null)return ToolClient.jsonValidateField();

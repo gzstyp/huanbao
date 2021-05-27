@@ -211,11 +211,19 @@
   </delete>
   <!-- listData条件查询 -->
   <sql id="sql_where_listData">
-    <trim prefix="WHERE" prefixOverrides="AND">
-      <if test="device_flag != null">
-        mv.device_flag LIKE CONCAT('%',#{device_flag},'%')
-      </if>
-    </trim>
+    <where>
+      <trim prefix="AND" prefixOverrides="AND">
+        <if test="device_flag != null">
+          mv.device_flag LIKE CONCAT('%',#{device_flag},'%')
+        </if>
+        <if test="date_start != null">
+          <![CDATA[ AND mv.create_time >= #{date_start} ]]>
+        </if>
+        <if test="date_end != null">
+          <![CDATA[ AND mv.create_time <= #{date_end} ]]>
+        </if>
+      </trim>
+    </where>
   </sql>
   <!-- 列表数据 -->
   <select id="listData" parameterType="HashMap" resultType="HashMap">

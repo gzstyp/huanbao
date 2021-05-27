@@ -652,6 +652,10 @@ public final class ToolString implements Serializable {
         final String pattern = "\\d{4}(\\-|\\/|.)\\d{1,2}\\1\\d{1,2}";
         return Pattern.matches(pattern,date);
 	}
+
+	public static boolean checkDateTime(final String dateTime){
+        return checkDate(dateTime,"yyyy-MM-dd HH:mm");
+	}
 	
 	/**
 	 * 判断是否是合格的指定时间格式
