@@ -297,6 +297,30 @@
     ORDER BY se.name
     limit 24
   </select>
+  
+  <!-- 获取设备的联机状态 -->
+  <select id="getDeviceStatus" resultType="HashMap" parameterType="HashMap">
+    select ln.device_id,dne.flag_name,ln.longs,ln.lat,DATE_FORMAT(max(mv.create_time),'%Y-%m-%d %H:%i:%s') createtime,IF(MINUTE(timediff(now(),max(mv.create_time))) > 2,0,1) status from location ln
+    left join monitor_value mv on mv.location_id = ln.kid
+    left join device_noise dne on dne.kid = ln.device_id
+    <where>
+      <trim prefix="AND" prefixOverrides="AND">
+        <if test="siteIds != null">
+          and ln.site_id in
+          <foreach item="item" collection="siteIds" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+        <if test="countyIds != null">
+          and ln.county_id in
+          <foreach item="item" collection="countyIds" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+      </trim>
+    </where>
+    group by ln.device_id,dne.flag_name,ln.longs,ln.lat
+  </select>
 
   <!-- 获取监测点过去10小时的噪音数据 -->
   <select id="getAgo10Hour" resultType="HashMap" parameterType="String">

@@ -56,6 +56,10 @@ public class MonitorValueDao{
         return dao.queryForListHashMap("monitor_value.getListTable",formData);
     }
 
+    public List<HashMap<String,Object>> getDeviceStatus(final PageFormData formData){
+        return dao.queryForListHashMap("monitor_value.getDeviceStatus",formData);
+    }
+
     public List<HashMap<String,Object>> queryMapGreaterLess(){
         return dao.queryForListHashMap("monitor_value.queryMapGreaterLess");
     }

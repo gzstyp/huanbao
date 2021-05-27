@@ -199,6 +199,25 @@ public class MonitorValueService{
         return ToolClient.queryJson(list);
     }
 
+    //获取设备的联机状态
+    public String getDeviceStatus(final PageFormData formData){
+        final String siteIds = formData.getString("siteIds");
+        final String countyIds = formData.getString("countyIds");
+        if(siteIds != null){
+            final ArrayList<String> isds = ToolString.keysToList(siteIds);
+            if(isds != null && isds.size() > 0){
+                formData.put("siteIds",isds);
+            }
+        }
+        if(countyIds != null){
+            final ArrayList<String> isds = ToolString.keysToList(countyIds);
+            if(isds != null && isds.size() > 0){
+                formData.put("countyIds",isds);
+            }
+        }
+        return ToolClient.queryJson(monitorvalueDao.getDeviceStatus(formData));
+    }
+
     public String getRefreshValue(){
         final Integer result = monitorvalueDao.getRefreshValue();
         return ToolClient.queryJson(result);

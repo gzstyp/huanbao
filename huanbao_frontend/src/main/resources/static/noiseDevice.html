@@ -125,16 +125,13 @@
     }
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
-      var marker = new BMap.Marker(new BMap.Point(obj.lng,obj.lat),{
-        icon : new BMap.Icon((obj.icon == null || obj.icon == '' ? 'images/circle.png' : '/png/'+obj.icon),new BMap.Size(obj.width,55)),
-        title : obj.siteName
+      var marker = new BMap.Marker(new BMap.Point(obj.longs,obj.lat),{
+        icon : new BMap.Icon((obj.status == 1 ? 'images/online.png' : 'images/offline.png'),new BMap.Size(30,30)),
+        title : obj.flag_name
       });
       map.addOverlay(marker);
       addClickHandler(obj,marker);
     }
-    var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":50,"visible":true});/*半径大小,可以调整*/
-    map.addOverlay(heatmapOverlay);
-    heatmapOverlay.setDataSet({data:data,max:65});/*最大值,可以调整,值越小显示的颜色越多，显示的圆圈就越多，它跟 count 的值有关 */
   }
 
   initMap(106.703243,26.570824,[]);
@@ -151,11 +148,14 @@
 
   var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
   var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
-  var urlGetListMap = '/monitorValue/getListMap';/*获取数据在map标识*/
+  var urlGetDeviceStatus = '/monitorValue/getDeviceStatus';/*获取设备的联机状态*/
   var urlGetRefreshValue = '/monitorValue/getRefreshValue';/*获取刷新频率*/
 
   function openInfo(object){
-    alert('详情');
+    var html = "设备标识名称</br/>"+object.flag_name;
+    html += "</br/>最近时间："+object.createtime;
+    html += "</br/>联机状态："+(object.status == 1 ? '联机' : '脱机');
+    layerFn.alert(html,(object.status == 1 ? AppKey.code.code200 : AppKey.code.code199));
   }
   //判断浏览区是否支持canvas
   function isSupportCanvas(){
@@ -276,7 +276,7 @@
           siteIds : $('#site_id').val(),
           countyIds : $('#county_id').val()
         };
-        layerFn.ajaxGetResult(urlGetListMap,params,function(data){
+        layerFn.queryGetHintResult(urlGetDeviceStatus,params,function(data){
           if(AppKey.code.code200 == data.code){
             initMap(106.703243,26.570824,data.data);
           }else{

@@ -75,6 +75,12 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getListMap(new PageFormData(request)),response);
     }
 
+    //获取设备的联机状态
+    @GetMapping("/getDeviceStatus")
+    public void getDeviceStatus(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getDeviceStatus(new PageFormData(request)),response);
+    }
+
     /**获取刷新间隔*/
     @GetMapping("/getRefreshValue")
     public void getRefreshValue(final HttpServletResponse response){
