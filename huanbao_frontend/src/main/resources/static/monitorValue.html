@@ -127,7 +127,7 @@
                 tableDom : tableDom,
                 sAjaxSource: getList,
                 fnServerParams : function(params){
-                    params.push({"name":"device_flag","value":$("#key_device_flag").val()});
+                    params.push({"name":"device_flag","value":$("#key_device_flag").val()},{"name":"date_start","value":$("#key_date_start").val()},{"name":"date_end","value":$("#key_date_end").val()});
                 },
                 aoColumns : [
                   {
