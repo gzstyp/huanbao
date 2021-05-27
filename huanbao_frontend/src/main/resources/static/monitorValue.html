@@ -6,6 +6,18 @@
                 <div class="clearfix">
                     <table class="no-border" style="display:inline">
                         <tr permission='monitorValue_btn_listData' style="display:none">
+                          <td style="padding: 0px 6px;">
+                            起止日期
+                          </td>
+                          <td>
+                            <div class="input-group">
+                              <input id="key_date_start" type="text" class="form-control search-query date-picker" placeholder="起始时间" style="width:130px" maxlength="16" onblur="value=value.replace(/[/]/g,'-')"/>
+                              <span class="input-group-addon">
+                                <i class="fa fa-exchange"></i>
+                              </span>
+                              <input id="key_date_end" type="text" class="form-control search-query date-picker" placeholder="截至时间" style="width:130px" maxlength="16" onblur="value=value.replace(/[/]/g,'-')"/>
+                            </div>
+                          </td>
                           <td class="hidden-480" style="padding: 0px 6px;">
                             设备标识
                           </td>
@@ -191,14 +203,13 @@
             var thisJquery = $(tableDom).dataTable();
             thisPage = {
                 init : function(){
-                    this.addEvent();
-                },
-                initDom : function(){
+                  winFn.initDateTime();
+                  this.addEvent();
                 },
                 createDropdown : function(){
                 },
                 addEvent : function(){
-                    this.btnEvent();
+                  this.btnEvent();
                 },
                 btnEvent : function(){
                     $(tableDom +' tbody').on('dblclick','tr',function(){

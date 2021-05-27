@@ -1068,6 +1068,18 @@ var refreshFlag = true;
                 });
             }
         },
+        /*默认初始化日期格式,属于bootstrap-datetimepicker.js;用法:winFn.initDateTime();或winFn.initDateTime('#id或.class');*/
+        initDateTime : function(dom){
+            if(dom == null || dom ==''){
+                $('.date-picker').datetimepicker({
+                    locale: 'ZH-CN'
+                });
+            }else{
+                $(dom).datetimepicker({
+                    locale: 'ZH-CN'
+                });
+            }
+        },
         /**页面统计,第一步:通过排序js统计列中计算最大的列作为表头列数 别名的key字段*/
         getMaxValue(listData,key){
             var list = new Array();
