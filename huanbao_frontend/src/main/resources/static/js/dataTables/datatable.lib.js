@@ -330,6 +330,7 @@
             }
         },
         formatColumn : function(value){
+            if(!value) return "";
             var width = winFn.fnGetWidth();
             if(width >= 1280){
                 if(width >= 1366){
