@@ -320,14 +320,12 @@
                         sWidth : "10%"
                     },
                     {
-                        mData : "longs",
-                        sTitle : "经度",
-                        sWidth : "8%"
-                    },
-                    {
-                        mData : "lat",
-                        sTitle : "纬度",
-                        sWidth : "8%"
+                      mData : "longs",
+                      sTitle : "经纬度",
+                      sWidth : "10%",
+                      render : function(value,type,row,meta){
+                        return row.longs+','+row.lat;
+                      }
                     },
                     {
                         mData : "flag_name",
@@ -374,7 +372,7 @@
                         }
                     },
                     {
-                        targets: [1,2,3,4,5,6,7,8,9],
+                        targets: [1,2,3,4,5,6,7,8],
                         render: function (value,type,row,meta){
                             return pageDataTable.formatColumn(value);
                         }
