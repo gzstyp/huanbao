@@ -19,6 +19,7 @@
               <div class="input-group">
                 <input type="text" id="site_label" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
                 <input type="hidden" id="site_id" class="form-control"/>
+                <input type="hidden" id="refresh" value="120000"/>
               </div>
             </td>
             <td class="hidden-480" style="padding: 0px 6px;">
@@ -113,12 +114,6 @@
     map.centerAndZoom(point,15);             // 初始化地图，设置中心点坐标和地图级别
     map.setCurrentCity("贵阳市");		//设置当前显示城市
     map.enableScrollWheelZoom(); // 允许滚轮缩放
-    var opts = {
-      width : 256,
-      height : 270,
-      title : "<span style='width:100%;text-align:center;color:#0aaf19;display:inline-block;font-weight:bold;'>监测点信息</span>",
-      enableMessage : true
-    };
     if(!isSupportCanvas()){
       alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能!');
       return;
