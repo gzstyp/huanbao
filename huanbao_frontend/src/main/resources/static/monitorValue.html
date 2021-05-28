@@ -156,9 +156,17 @@
                         sWidth : "10%"
                     },
                     {
-                        mData : "volume",
-                        sTitle : "噪音值",
-                      sWidth : "6%"
+                      mData : "volume",
+                      sTitle : "噪音值",
+                      sWidth : "6%",
+                      render : function(value,type,row,meta){
+                        value = Number.parseFloat(value)
+                        if(value >= 60){
+                          return "<span style='color:#f00;'>"+value+"</span>";
+                        }else{
+                          return value;
+                        }
+                      }
                     },
                     {
                         mData : "temperature",
