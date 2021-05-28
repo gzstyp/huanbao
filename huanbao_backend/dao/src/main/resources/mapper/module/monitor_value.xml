@@ -298,9 +298,11 @@
     limit 24
   </select>
   
-  <!-- 获取设备的联机状态 -->
+  <!-- 获取设备的联机状态,脱机大于120秒的算脱机 -->
   <select id="getDeviceStatus" resultType="HashMap" parameterType="HashMap">
-    select ln.device_id,dne.flag_name,ln.longs,ln.lat,DATE_FORMAT(max(mv.create_time),'%Y-%m-%d %H:%i:%s') createtime,IF(MINUTE(timediff(now(),max(mv.create_time))) > 2,0,1) status from location ln
+    select ln.device_id,dne.flag_name,ln.longs,ln.lat,DATE_FORMAT(max(mv.create_time),'%Y-%m-%d %H:%i:%s') createtime,
+    <![CDATA[ IF(timestampdiff(SECOND,now(),max(mv.create_time)) < -120,0,1) status ]]>
+    from location ln
     left join monitor_value mv on mv.location_id = ln.kid
     left join device_noise dne on dne.kid = ln.device_id
     <where>
