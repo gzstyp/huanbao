@@ -1,39 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>登录认证</title>
-    <link rel="stylesheet" type="text/css" href="style/reset.css">
-    <link rel="stylesheet" type="text/css" href="style/login.css">
+    <title>引路者服务平台</title>
+    <meta name="keywords" content="引路者,引领者,404,网址服务,短网址,找不到网页对象,url网址,URL引路服务,URL服务,网址跳转,uri,链接"/>
+    <meta name="description" content="引路者，仅为url网址指引道路服务,为个人、商家、企业打造一款网址云服务产品。一个可编辑可管理永久免费使用的url网址引路服务平台。让url网址永不出现404永无找不到网页对象永无找不到服务器"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style type="text/css">*{
+        margin:0;
+        padding:0;
+        font-family:"微软雅黑", Arial, Helvetica, sans-serif;
+        font-size:14px;
+    }
+    .foot{
+        background:#eee;
+        color:#a5a4a4;
+        height:60px;
+        line-height:60px;
+        text-align:center;
+        vertical-align:center;
+        width:100%;
+        position:absolute;bottom:0;left:0;
+    }
+    .container{
+        min-height:891px;
+        padding:3px 0px;
+    }
+    .row{
+        width:100%;
+        height:40px;
+        line-height:40px;
+        text-align:center;
+        background-color:#eee;
+    }
+    .middle{
+        margin-bottom:2px;
+    }
+    a{
+        text-decoration:none;
+        outline:none;
+        color:#1e9fff;
+    }</style>
+    <script type="text/javascript"> var time = 6;
+    function count(){
+        var fun = setTimeout('count()', 1000);
+        rest.innerHTML = time;
+        time--;
+        if(time == 0){
+            window.clearInterval(fun);
+            window.location.href = 'http://www.yinlz.com';
+        }
+    }</script>
 </head>
-<body>
-    <form action="/login" method="post">
-        <table style="border-collapse:separate; border-spacing:0px 4px;">
-            <tr>
-                <td>登录账号</td>
-                <td><input class="inputStyle" type="text" name="username"/></td>
-            </tr>
-            <tr>
-                <td>登录密码</td>
-                <td><input class="inputStyle" type="password" name="password"/></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" value="登录认证" class="btn">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <a href="/login.html" class="btn" style="display:block;background:#b4a477;font-size:14px;text-align:center;line-height:2.3">退出</a>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <a class="btn" style="display:block;background:#999;font-size:14px;text-align:center;line-height:2.3" href="http://www.dwz.cloud" target="_blank">www.dwz.cloud</a>
-                </td>
-            </tr>
-        </table>
-    </form>
-    <br/>
+<body onLoad="window.setTimeout('count()',1);">
+<div class="container">
+    <div class="row middle">访问URL网址不存在或已删除</div>
+    <div class="row"><img
+        src=data:image/gif;base64,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
+        style='border:none;vertical-align:middle;' height='16' width='16' alt='正在加载……'/>系统将在<span id='rest' style='color:#F00'></span>秒后自动返回<a href='http://www.yinlz.com' title='立即跳转'>URL引路者服务平台</a></div>
+</div>
+<div class="foot"><p>版权 引路者服务平台 黔ICP备14005277号-3</p></div>
 </body>
 </html>
