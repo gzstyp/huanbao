@@ -341,7 +341,7 @@
     ) lft
     left join location ln on ln.kid = lft.location_id
     where ln.site_id = #{kid}
-    group by lft.createtime order by lft.createtime
+    group by lft.createtime order by lft.createtime DESC
   </select>
   
   <!-- 统计图统计噪音超过60 -->
