@@ -118,13 +118,13 @@ public class MonitorValueService{
         if(date_start != null){
             final boolean b = ToolString.checkDateTime(date_start);
             if(!b){
-                return ToolClient.createJsonFail("日期格式有误");
+                return ToolClient.createJsonFail("开始日期格式有误");
             }
         }
         if(date_end != null){
             final boolean b = ToolString.checkDateTime(date_end);
             if(!b){
-                return ToolClient.createJsonFail("日期格式有误");
+                return ToolClient.createJsonFail("截至日期格式有误");
             }
         }
         try {
@@ -184,7 +184,7 @@ public class MonitorValueService{
             }
         }
         final List<HashMap<String,Object>> list = monitorvalueDao.getListTable(formData);
-        final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;//删除 /oss/bt_backup 目录下所有最近更改时间超过2天的文件;find /oss/bt_backup -mtime +2 -name "*.tar.gz" | xargs -I {} rm -rf {}
+        final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;
         list.forEach(map->{
             final String value = (String)map.get("count");
             final String siteName = (String)map.get("siteName");
@@ -230,18 +230,78 @@ public class MonitorValueService{
         return ToolClient.queryJson(monitorvalueDao.getAgo10Hour(kid));
     }
 
-    public String getStatistics(final String kid){
+    public String getStatistics(final PageFormData formData){
+        final String p_kid = "kid";
+        final String validate = ToolClient.validateField(formData,p_kid);
+        final String kid = formData.getString(p_kid);
+        if(validate != null)return validate;
         if(kid == null || kid.length() <= 0){
             return ToolClient.createJsonFail("请选择要查看的位置点");
         }
-        final List<HashMap<String,Object>> toNow = monitorvalueDao.get0toNow(kid);//获取展示凌晨到现在的24小时实时监测数据
-        final List<HashMap<String,Object>> total60 = monitorvalueDao.getTotal60(kid);//统计图统计噪音超过60
-        if(toNow == null || toNow.size() <= 0){
+        final String date_start = formData.getString("date_start");
+        final String date_end = formData.getString("date_end");
+        if(date_start != null){
+            final boolean b = ToolString.checkDateTime(date_start);
+            if(!b){
+                return ToolClient.createJsonFail("开始日期格式有误");
+            }
+        }
+        if(date_end != null){
+            final boolean b = ToolString.checkDateTime(date_end);
+            if(!b){
+                return ToolClient.createJsonFail("截至日期格式有误");
+            }
+        }
+        final List<HashMap<String,Object>> list = monitorvalueDao.get0toNow(formData);//获取展示凌晨到现在的24小时实时监测数据
+        if(list == null || list.size() <= 0){
             return ToolClient.queryEmpty();
         }
-        final HashMap<String,Object> result = new HashMap<>();
-        result.put("toNow",toNow);
-        result.put("total60",total60);
-        return ToolClient.queryJson(result);
+        return ToolClient.queryJson(list);
+    }
+
+    //最近7天
+    public String getLately7Day(final PageFormData formData){
+        final String p_kid = "kid";
+        final String validate = ToolClient.validateField(formData,p_kid);
+        final String kid = formData.getString(p_kid);
+        if(validate != null)return validate;
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择要查看的位置点");
+        }
+        final List<HashMap<String,Object>> list = monitorvalueDao.getTotal60(kid);//统计图统计噪音超过60
+        if(list == null || list.size() <= 0){
+            return ToolClient.queryEmpty();
+        }
+        return ToolClient.queryJson(list);
+    }
+
+    //最近1年
+    public String getLately365Day(final PageFormData formData){
+        final String p_kid = "kid";
+        final String validate = ToolClient.validateField(formData,p_kid);
+        final String kid = formData.getString(p_kid);
+        if(validate != null)return validate;
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择要查看的位置点");
+        }
+        final String date_start = formData.getString("date_start");
+        final String date_end = formData.getString("date_end");
+        if(date_start != null){
+            final boolean b = ToolString.checkDate(date_start);
+            if(!b){
+                return ToolClient.createJsonFail("开始日期格式有误");
+            }
+        }
+        if(date_end != null){
+            final boolean b = ToolString.checkDate(date_end);
+            if(!b){
+                return ToolClient.createJsonFail("截至日期格式有误");
+            }
+        }
+        final List<HashMap<String,Object>> list = monitorvalueDao.getLately365Day(formData);//获取展示凌晨到现在的24小时实时监测数据
+        if(list == null || list.size() <= 0){
+            return ToolClient.queryEmpty();
+        }
+        return ToolClient.queryJson(list);
     }
 }

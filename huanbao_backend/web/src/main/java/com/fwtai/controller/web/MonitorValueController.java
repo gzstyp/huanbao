@@ -93,10 +93,22 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getAgo10Hour(kid),response);
     }
 
-    /**获取监测点过去10小时的噪音数据*/
+    /**获取展示凌晨到现在的24小时实时监测数据,仅能查询2天的数据*/
     @GetMapping("/getStatistics")
-    public void getStatistics(final String kid,final HttpServletResponse response){
-        ToolClient.responseJson(monitorvalueService.getStatistics(kid),response);
+    public void getStatistics(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getStatistics(new PageFormData(request)),response);
+    }
+
+    /** 最近7天平均监测数据统计 */
+    @GetMapping("/getLately7Day")
+    public void getLately7Day(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getLately7Day(new PageFormData(request)),response);
+    }
+
+    /** 最近1年平均监测数据统计 */
+    @GetMapping("/getLately365Day")
+    public void getLately365Day(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getLately365Day(new PageFormData(request)),response);
     }
 
     @GetMapping("/notAuthorized")

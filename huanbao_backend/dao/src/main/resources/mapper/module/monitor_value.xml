@@ -217,10 +217,10 @@
           mv.device_flag LIKE CONCAT('%',#{device_flag},'%')
         </if>
         <if test="date_start != null">
-          <![CDATA[ AND mv.create_time >= #{date_start} ]]>
+          <![CDATA[ AND DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') >= #{date_start} ]]>
         </if>
         <if test="date_end != null">
-          <![CDATA[ AND mv.create_time <= #{date_end} ]]>
+          <![CDATA[ AND DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') <= #{date_end} ]]>
         </if>
       </trim>
     </where>
@@ -333,15 +333,55 @@
     group by createtime order by createtime
   </select>
   
-  <!--获取展示凌晨到现在的24小时实时监测数据-->
+  <!--获取展示凌晨到现在的24小时实时监测数据,仅能查询2天的数据-->
   <select id="get0toNow" resultType="HashMap" parameterType="HashMap">
     select lft.createtime,LEFT(avg(lft.volume),5) volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
-    where 
-    <![CDATA[ mv.create_time >= curdate() and mv.create_time < date_sub(curdate(),interval -1 day) ]]>
+    where
+    <choose>
+      <when test="date_start != null or date_end != null">
+        <trim prefixOverrides="AND">
+          <if test="date_start != null">
+            <![CDATA[ DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') >= #{date_start} ]]>
+          </if>
+          <if test="date_end != null">
+            <![CDATA[ AND DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') <= #{date_end} ]]>
+          </if>
+        </trim>
+      </when>
+      <otherwise>
+        <![CDATA[ mv.create_time >= curdate() and mv.create_time < date_sub(curdate(),interval -1 day) ]]>
+      </otherwise>
+    </choose>
     ) lft
     left join location ln on ln.kid = lft.location_id
     where ln.site_id = #{kid}
-    group by lft.createtime order by lft.createtime DESC
+    group by lft.createtime order by lft.createtime DESC limit 2880
+  </select>
+  
+  <!--最近1年平均监测数据统计,仅支持连续3年的数据-->
+  <select id="getLately365Day" resultType="HashMap" parameterType="HashMap">
+    select createtime,LEFT(avg(lft.volume),5) as volume from (
+        SELECT mv.location_id,DATE_FORMAT(mv.create_time,'%Y-%m-%d') createtime,mv.volume FROM monitor_value mv
+        where
+        <choose>
+          <when test="date_start != null or date_end != null">
+            <trim prefixOverrides="AND">
+              <if test="date_start != null">
+                <![CDATA[ DATE_FORMAT(mv.create_time,'%Y-%m-%d') >= #{date_start} ]]>
+              </if>
+              <if test="date_end != null">
+                <![CDATA[ AND DATE_FORMAT(mv.create_time,'%Y-%m-%d') <= #{date_end} ]]>
+              </if>
+            </trim>
+          </when>
+          <otherwise>
+            <![CDATA[ mv.create_time > DATE_SUB(CURDATE(), INTERVAL 1 YEAR) ]]>
+          </otherwise>
+        </choose>
+        ) lft
+    left join location ln on ln.kid = lft.location_id
+    where ln.site_id = #{kid}
+    group by lft.createtime order by lft.createtime DESC limit 1095
   </select>
   
   <!-- 统计图统计噪音超过60 -->

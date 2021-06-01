@@ -117,7 +117,7 @@
       <td style="padding-left:10px;">
         起止时间
       </td>
-      <td style="padding-left:10px;">
+      <td style="padding-left:10px;" id="day1">
         <div class="input-group">
           <input id="date_start" type="text" class="form-control search-query date-picker" placeholder="起始日期时间" style="width:130px" maxlength="16" onblur="value=value.replace(/[/]/g,'-')"/>
           <span class="input-group-addon" title="起止日期时间">
@@ -156,15 +156,15 @@
   <table class="no-border" style="display:inline;">
     <tr>
       <td style="padding-left:10px;">
-        起止时间
+        起止日期
       </td>
       <td style="padding-left:10px;">
-        <div class="input-group">
-          <input id="date_start365" type="text" class="form-control search-query date-picker" placeholder="起始日期时间" style="width:130px" maxlength="16" onblur="value=value.replace(/[/]/g,'-')"/>
-          <span class="input-group-addon" title="起止日期时间">
+        <div class="input-group" id="day365">
+          <input id="date_start365" type="text" class="form-control search-query date-picker" placeholder="起始日期" style="width:130px" data-date-format="yyyy-mm-dd" maxlength="10" onblur="value=value.replace(/[/]/g,'-')"/>
+          <span class="input-group-addon" title="起止日期">
             <i class="fa fa-long-arrow-right"></i>
           </span>
-          <input id="date_end365" type="text" class="form-control search-query date-picker" placeholder="截至日期时间" style="width:130px" maxlength="16" onblur="value=value.replace(/[/]/g,'-')"/>
+          <input id="date_end365" type="text" class="form-control search-query date-picker" placeholder="截至日期" style="width:130px" data-date-format="yyyy-mm-dd" maxlength="10" onblur="value=value.replace(/[/]/g,'-')"/>
           <input type="hidden" id="searchDataId365"/>
           <span class="input-group-btn">
               <button type="button" class="btn btn-inverse btn-white" id="dateSearch365">
@@ -587,7 +587,8 @@
     $(function(){
       thisPage = {
         init : function(){
-          winFn.initDateTime();
+          winFn.initDateTime('#day1 .date-picker');
+          winFn.initDate('#day365 .date-picker');
           this.addEvent();
           this.initDom();
           thisPage.initTree();//若再次调用便是刷新树
