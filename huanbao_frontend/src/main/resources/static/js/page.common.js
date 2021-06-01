@@ -2035,12 +2035,12 @@ var refreshFlag = true;
                 time : 1500
             });
         },
-        /**单个按钮的提示框,不带回调事件:layerFn.alert(msg,code);code不为空且值为[AppKey.code.code198,199,200,201,202,203,204,205,206,207]之一时显示图标*/
-        alert : function(msg,code){
+        /**单个按钮的提示框,默认有270px的宽度,不带回调事件:layerFn.alert(msg,code);code不为空且值为[AppKey.code.code198,199,200,201,202,203,204,205,206,207]之一时显示图标*/
+        alert : function(msg,code,width){
             if(code == null || code == ''){
                 opts.dialog({msg : msg});
             }else{
-                opts.dialog({msg : msg,code:code});
+                opts.dialog({msg : msg,code:code,width:width});
             }
         },
         /**提示输入框,layerFn.inputValue(function(value){});*/
@@ -2134,6 +2134,7 @@ var refreshFlag = true;
             var title = options.title || AppKey.title;
             var msg = options.msg || '操作有误';
             var code = options.code || null;
+            var width = options.width || AppKey.layerArea;
             code = parseInt(code);
             var imagerUrl = AppKey.iconDir+'warn.png';
             var img_style = '"vertical-align:middle;margin-right:3px;"';
@@ -2158,7 +2159,7 @@ var refreshFlag = true;
             }
             var exitIndex = top.layer.alert(content,{
                 title : title,
-                area : AppKey.layerArea,
+                area : width,
                 btn : [AppKey.confirm],
             });
             layerFn.EscLayer(exitIndex);

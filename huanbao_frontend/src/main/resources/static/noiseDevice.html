@@ -149,8 +149,8 @@
   function openInfo(object){
     var html = "设备标识名称</br/>"+object.flag_name;
     html += "</br/>最近时间："+object.createtime;
-    html += "</br/>联机状态："+(object.status == 1 ? '联机' : '脱机');
-    layerFn.alert(html,(object.status == 1 ? AppKey.code.code200 : AppKey.code.code199));
+    html += "</br/>状态："+(object.status == 1 ? '联机' : '脱机');
+    layerFn.alert(html,(object.status == 1 ? AppKey.code.code200 : AppKey.code.code199),'320px');
   }
   //判断浏览区是否支持canvas
   function isSupportCanvas(){
