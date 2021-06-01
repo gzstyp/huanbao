@@ -127,7 +127,7 @@
   </table>
 </div>
 <!--摘自降雨量-->
-<div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:30px;"></div>
+<div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
     function windowShow(){
         var width = winFn.fnGetWidth();
@@ -206,32 +206,26 @@
             hours.push(obj.createtime);
             values.push(obj.volume);
           }
-          toECharts(hours,values);
-          var item1 = data.data.toNow;
-          var item2 = data.data.total60;
-          var hours = [];
-          var values = [];
-          for(var i=0;i<item2.length;i++){
-            var obj = item2[i];
-            hours.push(obj.createtime);
-            values.push(obj.volume);
+          if(hours.length > 0 && values.length > 0){
+            toECharts(hours,values);
+          }else{
+            $('#div_echarts').html('<div style="width:192px;height:32px;line-height:32px;font-size:16px;text-align:center;margin-left:314px;padding-top:210px">当前没有超过60的噪音</div>');
           }
-          toECharts(hours,values);
-          var html1 = '';
+          var item1 = data.data.toNow;
+          var html = '';
           for(var i=0;i< item1.length;i++){
             var obj = item1[i];
-            html1 += '<tr>';
-            html1 += '<td>'+obj.createtime+'</td>';
-            
+            html += '<tr>';
+            html += '<td>'+obj.createtime+'</td>';
             var volume = Number.parseFloat(obj.volume);
             if(volume >= 60){
-              html1 += '<td style="color:#f00;">'+obj.volume+'</td>';
+              html += '<td style="color:#f00;">'+obj.volume+'</td>';
             }else{
-              html1 += '<td>'+obj.volume+'</td>';
+              html += '<td>'+obj.volume+'</td>';
             }
-            html1 += '</tr>';
+            html += '</tr>';
           }
-          $('#tableItem tbody').empty().html(html1);
+          $('#tableItem tbody').empty().html(html);
           top.layer.open({
             type : 1,
             title : '展示24小时实时监测数据',
