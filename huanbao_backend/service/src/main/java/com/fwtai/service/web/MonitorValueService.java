@@ -259,6 +259,22 @@ public class MonitorValueService{
         return ToolClient.queryJson(list);
     }
 
+    //统计噪凌晨到现在(24小时内)音超过60
+    public String getTotal60(final PageFormData formData){
+        final String p_kid = "kid";
+        final String validate = ToolClient.validateField(formData,p_kid);
+        final String kid = formData.getString(p_kid);
+        if(validate != null)return validate;
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择要查看的位置点");
+        }
+        final List<HashMap<String,Object>> list = monitorvalueDao.getTotal60(kid);//统计图统计噪音超过60
+        if(list == null || list.size() <= 0){
+            return ToolClient.queryEmpty();
+        }
+        return ToolClient.queryJson(list);
+    }
+
     //最近7天
     public String getLately7Day(final PageFormData formData){
         final String p_kid = "kid";
@@ -268,7 +284,7 @@ public class MonitorValueService{
         if(kid == null || kid.length() <= 0){
             return ToolClient.createJsonFail("请选择要查看的位置点");
         }
-        final List<HashMap<String,Object>> list = monitorvalueDao.getTotal60(kid);//统计图统计噪音超过60
+        final List<HashMap<String,Object>> list = monitorvalueDao.getLately7Day(formData);//最近7天
         if(list == null || list.size() <= 0){
             return ToolClient.queryEmpty();
         }

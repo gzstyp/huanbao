@@ -384,15 +384,27 @@
     group by lft.createtime order by lft.createtime DESC limit 1095
   </select>
   
-  <!-- 统计图统计噪音超过60 -->
+  <!-- 统计噪凌晨到现在(24小时内)音超过60 -->
   <select id="getTotal60" resultType="HashMap" parameterType="HashMap">
-    select RIGHT(lft.createtime,5) createtime,LEFT(avg(lft.volume),5) volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
+    select RIGHT(lft.createtime,5) createtime,LEFT(avg(lft.volume),5) as volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
     where
     <![CDATA[ mv.create_time >= curdate() and mv.create_time < date_sub(curdate(),interval -1 day) ]]>
     ) lft
     left join location ln on ln.kid = lft.location_id
     where ln.site_id = #{kid}
     group by lft.createtime having avg(lft.volume) > 60 order by lft.createtime
+  </select>
+  
+  <!-- 最近7天的平均值 -->
+  <select id="getLately7Day" resultType="HashMap" parameterType="HashMap">
+    select lft.createtime,LEFT(avg(lft.volume),5) as volume from (select DATE_FORMAT(mv.create_time,'%Y-%m-%d') createtime, mv.location_id, mv.volume
+    from monitor_value mv
+    where
+    <![CDATA[ DATE_SUB(CURDATE(), INTERVAL 7 DAY) < date(mv.create_time) ]]>
+    ) lft
+    left join location ln on ln.kid = lft.location_id
+    where ln.site_id = #{kid}
+    group by lft.createtime order by lft.createtime;
   </select>
 
   <!--大于小于-->

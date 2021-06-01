@@ -84,6 +84,10 @@ public class MonitorValueDao{
         return dao.queryForListHashMap("monitor_value.getLately365Day",formData);
     }
 
+    public List<HashMap<String,Object>> getLately7Day(final PageFormData formData){
+        return dao.queryForListHashMap("monitor_value.getLately7Day",formData);
+    }
+
     public List<HashMap<String,Object>> getTotal60(final String kid){
         return dao.queryForListHashMap("monitor_value.getTotal60",kid);
     }

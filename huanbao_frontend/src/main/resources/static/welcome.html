@@ -267,7 +267,7 @@
       
       html += '<div class="input-group" style="margin:6px 0px;">';
       html += '<span class="input-group-btn">';
-      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="openInfo(\''+obj.kid+'\')">';
+      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="open7Day(\''+obj.kid+'\')">';
       html += '<span class="fa fa-area-chart bigger-110"></span>';
       html += '最近7天平均监测数据统计';
       html += '</button>';
@@ -395,6 +395,26 @@
       $('#tableItem365 tbody').empty().html(html);
     }
 
+    function open7Day(kid) {
+      layerFn.queryGetHandleHint(urlGetLately7Day,{kid:kid},function(data){
+        if(AppKey.code.code200 == data.code){
+          var list = data.data;
+          var hours = [];
+          var values = [];
+          for(var i=0;i<list.length;i++){
+            var obj = list[i];
+            hours.push(obj.createtime);
+            values.push(obj.volume);
+          }
+          toECharts(hours,values);
+          layerFn.viewDialog('最近7天平均监测数据统计','#div_echarts',['875px','536px']);
+        }else{
+          layerFn.handleResult(data.msg,data.code,3000);
+        }
+      });
+    }
+
+    //凌晨到当前时刻(24小时内)的噪音超过60分贝
     function openInfo(kid) {
       layerFn.queryGetHandleHint(urlGetLately7Day,{kid:kid},function(data){
         if(AppKey.code.code200 == data.code){
