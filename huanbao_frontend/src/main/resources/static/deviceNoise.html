@@ -308,12 +308,7 @@
                     }else{
                         if(verifyFn.inputCheck('#deviceNoise_btn_add','没有添加权限'))return;
                     }
-                    var height = 240;
-                    var lines = 8;
-                    if(lines > 3){
-                        height = height + (lines - 3) * 40;
-                    }
-                    layerFn.addOrEdit(title,'#div_device_noise_edit',['500px',height+'px'],function(index,layero){
+                    layerFn.addOrEdit(title,'#div_device_noise_edit',['500px','432px'],function(index,layero){
                         //var editKey = winFn.getDomValue(inputEditKeyId);//用于某些值在新增时必填,编辑时可填可不填,填时则更新,否则不更新
                         //if(editKey == null){}
                         if(verifyFn.inputCheck('#device_flag','设备标识不能为空'))return;

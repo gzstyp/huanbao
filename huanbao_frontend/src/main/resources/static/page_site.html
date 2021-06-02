@@ -49,7 +49,7 @@
         </div>
     </div>
 </div>
-<div id="div_site_edit" style="display:none;padding:20px 0px;">
+<div id="div_site_edit" style="display:none;">
     <form class="form-horizontal" id="form_site_edit" role="form">
         <label class="col-sm-3 control-label no-padding-right" for="name"><div class="hr-4"></div>地点名称</label>
         <div class="col-sm-7">
@@ -82,6 +82,11 @@
             </span>
           </div>
         </div>
+      <label class="col-sm-3 control-label no-padding-right" for="name"><div class="hr-4"></div>位置地址</label>
+      <div class="col-sm-7">
+        <div class="hr-4"></div>
+        <input type="text" id="address" placeholder="位置地址" class="form-control" maxlength="128"/>
+      </div>
     </form>
 </div>
 <div id="divKeyColumns" style="display:none;padding:1px 0px;"></div>
@@ -282,7 +287,7 @@
                     }else{
                         if(verifyFn.inputCheck('#site_btn_add','没有添加权限'))return;
                     }
-                    layerFn.addOrEdit(title,'#div_site_edit',['400px','230px'],function(index,layero){
+                    layerFn.addOrEdit(title,'#div_site_edit',['400px','240px'],function(index,layero){
                         if(verifyFn.inputCheck('#name','位置地点名称不能为空'))return;
                         if(verifyFn.inputCheck('#lng','请输入经度'))return;
                         if(verifyFn.inputCheck('#lat','纬度不能为空'))return;
