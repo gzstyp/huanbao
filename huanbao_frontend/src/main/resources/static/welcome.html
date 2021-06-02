@@ -258,6 +258,15 @@
 
       html += '<div class="input-group">';
       html += '<span class="input-group-btn">';
+      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="getTotal60(\''+obj.kid+'\')">';
+      html += '<span class="fa fa-area-chart bigger-110"></span>';
+      html += '凌晨到现在超过60趋势图';
+      html += '</button>';
+      html += '</span>';
+      html += '</div>';
+      
+      html += '<div class="input-group" style="padding-top:6px;">';
+      html += '<span class="input-group-btn">';
       html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="openListTable(\''+obj.kid+'\')">';
       html += '<span class="ace-icon fa fa-eye bigger-110"></span>';
       html += '查看24小时实时监测数据';
@@ -284,7 +293,7 @@
       html += '</div>';
       
       $('#div_btns').empty().html(html);
-      layerFn.viewDialog('['+obj.siteName+']操作选项','#div_btns',['370px','250px']);
+      layerFn.viewDialog('['+obj.siteName+']操作选项','#div_btns',['370px','290px']);
     }
 
     setInterval(function(){
@@ -298,12 +307,14 @@
     var urlGetListMap = '/monitorValue/getListMap';
     /*获取刷新频率*/
     var urlGetRefreshValue = '/monitorValue/getRefreshValue';
-    /*获取展示凌晨到现在的24小时实时监测数据*/
+    /*查看24小时实时监测数据,仅能查询2天的数据*/
     var urlGetStatistics = '/monitorValue/getStatistics';
     /* 最近7天平均监测数据统计 */
     var urlGetLately7Day = '/monitorValue/getLately7Day';
-    /* 最近7天平均监测数据统计 */
+    /* 最近1年平均监测数据统计 */
     var urlGetLately365Day = '/monitorValue/getLately365Day';
+    /* 统计噪凌晨到现在(24小时内)音超过60 */
+    var urlGetTotal60 = '/monitorValue/getTotal60';
     
     function openListTable(kid){
       $('#searchDataId').val(kid);
@@ -408,6 +419,25 @@
           }
           toECharts(hours,values);
           layerFn.viewDialog('最近7天平均监测数据统计','#div_echarts',['875px','536px']);
+        }else{
+          layerFn.handleResult(data.msg,data.code,3000);
+        }
+      });
+    }
+    
+    function getTotal60(kid) {
+      layerFn.queryGetHandleHint(urlGetTotal60,{kid:kid},function(data){
+        if(AppKey.code.code200 == data.code){
+          var list = data.data;
+          var hours = [];
+          var values = [];
+          for(var i=0;i<list.length;i++){
+            var obj = list[i];
+            hours.push(obj.createtime);
+            values.push(obj.volume);
+          }
+          toECharts(hours,values);
+          layerFn.viewDialog('凌晨到当前时刻超过60趋势','#div_echarts',['875px','536px']);
         }else{
           layerFn.handleResult(data.msg,data.code,3000);
         }
