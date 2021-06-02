@@ -127,29 +127,34 @@
                         sTitle : '<label title="全选|不选"><input type="checkbox" class="ace" /><span class="lbl"></span></label>'
                     },
                     {
-                        mData : "name",
-                        sTitle : "位置地点名称"
+                      mData : "name",
+                      sTitle : "位置地点名称",
+                      sWidth : "25%"
+                    },
+                    {
+                        mData : "address",
+                        sTitle : "位置地址"
                     },
                     {
                         mData : "lng",
                         sTitle : "经度",
-                        sWidth : "10%"
+                        sWidth : "8%"
                     },
                     {
                         mData : "lat",
                         sTitle : "纬度",
-                        sWidth : "10%"
+                        sWidth : "8%"
                     },
                     {
                         mData : "create_time",
                         sTitle : "创建时间",
-                        sWidth : "15%"
+                        sWidth : "13%"
                     },
                     {
                         mData : "_kid_",
                         sTitle : "<label style='color:#000;margin-left:6px;' title='单行操作'>操作选项</label>",
                         bSortable : false,
-                        sWidth : "10%"
+                        sWidth : "8%"
                     }
                 ],
                 columnDefs : [
@@ -291,11 +296,13 @@
                         if(verifyFn.inputCheck('#name','位置地点名称不能为空'))return;
                         if(verifyFn.inputCheck('#lng','请输入经度'))return;
                         if(verifyFn.inputCheck('#lat','纬度不能为空'))return;
+                        if(verifyFn.inputCheck('#address','位置地址不能为空'))return;
                         var params = {
-                            name : winFn.getDomValue('#name'),
-                            lng : winFn.getDomValue('#lng'),
-                            lat : winFn.getDomValue('#lat'),
-                            kid : winFn.getDomValue(inputEditKeyId)
+                          name : winFn.getDomValue('#name'),
+                          lng : winFn.getDomValue('#lng'),
+                          lat : winFn.getDomValue('#lat'),
+                          address : winFn.getDomValue('#address'),
+                          kid : winFn.getDomValue(inputEditKeyId)
                         };
                         layerFn.submit(url,params,function(data){
                             thisPage.complete(data,index,true);

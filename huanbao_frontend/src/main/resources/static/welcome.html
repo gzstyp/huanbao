@@ -5,6 +5,10 @@
         width:1366px;
         margin-left:-4px;
     }
+    a:link,a:visited,a:hover,a:active{
+        text-decoration: none;
+        outline:none;
+    }
 </style>
 <div class="row">
     <div class="col-xs-12">
@@ -111,7 +115,7 @@
     <li style="margin-top:2px;"><span>获取数据失败</span></li>
   </ul>
 </div>
-<div id="div_tabs" style="display:none;padding-top:4px;">
+<div id="div_tabs" style="display:none;padding-top:4px;margin-bottom:-20px;">
   <table class="no-border" style="display:inline;">
     <tr>
       <td style="padding-left:10px;">
@@ -152,7 +156,7 @@
     </tbody>
   </table>
 </div>
-<div id="div_tabs_365" style="display:none;padding-top:4px;">
+<div id="div_tabs_365" style="display:none;padding-top:4px;margin-bottom:-20px;">
   <table class="no-border" style="display:inline;">
     <tr>
       <td style="padding-left:10px;">
@@ -193,7 +197,7 @@
     </tbody>
   </table>
 </div>
-<div id="div_btns" style="display:none;padding:4px;"></div>
+<div id="div_btns" style="display:none;margin-bottom:-20px;"></div>
 <!--摘自降雨量-->
 <div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
@@ -254,46 +258,41 @@
 
     function btnsOptions(obj){
       var html = '';
-      html += '<div style="margin-top:6px;margin-bottom:10px;">当前：'+obj.count+'</div>';
+      html += '<table class="table table-bordered">';
 
-      html += '<div class="input-group">';
-      html += '<span class="input-group-btn">';
-      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="getTotal60(\''+obj.kid+'\')">';
-      html += '<span class="fa fa-area-chart bigger-110"></span>';
-      html += '凌晨到现在超过60趋势图';
-      html += '</button>';
-      html += '</span>';
-      html += '</div>';
-      
-      html += '<div class="input-group" style="padding-top:6px;">';
-      html += '<span class="input-group-btn">';
-      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="openListTable(\''+obj.kid+'\')">';
-      html += '<span class="ace-icon fa fa-eye bigger-110"></span>';
-      html += '查看24小时实时监测数据';
-      html += '</button>';
-      html += '</span>';
-      html += '</div>';
-      
-      html += '<div class="input-group" style="margin:6px 0px;">';
-      html += '<span class="input-group-btn">';
-      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="open7Day(\''+obj.kid+'\')">';
-      html += '<span class="fa fa-area-chart bigger-110"></span>';
-      html += '最近7天平均监测数据统计';
-      html += '</button>';
-      html += '</span>';
-      html += '</div>';
-      
-      html += '<div class="input-group">';
-      html += '<span class="input-group-btn">';
-      html += '<button type="button" class="btn btn-inverse btn-white" style="border-radius:3px;" onclick="openListTable365(\''+obj.kid+'\')">';
-      html += '<span class="fa fa-area-chart bigger-110"></span>';
-      html += '最近1年平均监测数据统计';
-      html += '</button>';
-      html += '</span>';
-      html += '</div>';
-      
+      html += '<tr>';
+      html += '<td style="width:190px;">监测点名称</td>';
+      html += '<td>'+obj.siteName+'</td>';
+      html += '</tr>';
+
+      html += '<tr>';
+      html += '<td>地址</td>';
+      html += '<td>贵阳市南明区青云路262号</td>';
+      html += '</tr>';
+
+      html += '<tr>';
+      html += '<td>当前平均值</td>';
+      html += '<td>'+obj.count+'</td>';
+      html += '</tr>';
+    
+      html += '<tr>';
+      html += '<td colspan="2" style="padding-top:4px;padding-bottom:0px;">';  
+      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;" onclick="getTotal60(\''+obj.kid+'\')">凌晨到现在超过60趋势图</a></div>';
+      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable(\''+obj.kid+'\')">查看24小时实时监测数据</a></div>';
+      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="open7Day(\''+obj.kid+'\')">最近7天平均监测数据统计</a></div>';
+      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable365(\''+obj.kid+'\')">最近1年平均监测数据统计</a></div>';
+      html += '</td>';
+      html += '</tr>';
+
+      html += '<tr>';
+      html += '<td colspan="2" style="padding:0px;">';
+      html += '<img src="images/syxx800x700.jpg" width="600" height="480"/>';
+      html += '</td>';
+      html += '</tr>';
+
+      html += '</table>';      
       $('#div_btns').empty().html(html);
-      layerFn.viewDialog('['+obj.siteName+']操作选项','#div_btns',['370px','290px']);
+      layerFn.viewDialog('操作选项','#div_btns',['620px','550px']);
     }
 
     setInterval(function(){
@@ -320,7 +319,7 @@
       $('#searchDataId').val(kid);
       $('#date_start').val('');
       $('#date_end').val('');
-      layerFn.viewDialog('查看24小时实时监测数据','#div_tabs',['670px','620px']);
+      layerFn.viewDialog('查看24小时实时监测数据','#div_tabs',['650px','550px']);
       getListTable();
     }
     
@@ -328,7 +327,7 @@
       $('#searchDataId365').val(kid);
       $('#date_start365').val('');
       $('#date_end365').val('');
-      layerFn.viewDialog('查看最近1年每天平均监测数据统计','#div_tabs_365',['670px','620px']);
+      layerFn.viewDialog('查看最近1年每天平均监测数据统计','#div_tabs_365',['650px','550px']);
       getListTable365();
     }
     

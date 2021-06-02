@@ -36,7 +36,8 @@ public class SiteService{
         final String p_lat = "lat";
         final String p_lng = "lng";
         final String p_name = "name";
-        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name);
+        final String p_address = "address";
+        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name,p_address);
         if(validate != null)return validate;
         if(formData.getString("lat").length() > 20){
             return ToolClient.createJsonFail("纬度内容字数太长");
@@ -46,6 +47,9 @@ public class SiteService{
         }
         if(formData.getString("name").length() > 128){
             return ToolClient.createJsonFail("位置地点名称字数太长");
+        }
+        if(formData.getString("address").length() > 128){
+            return ToolClient.createJsonFail("位置地址字数太长");
         }
         formData.put("kid",ToolString.getIdsChar32());
         return ToolClient.executeRows(siteDao.add(formData));
@@ -57,7 +61,8 @@ public class SiteService{
         final String p_lat = "lat";
         final String p_lng = "lng";
         final String p_name = "name";
-        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name,p_kid);
+        final String p_address = "address";
+        final String validate = ToolClient.validateField(formData,p_lat,p_lng,p_name,p_kid,p_address);
         if(validate != null)return validate;
         if(formData.getString("lat").length() > 20){
             return ToolClient.createJsonFail("纬度字数太长");
@@ -67,6 +72,9 @@ public class SiteService{
         }
         if(formData.getString("name").length() > 128){
             return ToolClient.createJsonFail("位置地点名称字数太长");
+        }
+        if(formData.getString("address").length() > 128){
+            return ToolClient.createJsonFail("位置地址字数太长");
         }
         final String exist_key = siteDao.queryExistById(formData.getString(p_kid));
         if(exist_key == null){

@@ -60,6 +60,9 @@ public final class AuthorizationFilter extends BasicAuthenticationFilter{
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUser.getUsername(),null,jwtUser.getAuthorities()));
                 super.doFilterInternal(request,response,chain);
             } catch (final Exception exception){
+                final Class<? extends Exception> aClass = exception.getClass();
+                System.out.println("aClass -> " + aClass);
+                exception.printStackTrace();
                 RenewalToken.remove();
                 FlagToken.set(2);
                 //todo 勿删,走这里因为没有角色权限信息,所以要被 AuthenticationEntryPoint 的实现类拦截下来并执行
