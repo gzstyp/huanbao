@@ -39,6 +39,10 @@
     </trim>
     WHERE kid = #{kid} LIMIT 1
   </update>
+  <!-- 绑定图片或修改图片 -->
+  <update id="editImage" parameterType="HashMap">
+    UPDATE SITE SET image = #{image} WHERE kid = #{kid} LIMIT 1
+  </update>
   <select id="queryExistById" resultType="String" parameterType="String">
     SELECT kid FROM SITE WHERE kid = #{kid} LIMIT 1
   </select>
@@ -78,6 +82,7 @@
       lng,
       lat,
       address,
+      image,
       DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time
     FROM SITE
     <include refid="sql_where_listData"/>

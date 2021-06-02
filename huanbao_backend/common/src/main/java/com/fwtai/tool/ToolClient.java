@@ -1041,7 +1041,7 @@ public final class ToolClient implements Serializable{
      * @QQ 444141300
      * @创建时间 2021年3月25日 18:18:31
     */
-    public static UploadObject uploadExcel(final HttpServletRequest request,final String baseDir,final String prefixType,final Integer limit,final boolean verify){
+    public static UploadObject uploadImage(final HttpServletRequest request,final String baseDir,final String prefixType,final Integer limit,final boolean verify){
         return uploadFile(request,baseDir,prefixType,true,limit,verify);
     }
 

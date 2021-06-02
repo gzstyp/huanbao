@@ -141,7 +141,7 @@
   </select>
   <!-- 首页右边的列表,大于等于min到小于max -->
   <select id="getListTable" resultType="HashMap" parameterType="HashMap">
-    select se.name siteName,LEFT(avg(mv.volume),5) count,se.lng,se.lat,se.kid from (
+    select se.name siteName,LEFT(avg(mv.volume),5) count,se.lng,se.lat,se.kid,se.address,se.image from (
     select mv.location_id,max(mv.create_time) max from monitor_value mv group by mv.location_id) lt
     left join monitor_value mv on mv.location_id = lt.location_id and lt.max = mv.create_time
     left join location ln on ln.kid = mv.location_id
@@ -162,7 +162,7 @@
         </if>
       </trim>
     </where>
-    group by se.name,se.lng,se.lat,se.kid
+    group by se.name,se.lng,se.lat,se.kid,se.address,se.image
     <if test="min != null and max != null">
       <![CDATA[ having avg(mv.volume) >= #{min} and avg(mv.volume) < #{max} ]]>
     </if>

@@ -267,7 +267,7 @@
 
       html += '<tr>';
       html += '<td>地址</td>';
-      html += '<td>贵阳市南明区青云路262号</td>';
+      html += '<td>'+obj.address+'</td>';
       html += '</tr>';
 
       html += '<tr>';
@@ -280,13 +280,17 @@
       html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;" onclick="getTotal60(\''+obj.kid+'\')">凌晨到现在超过60趋势图</a></div>';
       html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable(\''+obj.kid+'\')">查看24小时实时监测数据</a></div>';
       html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="open7Day(\''+obj.kid+'\')">最近7天平均监测数据统计</a></div>';
-      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable365(\''+obj.kid+'\')">最近1年平均监测数据统计</a></div>';
+      html += '<div><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable365(\''+obj.kid+'\')">最近1年平均监测数据统计</a></div>';
       html += '</td>';
       html += '</tr>';
 
       html += '<tr>';
       html += '<td colspan="2" style="padding:0px;">';
-      html += '<img src="images/syxx800x700.jpg" width="600" height="480"/>';
+      if(obj.image != null && obj.image != ''){
+        html += '<img src="'+obj.image+'" width="600" height="480"/>';
+      }else{
+        html += '<img src="images/default_image.png" width="600" height="480"/>';
+      }
       html += '</td>';
       html += '</tr>';
 

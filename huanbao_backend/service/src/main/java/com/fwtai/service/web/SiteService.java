@@ -1,12 +1,15 @@
 package com.fwtai.service.web;
 
 import com.fwtai.bean.PageFormData;
+import com.fwtai.bean.UploadFile;
+import com.fwtai.bean.UploadObject;
 import com.fwtai.config.ConfigFile;
 import com.fwtai.tool.ToolClient;
 import com.fwtai.tool.ToolString;
 import com.fwtai.web.SiteDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,6 +30,12 @@ import java.util.List;
 public class SiteService{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${upload_dir_window}")
+    private String dir_window;
+
+    @Value("${upload_dir_linux}")
+    private String dir_linux;
 
     @Resource
     private SiteDao siteDao;
@@ -128,5 +137,22 @@ public class SiteService{
         } catch (Exception e){
             return ToolClient.dataTableException(formData.get("sEcho"));
         }
+    }
+
+    public String editImage(final HttpServletRequest request){
+        final PageFormData formData = new PageFormData(request);
+        final String p_image = "image";
+        final String p_kid = "kid";
+        final String validate = ToolClient.validateField(formData,p_kid,p_image);
+        if(validate != null)return validate;
+        final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;
+        final UploadObject uploadObject = ToolClient.uploadImage(request,baseDir,"/noise/images",1,true);
+        final String errorMsg = uploadObject.getErrorMsg();
+        if(errorMsg != null) return ToolClient.createJsonFail(errorMsg);
+        final ArrayList<UploadFile> listFiles = uploadObject.getListFiles();
+        if(listFiles == null || listFiles.size() <= 0) return ToolClient.createJsonFail("请选择全景图文件");
+        final String urlFile = listFiles.get(0).getUrlFile();
+        formData.put("image",urlFile);
+        return ToolClient.executeRows(siteDao.editImage(formData));
     }
 }

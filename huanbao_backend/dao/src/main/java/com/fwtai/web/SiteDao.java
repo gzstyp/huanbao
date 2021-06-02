@@ -5,7 +5,6 @@ import com.fwtai.datasource.DaoHandle;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,5 +49,9 @@ public class SiteDao{
 
     public HashMap<String,Object> listData(final PageFormData pageFormData){
         return dao.queryForPage(pageFormData,"site.listData","site.listTotal");
+    }
+
+    public int editImage(final PageFormData formData){
+        return dao.execute("site.editImage",formData);
     }
 }

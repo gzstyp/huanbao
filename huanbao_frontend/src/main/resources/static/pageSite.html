@@ -40,6 +40,16 @@
                                     </span>
                                 </div>
                             </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-inverse btn-white" id="btnImage" permission='site_btn_image' style="display:none">
+                                            <span class="fa fa-file-image-o bigger-110"></span>
+                                            全景图
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                     <div class="hidden-480 pull-right tableTools-container" permission='site_btn_listData' style="display:none"></div>
@@ -98,6 +108,10 @@
     <input type="hidden" id="site_row_queryById"/>
     <input type="hidden" id="site_row_delById"/>
     <input type="hidden" id="site_btn_delByKeys"/>
+    <input type="hidden" id="site_btn_image"/>
+</div>
+<div id="div_image_container" style="display:none;margin-bottom:-20px;padding-top:4px;">
+  <input type="file" id="file_image" class="form-control"/>
 </div>
 <script type="text/javascript">
     var scripts = [null,null];
@@ -112,6 +126,7 @@
             var urlQueryById = urlRoute + 'queryById';/*根据id查询对应的数据*/
             var urlDelById = urlRoute + 'delById';/*根据id删除对应的数据*/
             var urlDelByKeys = urlRoute + 'delByKeys';/*批量删除*/
+            var urlUpload = urlRoute + 'uploadImage';/*添加或修改图片*/
             var thisTable = pageDataTable.initDataTable({
                 tableDom : tableDom,
                 sAjaxSource: getList,
@@ -134,6 +149,18 @@
                     {
                         mData : "address",
                         sTitle : "位置地址"
+                    },
+                    {
+                      mData : "image",
+                      sTitle : "全景图",
+                      sWidth : "3%",
+                      render : function(value,type,row,meta){
+                        if(value == null || value == ''){
+                          return '';
+                        }else{
+                          return "<a style='outline:none;text-decoration: none;color:#3b8cff;margin-left:6px;' href='"+urlPrefix + value +"' target='_blank'>查看</a>";
+                        }
+                      }
                     },
                     {
                         mData : "lng",
@@ -191,9 +218,11 @@
             var thisJquery = $(tableDom).dataTable();
             thisPage = {
                 init : function(){
-                    this.addEvent();
+                  this.addEvent();
+                  this.initDom();
                 },
                 initDom : function(){
+                  winFn.initFileShoose('#file_image',['png','jpg']);
                 },
                 createDropdown : function(){
                 },
@@ -224,6 +253,9 @@
                     });
                     $('#btnDel').on('click',function(){
                         thisPage.delKeys();
+                    });
+                    $('#btnImage').on('click',function(){
+                        thisPage.addImage();
                     });
                     $('#btnLongs').on('click',function(){
                       thisPage.openPage();
@@ -316,6 +348,47 @@
                             }catch(e){}
                         });
                     }
+                },
+                addImage : function(){
+                  if(verifyFn.inputCheck('#site_btn_image','没有操作权限'))return;
+                  winFn.removeInputFile('#div_image_container');
+                  var kids = '';
+                  var index = 0;
+                  $(tableDom + ' tbody input:checked').each(function(){
+                    index ++;
+                    var value = this.value;
+                    if(value != null && value != ''){
+                      if(kids.length > 0)
+                        kids += ",";
+                      kids += value;
+                    }
+                  });
+                  if(kids == ''){
+                    layerFn.alert('请选择要绑定或编辑数据',AppKey.code.code199);
+                    return;
+                  }
+                  if(index > 1){
+                    layerFn.alert('仅支持单个操作',AppKey.code.code199);
+                    return;
+                  }
+                  layerFn.addOrEdit('绑定或编辑全景图','#div_image_container',['400px','240px'],function(index,layero){
+                    if(verifyFn.inputRequired('#file_image')){
+                      layerFn.alert('请选择图片文件',AppKey.code.code199);
+                      return;
+                    }
+                    var params = {
+                      image : winFn.getDomValue('#file_image'),
+                      kid :kids,
+                    };
+                    var formData = new FormData();
+                    for(var key in params){
+                      formData.append(key,params[key]);
+                    }
+                    formData.append("file_image",document.getElementById("file_image").files[0]);//获取上传文件
+                    layerFn.formSubmit(urlUpload,formData,function(data){
+                      thisPage.complete(data,index,true);
+                    });
+                  });
                 },
                 rowEdit : function(index){
                     var row = thisJquery.fnGetData(index);

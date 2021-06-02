@@ -70,6 +70,12 @@ public class SiteController{
         ToolClient.responseJson(siteService.listData(new PageFormData(request)),response);
     }
 
+    @PreAuthorize("hasAuthority('site_btn_image')")
+    @PostMapping("/uploadImage")
+    public void uploadImage(final HttpServletRequest request,final HttpServletResponse response){
+        ToolClient.responseJson(siteService.editImage(request),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);
