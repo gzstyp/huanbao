@@ -62,10 +62,8 @@ public final class AuthorizationFilter extends BasicAuthenticationFilter{
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(jwtUser.getUsername(),null,jwtUser.getAuthorities()));
                 super.doFilterInternal(request,response,chain);
             } catch (final Exception exception){
-                final Class<? extends Exception> aClass = exception.getClass();
-                System.out.println("aClass -> " + aClass);
                 if(exception instanceof MyBatisSystemException){
-                    throw new HandleException("系统出现错误,稍候重试");
+                    throw new HandleException("出现错误,稍候重试");
                 }else{
                     RenewalToken.remove();
                     FlagToken.set(2);
