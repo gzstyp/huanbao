@@ -307,8 +307,7 @@
       html += '<td colspan="2" style="padding:0px;" id="'+obj.kid+'">';
       if(obj.image != null && obj.image != ''){
         renderDeviceInfo(obj.kid,'');//置空,下行的加载动画
-        //html += '<img src="'+obj.image+'" width="600" height="480"/>';
-        html += '<img src="images/default_image.png" width="600" height="480"/>';
+        html += '<img src="'+obj.image+'" width="600" height="480"/>';
         //html += '<div style="height:230px;line-height:230px;text-align:center;"><img src="js/zTree/img/loading.gif" alt="正在加载……" style="vertical-align:middle">正在加载设备信息……</div>';
         getDeviceInfo(obj.kid);//获取设备信息
       }else{

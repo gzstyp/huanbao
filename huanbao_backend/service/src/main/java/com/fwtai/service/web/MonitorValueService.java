@@ -187,10 +187,8 @@ public class MonitorValueService{
         final String baseDir = ToolString.isLinuxOS() ? dir_linux : dir_window;
         list.forEach(map->{
             final String value = (String)map.get("count");
-            final String siteName = (String)map.get("siteName");
             final String icon = ToolString.getIdsChar32();
-            //final ImagePng png = ToolImage.getPng(baseDir,icon,siteName+"("+value+")");
-            final ImagePng png = ToolImage.getPng(baseDir,icon,value);
+            final ImagePng png = ToolImage.getPng(baseDir+"/png/",icon,value);
             if(png != null){
                 map.put("icon",png.getIcon()+".png");
                 map.put("width",png.getWidth());
