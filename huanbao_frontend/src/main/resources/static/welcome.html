@@ -337,7 +337,7 @@
           for(var inx in lists){
             var obj = lists[inx];
             if(obj.left != null && obj.top != null){
-              var ImgUrl = obj.status == 1 ? 'images/online.png' : 'images/offline.png';
+              var ImgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
               html += "<img src='"+ImgUrl+"' style='position:absolute;left:"+obj.left+"px;top:"+obj.top+"px;' alt='"+obj.flag_name+"' title='"+obj.flag_name+"'/>";
             }
           }
