@@ -217,6 +217,25 @@
         windowShow();
     }).resize();
 
+    /*获取位置地点名称*/
+    var urlGetSiteList = '/location/getSiteList';
+    /*获取区域构建树形菜单*/
+    var urlGetAreaTree = urlPrefix + '/location/getAreaTree';
+    /*获取数据在map标识*/
+    var urlGetListMap = '/monitorValue/getListMap';
+    /*获取刷新频率*/
+    var urlGetRefreshValue = '/monitorValue/getRefreshValue';
+    /*查看24小时实时监测数据,仅能查询2天的数据*/
+    var urlGetStatistics = '/monitorValue/getStatistics';
+    /* 最近7天平均监测数据统计 */
+    var urlGetLately7Day = '/monitorValue/getLately7Day';
+    /* 最近1年平均监测数据统计 */
+    var urlGetLately365Day = '/monitorValue/getLately365Day';
+    /* 统计噪凌晨到现在(24小时内)音超过60 */
+    var urlGetTotal60 = '/monitorValue/getTotal60';
+    /* 获取监测点所有的设备 */
+    var urlGetSiteDevice = '/monitorValue/getSiteDevice';
+
     //todo 圆形中心的颜色越深说明噪音越大
     function initMap(lng,lat,data){
       var map = new BMap.Map("container");          // 创建地图实例
@@ -285,39 +304,50 @@
       html += '</tr>';
 
       html += '<tr>';
-      html += '<td colspan="2" style="padding:0px;">';
+      html += '<td colspan="2" style="padding:0px;" id="'+obj.kid+'">';
       if(obj.image != null && obj.image != ''){
-        html += '<img src="'+obj.image+'" width="600" height="480"/>';
+        renderDeviceInfo(obj.kid,'');//置空,下行的加载动画
+        //html += '<img src="'+obj.image+'" width="600" height="480"/>';
+        html += '<img src="images/default_image.png" width="600" height="480"/>';
+        //html += '<div style="height:230px;line-height:230px;text-align:center;"><img src="js/zTree/img/loading.gif" alt="正在加载……" style="vertical-align:middle">正在加载设备信息……</div>';
+        getDeviceInfo(obj.kid);//获取设备信息
       }else{
         html += '<img src="images/default_image.png" width="600" height="480"/>';
       }
       html += '</td>';
       html += '</tr>';
 
-      html += '</table>';      
+      html += '</table>';
       $('#div_btns').empty().html(html);
       layerFn.viewDialog('操作选项','#div_btns',['620px','550px']);
+    }
+    
+    function getDeviceInfo(kid){
+      layerFn.queryGetHandleHint(urlGetSiteDevice,{kid:kid},function(data){
+        if(AppKey.code.code200 == data.code){
+          var lists = data.data;
+          var html = '';
+          for(var inx in lists){
+            var obj = lists[inx];
+            if(obj.left != null && obj.top != null){
+              var ImgUrl = obj.status == 1 ? 'images/online.png' : 'images/offline.png';
+              html += "<img src='"+ImgUrl+"' style='position:absolute;left:"+obj.left+"px;top:"+obj.top+"px;' alt='"+obj.flag_name+"' title='"+obj.flag_name+"'/>";
+            }
+          }
+          $('#' + kid).append(html);
+        }else{
+          renderDeviceInfo(kid,'<div style="height:230px;line-height:230px;text-align:center;"><img src="js/layer/theme/default/warn.png" style="vertical-align:middle">'+data.msg+'</div>');
+        }
+      });
+    }
+    
+    function renderDeviceInfo(kid,html){
+      $('#' + kid).html(html);
     }
 
     setInterval(function(){
       thisPage.getListMap();
     },$('#refresh').val());
-    /*获取位置地点名称*/
-    var urlGetSiteList = '/location/getSiteList';
-    /*获取区域构建树形菜单*/
-    var urlGetAreaTree = urlPrefix + '/location/getAreaTree';
-    /*获取数据在map标识*/
-    var urlGetListMap = '/monitorValue/getListMap';
-    /*获取刷新频率*/
-    var urlGetRefreshValue = '/monitorValue/getRefreshValue';
-    /*查看24小时实时监测数据,仅能查询2天的数据*/
-    var urlGetStatistics = '/monitorValue/getStatistics';
-    /* 最近7天平均监测数据统计 */
-    var urlGetLately7Day = '/monitorValue/getLately7Day';
-    /* 最近1年平均监测数据统计 */
-    var urlGetLately365Day = '/monitorValue/getLately365Day';
-    /* 统计噪凌晨到现在(24小时内)音超过60 */
-    var urlGetTotal60 = '/monitorValue/getTotal60';
     
     function openListTable(kid){
       $('#searchDataId').val(kid);

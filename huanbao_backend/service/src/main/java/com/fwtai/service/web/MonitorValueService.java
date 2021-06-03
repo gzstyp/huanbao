@@ -320,4 +320,12 @@ public class MonitorValueService{
         }
         return ToolClient.queryJson(list);
     }
+
+    //获取监测点所有的设备
+    public String getSiteDevice(final String kid){
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择监测点");
+        }
+        return ToolClient.queryJson(monitorvalueDao.getSiteDevice(kid));
+    }
 }

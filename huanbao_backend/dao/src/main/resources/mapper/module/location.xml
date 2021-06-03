@@ -6,41 +6,45 @@
     <update id="add" parameterType="HashMap">
         INSERT INTO LOCATION (
         <trim suffixOverrides=",">
-            <if test="kid != null">kid,</if>
-            <if test="device_id != null">device_id,</if>
-            <if test="site_id != null">site_id,</if>
-            <if test="name != null">name,</if>
-            <if test="longs != null">longs,</if>
-            <if test="lat != null">lat,</if>
-            <if test="province_id != null">province_id,</if>
-            <if test="province_name != null">province_name,</if>
-            <if test="city_id != null">city_id,</if>
-            <if test="city_name != null">city_name,</if>
-            <if test="county_id != null">county_id,</if>
-            <if test="county_name != null">county_name,</if>
-            <if test="address != null">address,</if>
-            <if test="area != null">area,</if>
-            <if test="description != null">description,</if>
-            <if test="create_time != null">create_time</if>
+          <if test="kid != null">kid,</if>
+          <if test="device_id != null">device_id,</if>
+          <if test="site_id != null">site_id,</if>
+          <if test="name != null">name,</if>
+          <if test="longs != null">longs,</if>
+          <if test="lat != null">lat,</if>
+          <if test="province_id != null">province_id,</if>
+          <if test="province_name != null">province_name,</if>
+          <if test="city_id != null">city_id,</if>
+          <if test="city_name != null">city_name,</if>
+          <if test="county_id != null">county_id,</if>
+          <if test="county_name != null">county_name,</if>
+          <if test="address != null">address,</if>
+          <if test="area != null">area,</if>
+          <if test="left != null">`left`,</if>
+          <if test="top != null">top,</if>
+          <if test="description != null">description,</if>
+          <if test="create_time != null">create_time</if>
         </trim>
         ) VALUES (
         <trim suffixOverrides=",">
-			<if test="kid != null">#{kid},</if>
-			<if test="device_id != null">#{device_id},</if>
-			<if test="site_id != null">#{site_id},</if>
-			<if test="name != null">#{name},</if>
-			<if test="longs != null">#{longs},</if>
-			<if test="lat != null">#{lat},</if>
-			<if test="province_id != null">#{province_id},</if>
-			<if test="province_name != null">#{province_name},</if>
-			<if test="city_id != null">#{city_id},</if>
-			<if test="city_name != null">#{city_name},</if>
-			<if test="county_id != null">#{county_id},</if>
-			<if test="county_name != null">#{county_name},</if>
-			<if test="address != null">#{address},</if>
-			<if test="area != null">#{area},</if>
-			<if test="description != null">#{description},</if>
-			<if test="create_time != null">#{create_time}</if>
+          <if test="kid != null">#{kid},</if>
+          <if test="device_id != null">#{device_id},</if>
+          <if test="site_id != null">#{site_id},</if>
+          <if test="name != null">#{name},</if>
+          <if test="longs != null">#{longs},</if>
+          <if test="lat != null">#{lat},</if>
+          <if test="province_id != null">#{province_id},</if>
+          <if test="province_name != null">#{province_name},</if>
+          <if test="city_id != null">#{city_id},</if>
+          <if test="city_name != null">#{city_name},</if>
+          <if test="county_id != null">#{county_id},</if>
+          <if test="county_name != null">#{county_name},</if>
+          <if test="address != null">#{address},</if>
+          <if test="area != null">#{area},</if>
+          <if test="left != null">#{left},</if>
+          <if test="top != null">#{top},</if>
+          <if test="description != null">#{description},</if>
+          <if test="create_time != null">#{create_time}</if>
         </trim>
         )
     </update>
@@ -48,190 +52,6 @@
     <select id="queryExistById" resultType="String" parameterType="String">
         SELECT kid FROM LOCATION WHERE kid = #{kid} LIMIT 1
     </select>
-
-    <!-- 基于主键kid的存在就更新,否则新增操作 -->
-    <update id="updateOrEdit" parameterType="HashMap">
-        INSERT INTO LOCATION (
-        <trim suffixOverrides=",">
-            <if test="kid != null">kid,</if>
-            <if test="device_id != null">device_id,</if>
-            <if test="site_id != null">site_id,</if>
-            <if test="name != null">name,</if>
-            <if test="longs != null">longs,</if>
-            <if test="lat != null">lat,</if>
-            <if test="province_id != null">province_id,</if>
-            <if test="province_name != null">province_name,</if>
-            <if test="city_id != null">city_id,</if>
-            <if test="city_name != null">city_name,</if>
-            <if test="county_id != null">county_id,</if>
-            <if test="county_name != null">county_name,</if>
-            <if test="address != null">address,</if>
-            <if test="area != null">area,</if>
-            <if test="description != null">description,</if>
-            <if test="create_time != null">create_time</if>
-        </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            <if test="kid != null">#{kid},</if>
-            <if test="device_id != null">#{device_id},</if>
-            <if test="site_id != null">#{site_id},</if>
-            <if test="name != null">#{name},</if>
-            <if test="longs != null">#{longs},</if>
-            <if test="lat != null">#{lat},</if>
-            <if test="province_id != null">#{province_id},</if>
-            <if test="province_name != null">#{province_name},</if>
-            <if test="city_id != null">#{city_id},</if>
-            <if test="city_name != null">#{city_name},</if>
-            <if test="county_id != null">#{county_id},</if>
-            <if test="county_name != null">#{county_name},</if>
-            <if test="address != null">#{address},</if>
-            <if test="area != null">#{area},</if>
-            <if test="description != null">#{description},</if>
-            <if test="create_time != null">#{create_time}</if>
-        </trim>
-        )
-        ON DUPLICATE KEY UPDATE
-        <trim suffixOverrides=",">
-            <if test="device_id != null">device_id = #{device_id},</if>
-            <if test="site_id != null">site_id = #{site_id},</if>
-            <if test="name != null">name = #{name},</if>
-            <if test="longs != null">longs = #{longs},</if>
-            <if test="lat != null">lat = #{lat},</if>
-            <if test="province_id != null">province_id = #{province_id},</if>
-            <if test="province_name != null">province_name = #{province_name},</if>
-            <if test="city_id != null">city_id = #{city_id},</if>
-            <if test="city_name != null">city_name = #{city_name},</if>
-            <if test="county_id != null">county_id = #{county_id},</if>
-            <if test="county_name != null">county_name = #{county_name},</if>
-            <if test="address != null">address = #{address},</if>
-            <if test="area != null">area = #{area},</if>
-            <if test="description != null">description = #{description},</if>
-            <if test="create_time != null">create_time = #{create_time}</if>
-        </trim>
-    </update>
-
-    <!-- 基于主键kid的批量插入还是批量更新操作 VALUES (字段) VALUES内是数据库的字段，而不是实体的字段或map的key -->
-    <update id="updateEditBatch" parameterType="ArrayList">
-        INSERT IGNORE INTO LOCATION (
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                    <if test="item.kid != null">kid,</if>
-                    <if test="item.device_id != null">device_id,</if>
-                    <if test="item.site_id != null">site_id,</if>
-                    <if test="item.name != null">name,</if>
-                    <if test="item.longs != null">longs,</if>
-                    <if test="item.lat != null">lat,</if>
-                    <if test="item.province_id != null">province_id,</if>
-                    <if test="item.province_name != null">province_name,</if>
-                    <if test="item.city_id != null">city_id,</if>
-                    <if test="item.city_name != null">city_name,</if>
-                    <if test="item.county_id != null">county_id,</if>
-                    <if test="item.county_name != null">county_name,</if>
-                    <if test="item.address != null">address,</if>
-                    <if test="item.area != null">area,</if>
-                    <if test="item.description != null">description,</if>
-                    <if test="item.create_time != null">create_time</if>
-                </if>
-            </trim>
-        </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.device_id != null">#{item.device_id},</if>
-                <if test="item.site_id != null">#{item.site_id},</if>
-                <if test="item.name != null">#{item.name},</if>
-                <if test="item.longs != null">#{item.longs},</if>
-                <if test="item.lat != null">#{item.lat},</if>
-                <if test="item.province_id != null">#{item.province_id},</if>
-                <if test="item.province_name != null">#{item.province_name},</if>
-                <if test="item.city_id != null">#{item.city_id},</if>
-                <if test="item.city_name != null">#{item.city_name},</if>
-                <if test="item.county_id != null">#{item.county_id},</if>
-                <if test="item.county_name != null">#{item.county_name},</if>
-                <if test="item.address != null">#{item.address},</if>
-                <if test="item.area != null">#{item.area},</if>
-                <if test="item.description != null">#{item.description},</if>
-                <if test="item.create_time != null">#{item.create_time}</if>
-            </trim>
-            )
-        </foreach>
-        ON DUPLICATE KEY UPDATE
-        <foreach collection="list" item="item" index="index">
-            <trim suffixOverrides=",">
-                <if test="index==0">
-                <if test="item.kid != null">kid = values(kid),</if>
-                <if test="item.device_id != null">device_id = values(device_id),</if>
-                <if test="item.site_id != null">site_id = values(site_id),</if>
-                <if test="item.name != null">name = values(name),</if>
-                <if test="item.longs != null">longs = values(longs),</if>
-                <if test="item.lat != null">lat = values(lat),</if>
-                <if test="item.province_id != null">province_id = values(province_id),</if>
-                <if test="item.province_name != null">province_name = values(province_name),</if>
-                <if test="item.city_id != null">city_id = values(city_id),</if>
-                <if test="item.city_name != null">city_name = values(city_name),</if>
-                <if test="item.county_id != null">county_id = values(county_id),</if>
-                <if test="item.county_name != null">county_name = values(county_name),</if>
-                <if test="item.address != null">address = values(address),</if>
-                <if test="item.area != null">area = values(area),</if>
-                <if test="item.description != null">description = values(description),</if>
-                <if test="item.create_time != null">create_time = values(create_time)</if>
-                </if>
-            </trim>
-        </foreach>
-    </update>
-
-    <!-- 批量添加|插入-->
-    <update id="addBatch" parameterType="ArrayList">
-        INSERT INTO LOCATION (
-            <foreach collection="list" item="item" index="index">
-                <trim suffixOverrides=",">
-                    <if test="index==0">
-                        <if test="item.kid != null">kid,</if>
-                        <if test="item.device_id != null">device_id,</if>
-                        <if test="item.site_id != null">site_id,</if>
-                        <if test="item.name != null">name,</if>
-                        <if test="item.longs != null">longs,</if>
-                        <if test="item.lat != null">lat,</if>
-                        <if test="item.province_id != null">province_id,</if>
-                        <if test="item.province_name != null">province_name,</if>
-                        <if test="item.city_id != null">city_id,</if>
-                        <if test="item.city_name != null">city_name,</if>
-                        <if test="item.county_id != null">county_id,</if>
-                        <if test="item.county_name != null">county_name,</if>
-                        <if test="item.address != null">address,</if>
-                        <if test="item.area != null">area,</if>
-                        <if test="item.description != null">description,</if>
-                        <if test="item.create_time != null">create_time</if>
-                    </if>
-                </trim>
-            </foreach>
-        ) VALUES
-        <foreach collection="list" item="item" index="index" separator="," >
-            (
-            <trim suffixOverrides=",">
-                <if test="item.kid != null">#{item.kid},</if>
-                <if test="item.device_id != null">#{item.device_id},</if>
-                <if test="item.site_id != null">#{item.site_id},</if>
-                <if test="item.name != null">#{item.name},</if>
-                <if test="item.longs != null">#{item.longs},</if>
-                <if test="item.lat != null">#{item.lat},</if>
-                <if test="item.province_id != null">#{item.province_id},</if>
-                <if test="item.province_name != null">#{item.province_name},</if>
-                <if test="item.city_id != null">#{item.city_id},</if>
-                <if test="item.city_name != null">#{item.city_name},</if>
-                <if test="item.county_id != null">#{item.county_id},</if>
-                <if test="item.county_name != null">#{item.county_name},</if>
-                <if test="item.address != null">#{item.address},</if>
-                <if test="item.area != null">#{item.area},</if>
-                <if test="item.description != null">#{item.description},</if>
-                <if test="item.create_time != null">#{item.create_time}</if>
-            </trim>
-            )
-        </foreach>
-    </update>
 
 	<!-- 编辑数据 -->
 	<update id="edit" parameterType="HashMap">
@@ -250,6 +70,8 @@
             <if test="county_name != null">county_name = #{county_name},</if>
             <if test="address != null">address = #{address},</if>
             <if test="area != null">area = #{area},</if>
+            <if test="left != null">`left` = #{left},</if>
+            <if test="top != null">top = #{top},</if>
             <if test="description != null">description = #{description},</if>
             <if test="create_time != null">create_time = #{create_time}</if>
 		</trim>
@@ -272,6 +94,8 @@
             county_name,
             address,
             area,
+            `left`,
+            top,
             description
         FROM LOCATION WHERE kid = #{kid} LIMIT 1
     </select>

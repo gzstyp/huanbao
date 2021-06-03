@@ -198,6 +198,18 @@
     </where>
     group by ln.device_id,dne.flag_name,ln.longs,ln.lat
   </select>
+  
+  <!-- 获取监测点所有的设备 -->
+  <select id="getSiteDevice" resultType="HashMap" parameterType="String">
+    select dne.flag_name,lft.status,ln.left,ln.top from location ln
+    left join device_noise dne on dne.kid = ln.device_id
+    left join (
+    <![CDATA[ select device_id,IF(timestampdiff(SECOND,now(),max(mv.create_time)) < -120,0,1) status ]]>
+    from location ln
+    left join monitor_value mv on mv.location_id = ln.kid
+    where ln.site_id = #{kid} group by device_id) lft on lft.device_id = dne.kid
+    where ln.site_id = #{kid}
+  </select>
 
   <!-- 获取监测点过去10小时的噪音数据 -->
   <select id="getAgo10Hour" resultType="HashMap" parameterType="String">

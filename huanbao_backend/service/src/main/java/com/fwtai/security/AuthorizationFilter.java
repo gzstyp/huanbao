@@ -5,10 +5,12 @@ import com.fwtai.config.ConfigFile;
 import com.fwtai.config.FlagToken;
 import com.fwtai.config.LocalUserId;
 import com.fwtai.config.RenewalToken;
+import com.fwtai.exception.HandleException;
 import com.fwtai.tool.ToolBean;
 import com.fwtai.tool.ToolJWT;
 import com.fwtai.tool.ToolString;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,8 +65,12 @@ public final class AuthorizationFilter extends BasicAuthenticationFilter{
                 final Class<? extends Exception> aClass = exception.getClass();
                 System.out.println("aClass -> " + aClass);
                 exception.printStackTrace();
-                RenewalToken.remove();
-                FlagToken.set(2);
+                if(exception instanceof MyBatisSystemException){
+                    throw new HandleException("系统出现错误,稍候重试");
+                }else{
+                    RenewalToken.remove();
+                    FlagToken.set(2);
+                }
                 //todo 勿删,走这里因为没有角色权限信息,所以要被 AuthenticationEntryPoint 的实现类拦截下来并执行
                 chain.doFilter(request,response);//报错是否因为这个???,若是不加的话，则请求没有返回值
             }

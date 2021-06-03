@@ -52,8 +52,26 @@ public class LocationService{
         final String p_province_name = "province_name";
         final String p_city_id = "city_id";
         final String p_city_name = "city_name";
+        final String p_top = "top";
+        final String p_left = "left";
         final String validate = ToolClient.validateField(formData,p_site_id,p_device_id,p_name,p_longs,p_lat,p_county_id,p_county_name,p_province_id,p_province_name,p_city_id,p_city_name);
         if(validate != null)return validate;
+        final String top = formData.getString(p_top);
+        final String left = formData.getString(p_left);
+        if(top != null){
+            try {
+                formData.put("top",Integer.parseInt(top));
+            } catch (Exception e) {
+                return ToolClient.createJsonFail("像素只能是数字");
+            }
+        }
+        if(left != null){
+            try {
+                formData.put("left",Integer.parseInt(left));
+            } catch (Exception e) {
+                return ToolClient.createJsonFail("像素只能是数字");
+            }
+        }
         formData.put("kid",ToolString.getIdsChar32());
         return ToolClient.executeRows(locationDao.add(formData));
     }
@@ -68,8 +86,26 @@ public class LocationService{
         final String p_lat = "lat";
         final String p_county_id = "county_id";
         final String p_county_name = "county_name";
+        final String p_top = "top";
+        final String p_left = "left";
         final String validate = ToolClient.validateField(formData,p_site_id,p_device_id,p_name,p_longs,p_lat,p_county_id,p_county_name,p_kid);
         if(validate != null)return validate;
+        final String top = formData.getString(p_top);
+        final String left = formData.getString(p_left);
+        if(top != null){
+            try {
+                formData.put("top",Integer.parseInt(top));
+            } catch (Exception e) {
+                return ToolClient.createJsonFail("像素只能是数字");
+            }
+        }
+        if(left != null){
+            try {
+                formData.put("left",Integer.parseInt(left));
+            } catch (Exception e) {
+                return ToolClient.createJsonFail("像素只能是数字");
+            }
+        }
         final String exist_key = locationDao.queryExistById(formData.getString(p_kid));
         if(exist_key == null){
             return ToolClient.createJson(ConfigFile.code199,"数据已不存在,刷新重试");

@@ -127,7 +127,17 @@
             <input type="hidden" id="city_id"/>
             <input type="hidden" id="city_name"/>
         </div>
-        <label class="col-sm-3 control-label no-padding-right" for="address"><div class="hr-4"></div>区域地址</label>
+        <label class="col-sm-3 control-label no-padding-right" for="address"><div class="hr-4"></div>全景图左边像素</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="left" placeholder="设备在全景图离左边位置的像素" class="form-control" oninput="value=value.replace(/[^\d]/g,'')"/>
+        </div>
+      <label class="col-sm-3 control-label no-padding-right" for="address"><div class="hr-4"></div>全景图顶部像素</label>
+        <div class="col-sm-7">
+            <div class="hr-4"></div>
+            <input type="text" id="top" placeholder="设备在全景图离顶部位置的像素" class="form-control" oninput="value=value.replace(/[^\d]/g,'')"/>
+        </div>
+      <label class="col-sm-3 control-label no-padding-right" for="address"><div class="hr-4"></div>区域地址</label>
         <div class="col-sm-7">
             <div class="hr-4"></div>
             <input type="text" id="address" placeholder="区域详细地址" class="form-control"/>
@@ -740,6 +750,8 @@
                             address : winFn.getDomValue('#address'),
                             area : winFn.getDomValue('#area'),
                             description : winFn.getDomValue('#description'),
+                            left : winFn.getDomValue('#left'),
+                            top : winFn.getDomValue('#top'),
                             kid : winFn.getDomValue(inputEditKeyId)
                         };
                         layerFn.submit(url,params,function(data){

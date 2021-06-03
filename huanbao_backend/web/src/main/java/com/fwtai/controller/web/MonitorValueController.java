@@ -117,6 +117,12 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getLately365Day(new PageFormData(request)),response);
     }
 
+    /** 获取监测点所有的设备 */
+    @GetMapping("/getSiteDevice")
+    public void getSiteDevice(final String kid,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getSiteDevice(kid),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);
