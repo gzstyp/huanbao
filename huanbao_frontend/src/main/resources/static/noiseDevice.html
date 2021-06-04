@@ -19,7 +19,6 @@
               <div class="input-group">
                 <input type="text" id="site_label" class="form-control search-query" placeholder="选择区域查询查看" style="width:140px"/>
                 <input type="hidden" id="site_id" class="form-control"/>
-                <input type="hidden" id="refresh" value="120000"/>
               </div>
             </td>
             <td class="hidden-480" style="padding: 0px 6px;">
@@ -139,7 +138,7 @@
 
   setInterval(function(){
     thisPage.getListMap();
-  },$('#refresh').val());
+  },120000);
 
   var urlGetSiteList = '/location/getSiteList';/*获取位置地点名称*/
   var urlGetAreaTree = urlPrefix + '/location/getAreaTree'/*获取区域构建树形菜单*/
@@ -233,15 +232,7 @@
         thisPage.initTree();//若再次调用便是刷新树
       },
       initDom : function(){
-        thisPage.getRefreshValue();
         thisPage.getListMap();
-      },
-      getRefreshValue : function(){
-        layerFn.ajaxGetResult(urlGetRefreshValue,{},function(data){
-          if(AppKey.code.code200 == data.code){
-            $('#refresh').val(data.data);
-          }
-        });
       },
       initTree : function(){
         tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);
