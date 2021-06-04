@@ -302,10 +302,10 @@
     
       html += '<tr>';
       html += '<td colspan="2" style="padding-top:4px;padding-bottom:0px;">';  
-      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;" onclick="getTotal60(\''+obj.kid+'\')">凌晨到现在超过60趋势图</a></div>';
-      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable(\''+obj.kid+'\')">查看24小时实时监测数据</a></div>';
-      html += '<div style="border-bottom:1px solid #ddd;"><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="open7Day(\''+obj.kid+'\')">最近7天平均监测数据统计</a></div>';
-      html += '<div><a href="javascript:;" style="height:30px;line-height:30px;color:#459df5;margin-top:6px;" onclick="openListTable365(\''+obj.kid+'\')">最近1年平均监测数据统计</a></div>';
+      html += '<div style="border-bottom:1px solid #ddd;padding-bottom:2px;display:flex;justify-content:center;"><button type="button" class="btn btn-inverse btn-white" onclick="getTotal60(\''+obj.kid+'\')">凌晨到现在超过60趋势图</button>';
+      html += '<button style="margin-left:6px;" type="button" class="btn btn-inverse btn-white" onclick="open7Day(\''+obj.kid+'\')">最近7天平均监测数据统计</button></div>';
+      html += '<div style="padding-bottom:4px;padding-top:2px;display:flex;justify-content:center;"><button type="button" class="btn btn-inverse btn-white" onclick="openListTable(\''+obj.kid+'\')">查看24小时实时监测数据</button>';
+      html += '<button style="margin-left:6px;" type="button" class="btn btn-inverse btn-white" onclick="openListTable365(\''+obj.kid+'\')">最近1年平均监测数据统计</button></div>';
       html += '</td>';
       html += '</tr>';
 
@@ -325,7 +325,7 @@
         html += '<img src="'+obj.image+'" width="600" height="480"/>';
         getDeviceInfo(obj.kid);//获取设备信息
       }else{
-        html += '<img src="images/default_image.svg" alt="暂无图片" title="暂无图片" width="600" height="230"/>';
+        html += '<img src="images/default_image.svg" alt="暂无图片" title="暂无图片" width="600" height="250"/>';
       }
       html += '</td>';
       html += '</tr>';
@@ -347,13 +347,18 @@
             var obj = lists[inx];
             if(obj.left != null && obj.top != null){
               var imgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
-              html += "<span id='span_"+obj.location_id+"' style='position:absolute;left:"+(obj.left+4)+"px;top:"+(obj.top-16)+"px;'>"+obj.volume+"</span>";
+              var vol = Number.parseInt(obj.volume);
+              var color = '#000';
+              if(vol > 60){
+                color = '#f00';
+              }
+              html += "<span id='span_"+obj.location_id+"' style='position:absolute;left:"+(obj.left+4)+"px;top:"+(obj.top-16)+"px;color:"+color+";'>"+obj.volume+"</span>";
               html += "<img id='img_"+obj.location_id+"' src='"+imgUrl+"' style='position:absolute;left:"+obj.left+"px;top:"+obj.top+"px;' alt='"+obj.flag_name+"' title='"+obj.flag_name+"'/>";
             }
           }
           $('#' + kid).append(html);
         }else{
-          renderDeviceInfo(kid,'<div style="height:230px;line-height:230px;text-align:center;"><img src="js/layer/theme/default/warn.png" style="vertical-align:middle">'+data.msg+'</div>');
+          renderDeviceInfo(kid,'<div style="height:275px;line-height:275px;text-align:center;"><img src="js/layer/theme/default/warn.png" style="vertical-align:middle">'+data.msg+'</div>');
         }
       });
     }
@@ -368,7 +373,6 @@
     
     setInterval(function(){
       var kid = winFn.getDomValue('#input_device_refresh');
-      console.log(1);
       if(kid != null && kid != ''){
         getDeviceValue(kid);
       }      
@@ -380,7 +384,13 @@
           var list = data.data;
           for(var i=0;i< list.length;i++){
             var obj = list[i];
+            var vol = Number.parseInt(obj.volume);
+            var color = '#000';
+            if(vol > 60){
+              color = '#f00';
+            }
             $('#span_'+obj.location_id).text(obj.volume);
+            $('#span_'+obj.location_id).css({"color":color});
             var imgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
             $('#img_'+obj.location_id).attr("src",imgUrl);
           }
