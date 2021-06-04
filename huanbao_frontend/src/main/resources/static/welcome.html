@@ -49,7 +49,6 @@
                         </button>
                         <input type="hidden" id="min" />
                         <input type="hidden" id="max" />
-                        <input type="hidden" id="refresh" value="65000"/>
                       </span>
                     </div>
                   </td>
@@ -202,9 +201,7 @@
 <!--摘自降雨量-->
 <div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
-  $(function(){
-    sessionStorage.setItem("map_refresh",60000);
-  });
+    var map_refresh = 60000;//todo 写在<input/>再获取会有bug
     function windowShow(){
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
@@ -369,7 +366,7 @@
 
     setInterval(function(){
       thisPage.getListMap();
-    },$('#refresh').val());
+    },map_refresh);
     
     setInterval(function(){
       var kid = winFn.getDomValue('#input_device_refresh');
@@ -733,7 +730,7 @@
         getRefreshValue : function(){
           layerFn.ajaxGetResult(urlGetRefreshValue,{},function(data){
             if(AppKey.code.code200 == data.code){
-              $('#refresh').val(data.data);
+              map_refresh = data.data;
             }
           });
         },
@@ -776,6 +773,7 @@
           tree_obj.checkAllNodes(false);//仅对 chkStyle = "checkbox"有效
         },
         getListMap : function(){
+          console.log(map_refresh);
           var params = {//大于等于min到小于max
             min : $('#min').val(),
             max : $('#max').val(),
