@@ -201,14 +201,23 @@
   
   <!-- 获取监测点所有的设备 -->
   <select id="getSiteDevice" resultType="HashMap" parameterType="String">
-    select dne.flag_name,lft.status,ln.left,ln.top from location ln
+    select distinct dne.flag_name,lft.status,lft.createtime,ln.left,ln.top,mv.volume,ln.kid from location ln
     left join device_noise dne on dne.kid = ln.device_id
-    left join (
-    <![CDATA[ select device_id,IF(timestampdiff(SECOND,now(),max(mv.create_time)) < -120,0,1) status ]]>
-    from location ln
+    left join (select device_id,
+    <![CDATA[ IF(timestampdiff(SECOND,now(),max(mv.create_time)) < -120,0,1) status,]]>
+    max(mv.create_time) createtime from location ln
     left join monitor_value mv on mv.location_id = ln.kid
     where ln.site_id = #{kid} group by device_id) lft on lft.device_id = dne.kid
+    left join monitor_value mv on mv.create_time = lft.createtime
     where ln.site_id = #{kid}
+  </select>
+  
+  <!-- 首页设备信息实时刷新,每分钟刷新一次 -->
+  <select id="getDeviceValue" resultType="HashMap" parameterType="String">
+    select distinct mv.volume,mv.location_id from (select ln.kid from location ln where ln.site_id = #{kid}) lft
+    left join (select mv.location_id,max(mv.create_time) createtime from monitor_value mv group by mv.location_id) lt
+    on lt.location_id = lft.kid
+    left join monitor_value mv on mv.create_time = lt.createtime
   </select>
 
   <!-- 获取监测点过去10小时的噪音数据 -->

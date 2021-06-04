@@ -123,6 +123,12 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getSiteDevice(kid),response);
     }
 
+    /** 首页设备信息实时刷新,每分钟刷新一次 */
+    @GetMapping("/getDeviceValue")
+    public void getDeviceValue(final String kid,final HttpServletResponse response){
+        ToolClient.responseJson(monitorvalueService.getDeviceValue(kid),response);
+    }
+
     @GetMapping("/notAuthorized")
     public void notAuthorized(final HttpServletResponse response){
         ToolClient.responseJson(ToolClient.notAuthorized(),response);

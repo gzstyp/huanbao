@@ -326,4 +326,12 @@ public class MonitorValueService{
         }
         return ToolClient.queryJson(monitorvalueDao.getSiteDevice(kid));
     }
+
+    //首页设备信息实时刷新,每分钟刷新一次
+    public String getDeviceValue(final String kid){
+        if(kid == null || kid.length() <= 0){
+            return ToolClient.createJsonFail("请选择监测点");
+        }
+        return ToolClient.queryJson(monitorvalueDao.getDeviceValue(kid));
+    }
 }

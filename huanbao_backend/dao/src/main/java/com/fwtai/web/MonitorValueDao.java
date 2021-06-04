@@ -88,6 +88,10 @@ public class MonitorValueDao{
         return dao.queryForListHashMap("monitor_value.getSiteDevice",kid);
     }
 
+    public List<HashMap<String,Object>> getDeviceValue(final String kid){
+        return dao.queryForListHashMap("monitor_value.getDeviceValue",kid);
+    }
+
     public List<HashMap<String,Object>> getLately7Day(final PageFormData formData){
         return dao.queryForListHashMap("monitor_value.getLately7Day",formData);
     }
