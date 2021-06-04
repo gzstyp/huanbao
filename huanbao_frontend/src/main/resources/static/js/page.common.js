@@ -1961,7 +1961,7 @@ var refreshFlag = true;
                 btn :['打印',AppKey.cancel],
                 yes : function(index,layero){
                     callback(index,layero);
-                },
+                }
             });
         },
         /**获取layerFn.winUrl()或layerFn.winRUrl()打开新页面的js方法及属性:var iframeWin = layerFn.getIframe(layero);*/
@@ -1978,6 +1978,28 @@ var refreshFlag = true;
                 area : area,
                 btn : [AppKey.close],
                 time : time,
+                resize : false
+            });
+        },
+        /**仅查看且带关闭事件*/
+        viewCloseEvent : function(title,domDivId,area,close){
+            return top.layer.open({
+                type : 1,
+                title : title,
+                content : $(domDivId),
+                area : area,
+                btn : [AppKey.close],
+                yes : function(index,layero){
+                    layer.close(index);
+                    if (close != null && close != ''){
+                        close(index,layero);
+                    }
+                },
+                cancel: function(index,layero){
+                    if (close != null && close != ''){
+                        close(index,layero);
+                    }
+                },
                 resize : false
             });
         },

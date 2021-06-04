@@ -49,7 +49,7 @@
                         </button>
                         <input type="hidden" id="min" />
                         <input type="hidden" id="max" />
-                        <input type="hidden" id="refresh" value="60000"/>
+                        <input type="hidden" id="refresh" value="65000"/>
                       </span>
                     </div>
                   </td>
@@ -198,9 +198,13 @@
   </table>
 </div>
 <div id="div_btns" style="display:none;margin-bottom:-20px;"></div>
+<input type="hidden" id="input_device_refresh"/>
 <!--摘自降雨量-->
 <div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
+  $(function(){
+    sessionStorage.setItem("map_refresh",60000);
+  });
     function windowShow(){
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
@@ -235,6 +239,8 @@
     var urlGetTotal60 = '/monitorValue/getTotal60';
     /* 获取监测点所有的设备 */
     var urlGetSiteDevice = '/monitorValue/getSiteDevice';
+    /* 首页设备信息实时刷新,每分钟刷新一次 */
+    var urlGetDeviceValue = '/monitorValue/getDeviceValue';
 
     //todo 圆形中心的颜色越深说明噪音越大
     function initMap(lng,lat,data){
@@ -304,6 +310,7 @@
       html += '</tr>';
 
       if(obj.image != null && obj.image != ''){
+        $('#input_device_refresh').val(obj.kid);
         html += '<tr id="ajax_tr'+obj.kid+'">';
         html += '<td colspan="2" style="padding-top:4px;padding-bottom:0px;">';
         html += '<div style="height:36px;line-height:36px;text-align:center;"><img src="js/zTree/img/loading.gif" alt="正在加载……" style="vertical-align:middle">正在加载设备信息……</div>';
@@ -325,7 +332,9 @@
 
       html += '</table>';
       $('#div_btns').empty().html(html);
-      layerFn.viewDialog('操作选项','#div_btns',['620px','550px']);
+      layerFn.viewCloseEvent('操作选项','#div_btns',['620px','550px'],function(layerIndex,layero){
+        $('#input_device_refresh').val('');
+      });
     }
     
     function getDeviceInfo(kid){
@@ -337,9 +346,9 @@
           for(var inx in lists){
             var obj = lists[inx];
             if(obj.left != null && obj.top != null){
-              var ImgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
-              html += "<span id='"+obj.location_id+"' style='position:absolute;left:"+(obj.left+4)+"px;top:"+(obj.top-16)+"px;'>"+obj.volume+"</span>";
-              html += "<img src='"+ImgUrl+"' style='position:absolute;left:"+obj.left+"px;top:"+obj.top+"px;' alt='"+obj.flag_name+"' title='"+obj.flag_name+"'/>";
+              var imgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
+              html += "<span id='span_"+obj.location_id+"' style='position:absolute;left:"+(obj.left+4)+"px;top:"+(obj.top-16)+"px;'>"+obj.volume+"</span>";
+              html += "<img id='img_"+obj.location_id+"' src='"+imgUrl+"' style='position:absolute;left:"+obj.left+"px;top:"+obj.top+"px;' alt='"+obj.flag_name+"' title='"+obj.flag_name+"'/>";
             }
           }
           $('#' + kid).append(html);
@@ -356,6 +365,28 @@
     setInterval(function(){
       thisPage.getListMap();
     },$('#refresh').val());
+    
+    setInterval(function(){
+      var kid = winFn.getDomValue('#input_device_refresh');
+      console.log(1);
+      if(kid != null && kid != ''){
+        getDeviceValue(kid);
+      }      
+    },61000);
+    
+    function getDeviceValue(kid){
+      layerFn.ajaxGetResult(urlGetDeviceValue,{kid:kid},function(data){
+        if(AppKey.code.code200 == data.code){
+          var list = data.data;
+          for(var i=0;i< list.length;i++){
+            var obj = list[i];
+            $('#span_'+obj.location_id).text(obj.volume);
+            var imgUrl = obj.status == 1 ? 'images/icon_online.png' : 'images/icon_offline.png';
+            $('#img_'+obj.location_id).attr("src",imgUrl);
+          }
+        }
+      });
+    }
     
     function openListTable(kid){
       $('#searchDataId').val(kid);
