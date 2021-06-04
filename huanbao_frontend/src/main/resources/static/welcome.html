@@ -201,8 +201,7 @@
 <!--摘自降雨量-->
 <div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
-    var map_refresh = sessionStorage.getItem("refresh");
-    console.log(map_refresh);
+    var map_refresh = sessionStorage.getItem("refresh") || 65000;
     function windowShow(){
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
