@@ -44,11 +44,18 @@
                 },
                 success : function(data){
                     layerFn.closeIndex(self.layerIndex);
-                    if(data.code === 200){
+                    if(data.code == 200){
                         var token = data.data;
                         sessionStorage.setItem("accessToken",token.accessToken);
                         sessionStorage.setItem("refreshToken",token.refreshToken);
                         sessionStorage.setItem("userName",token.userName);
+                        var listParams = token.listParams;
+                        if(listParams != null && listParams != ''){
+                            for(var inx in listParams){
+                                var obj = listParams[inx];
+                                sessionStorage.setItem(obj.ky,obj.ve);
+                            }
+                        }
                         var menuData = token.menuData;
                         if(menuData != null && menuData != ''){
                             sessionStorage.setItem("menuData",menuData);
@@ -56,7 +63,7 @@
                         }else{
                             layerFn.handleClose(AppKey.msg.msg401,AppKey.code.code204);
                         }
-                    }else if(data.code === 198){
+                    }else if(data.code == 198){
                         layerFn.handleClose(data.msg,data.code);
                     }else{
                         layerFn.handleTop(data.msg,data.code);

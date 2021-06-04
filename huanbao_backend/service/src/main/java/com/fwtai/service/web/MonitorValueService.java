@@ -216,11 +216,6 @@ public class MonitorValueService{
         return ToolClient.queryJson(monitorvalueDao.getDeviceStatus(formData));
     }
 
-    public String getRefreshValue(){
-        final Integer result = monitorvalueDao.getRefreshValue();
-        return ToolClient.queryJson(result);
-    }
-
     public String getAgo10Hour(final String kid){
         if(kid == null || kid.length() <= 0){
             return ToolClient.createJsonFail("请选择要查看的位置点");

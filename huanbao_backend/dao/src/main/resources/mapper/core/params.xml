@@ -190,4 +190,9 @@
     <include refid="sql_where_listData"/>
     LIMIT 1
   </select>
+
+  <!-- 获取刷新间隔 -->
+  <select id="getParamsRefresh" resultType="HashMap">
+      select ve,ky from params where ky = 'refresh' LIMIT 1
+  </select>
 </mapper>

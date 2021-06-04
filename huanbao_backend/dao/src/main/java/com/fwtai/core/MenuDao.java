@@ -95,6 +95,10 @@ public class MenuDao{
         return dao.queryForListMap("sys_menu.queryAllMenu",kid);
     }
 
+    public List<Map<String,Object>> getParams(final String userId){
+        return dao.queryForListMap("params.getParamsRefresh",userId);
+    }
+
     public List<String> queryDataByParent(final String pid){
         return dao.queryListEntity("sys_menu.queryDataByParent",pid);
     }

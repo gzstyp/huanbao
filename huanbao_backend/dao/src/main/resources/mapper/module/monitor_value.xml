@@ -315,9 +315,4 @@
   <select id="queryMapGreaterValue" resultType="HashMap">
       select ve from params where ky = 'overbreak'
   </select>
-
-  <!-- 获取刷新间隔 -->
-  <select id="getRefreshValue" resultType="Integer">
-      select ve from params where ky = 'refresh'
-  </select>
 </mapper>

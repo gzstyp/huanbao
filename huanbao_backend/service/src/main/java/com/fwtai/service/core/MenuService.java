@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜单管理
@@ -191,6 +192,10 @@ public class MenuService extends DataService{
         } catch (Exception e){
             return null;
         }
+    }
+
+    public List<Map<String, Object>> getParams(final String userId){
+        return menuDao.getParams(userId);
     }
     
     public String listData(PageFormData formData){

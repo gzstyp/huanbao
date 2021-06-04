@@ -81,12 +81,6 @@ public class MonitorValueController{
         ToolClient.responseJson(monitorvalueService.getDeviceStatus(new PageFormData(request)),response);
     }
 
-    /**获取刷新间隔*/
-    @GetMapping("/getRefreshValue")
-    public void getRefreshValue(final HttpServletResponse response){
-        ToolClient.responseJson(monitorvalueService.getRefreshValue(),response);
-    }
-
     /**获取监测点过去10小时的噪音数据*/
     @GetMapping("/getAgo10Hour")
     public void getAgo10Hour(final String kid,final HttpServletResponse response){

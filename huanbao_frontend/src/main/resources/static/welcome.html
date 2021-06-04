@@ -201,7 +201,8 @@
 <!--摘自降雨量-->
 <div id="div_echarts" style="height:440px;width:820px;display:none;margin-left:28px;"></div>
 <script type="text/javascript">
-    var map_refresh = 65000;
+    var map_refresh = sessionStorage.getItem("refresh");
+    console.log(map_refresh);
     function windowShow(){
         var width = winFn.fnGetWidth();
         var height = winFn.fnGetHeight();
@@ -224,8 +225,6 @@
     var urlGetAreaTree = urlPrefix + '/location/getAreaTree';
     /*获取数据在map标识*/
     var urlGetListMap = '/monitorValue/getListMap';
-    /*获取刷新频率*/
-    var urlGetRefreshValue = '/monitorValue/getRefreshValue';
     /*查看24小时实时监测数据,仅能查询2天的数据*/
     var urlGetStatistics = '/monitorValue/getStatistics';
     /* 最近7天平均监测数据统计 */
@@ -726,15 +725,7 @@
         },
         initDom : function(){
           initValue(60,65);
-          thisPage.getRefreshValue();
           thisPage.getListMap();
-        },
-        getRefreshValue : function(){
-          layerFn.ajaxGetResult(urlGetRefreshValue,{},function(data){
-            if(AppKey.code.code200 == data.code){
-              map_refresh = data.data;
-            }
-          });
         },
         initTree : function(){
           tree_obj = $.fn.zTree.init($("#"+domTree),settingArea);

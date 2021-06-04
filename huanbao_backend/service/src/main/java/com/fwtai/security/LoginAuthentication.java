@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -120,7 +121,12 @@ public final class LoginAuthentication extends UsernamePasswordAuthenticationFil
         if(type == null || type.isEmpty()){
             map.put(ConfigFile.REFRESH_TOKEN,ToolJWT.expireRefreshToken(userId));
             map.put(ConfigFile.ACCESS_TOKEN,ToolJWT.expireAccessToken(userId));
-            map.put("menuData",ToolBean.getBean(request,MenuService.class).getMenuData(userId));//前端通过判断是否有这个key值是否再跳转页面
+            final MenuService menuService = ToolBean.getBean(request,MenuService.class);
+            final List<Map<String,Object>> listParams = menuService.getParams(userId);
+            if(listParams != null && listParams.size() > 0){
+                map.put("listParams",listParams);
+            }
+            map.put("menuData",menuService.getMenuData(userId));//前端通过判断是否有这个key值是否再跳转页面
             map.put("userName",jwtUser.getUsername());
         }else{
             map.put(ConfigFile.REFRESH_TOKEN,ToolJWT.buildRefreshToken(userId));
