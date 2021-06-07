@@ -317,7 +317,7 @@
       html += '<td colspan="2" style="padding:0px;" id="'+obj.kid+'">';
       if(obj.image != null && obj.image != ''){
         renderDeviceInfo(obj.kid,'');//置空,下行的加载动画
-        html += '<img src="'+obj.image+'" width="600" height="480"/>';
+        html += '<img src="'+obj.image+'" width="680" height="480"/>';
         getDeviceInfo(obj.kid);//获取设备信息
       }else{
         html += '<img src="images/default_image.svg" alt="暂无图片" title="暂无图片" width="600" height="250"/>';
@@ -327,7 +327,7 @@
 
       html += '</table>';
       $('#div_btns').empty().html(html);
-      layerFn.viewCloseEvent('操作选项','#div_btns',['620px','550px'],function(layerIndex,layero){
+      layerFn.viewCloseEvent('操作选项','#div_btns',['700px','550px'],function(layerIndex,layero){
         $('#input_device_refresh').val('');
       });
     }
