@@ -117,8 +117,8 @@
 	<!-- listData条件查询 -->
 	<sql id="sql_where_listData">
     <trim prefix="WHERE" prefixOverrides="AND">
-      <if test="name != null">
-        AND ln.name LIKE CONCAT('%',#{name},'%')
+      <if test="flag_name != null">
+        AND dne.flag_name LIKE CONCAT('%',#{flag_name},'%')
       </if>
       <if test="county_id != null">
         AND ln.county_id = #{county_id}
@@ -162,8 +162,9 @@
 	<select id="listTotal" parameterType="HashMap" resultType="Integer">
 		SELECT COUNT(1) TOTAL FROM LOCATION ln
     left join site se on se.kid = ln.site_id
+    LEFT JOIN device_noise dne on dne.kid = ln.device_id
 		<include refid="sql_where_listData"/>
-        LIMIT 1
+    LIMIT 1
 	</select>
 
   <!--查询位置地点名称-->
