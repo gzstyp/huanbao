@@ -14,27 +14,19 @@
                     <table class="no-border" style="display:inline">
                         <tr permission='location_btn_listData' style="display:none">
                             <td style="padding: 0px 6px;">
-                                检测点名称
+                              位置地点
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <input type="text" id="key_name" class="form-control search-query" placeholder="检测点名称" style="width:140px"/>
-                                </div>
-                            </td>
-                            <td style="padding: 0px 6px;">
-                                位置地点
-                            </td>
-                            <td>
-                                <div class="input-group">
-                                    <input type="text" id="key_siteName" class="form-control search-query" placeholder="位置地点名称" style="width:140px"/>
+                                  <input type="text" id="key_siteName" class="form-control search-query" placeholder="位置地点名称" style="width:140px"/>
                                 </div>
                             </td>
                             <td class="hidden-480" style="padding: 0px 6px;">
-                                区域
+                              设备标识名称
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <input type="text" id="key_county_id" class="form-control search-query hidden-480" placeholder="选择区域" style="width:140px"/>
+                                  <input type="text" id="key_flag_name" class="form-control search-query" placeholder="检测点名称" style="width:140px"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-inverse btn-white" id="btnSearch" permission='location_btn_listData' style="display:none">
                                             <span class="ace-icon fa fa-search bigger-110"></span>
@@ -310,7 +302,7 @@
                 tableDom : tableDom,
                 sAjaxSource: getList,
                 fnServerParams : function(params){
-                    params.push({"name":"name","value":$("#key_name").val()},{"name":"siteName","value":$("#key_siteName").val()},{"name":"county_id","value":$("#key_county_id").val()});
+                    params.push({"name":"flag_name","value":$("#key_flag_name").val()},{"name":"siteName","value":$("#key_siteName").val()},{"name":"county_id","value":$("#key_county_id").val()});
                 },
                 aoColumns : [
                     {
@@ -389,7 +381,7 @@
                     },
                     {
                         "visible":false,//列的隐藏显示
-                        "targets": []//指定列
+                        "targets": [1,7]//指定列
                     }
                 ]
             });
