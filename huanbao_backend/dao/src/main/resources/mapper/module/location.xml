@@ -124,7 +124,7 @@
         AND ln.county_id = #{county_id}
       </if>
       <if test="siteName != null">
-        AND se.name = #{siteName}
+        AND se.name LIKE CONCAT('%',#{siteName},'%')
       </if>
     </trim>
 	</sql>
