@@ -233,7 +233,7 @@
     group by createtime order by createtime
   </select>
   
-  <!--获取展示凌晨到现在的24小时实时监测数据,仅能查询2天的数据-->
+  <!--获取展示凌晨到现在的24小时实时监测数据,仅能查询连续2天的数据-->
   <select id="get0toNow" resultType="HashMap" parameterType="HashMap">
     select lft.createtime,LEFT(avg(lft.volume),5) volume from (select mv.location_id,mv.volume,DATE_FORMAT(mv.create_time,'%Y-%m-%d %H:%i') createtime from monitor_value mv
     where
