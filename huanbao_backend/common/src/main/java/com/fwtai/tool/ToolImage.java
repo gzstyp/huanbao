@@ -15,7 +15,7 @@ public final class ToolImage{
         final int width = 31;
         final int height = 30;
         // 创建BufferedImage对象
-        BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
         // 获取Graphics2D
         Graphics2D g2d = image.createGraphics();
         // ---------- 增加下面的代码使得背景透明 -----------------
@@ -46,6 +46,11 @@ public final class ToolImage{
         return width;
     }
 
+    protected static int getWordHeight(final Font font){
+        final FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
+        return metrics.getHeight();
+    }
+
     protected static String writeImage(final String fullDir,final String fileName,final BufferedImage bufferedImage){
         try{
             final File file = new File(fullDir);
@@ -61,10 +66,10 @@ public final class ToolImage{
     }
 
     // https://blog.csdn.net/zengrenyuan/article/details/80281738
-    public static ImagePng getPng(final String fullDir,final String fileName,final String content){
-        final Font font = new Font("cambria",Font.BOLD,12);
-        final FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
-        final int width = getWordWidth(font,content);
+    public static ImagePng getPng(final String fullDir,final String fileName,final String name,final String value){
+        final Font font = new Font("SimHei",Font.BOLD,12);
+        final int width = getWordWidth(font,name);
+        final int width_value = getWordWidth(font,value);
         //计算图片的宽
         //final int height = metrics.getHeight();//Ascent是从基线到顶部最大的高
         final int height = 52;//自定义高度
@@ -76,7 +81,8 @@ public final class ToolImage{
         //设置背影为白色;graphics.setColor(Color.WHITE);graphics.fillRect(0,0,bufferedImage.getWidth(),bufferedImage.getHeight());
         graphics.setFont(font); graphics.setColor(Color.BLACK);
         //graphics.drawString(content,0,metrics.getAscent());//按着顶部
-        graphics.drawString(content,0,50);
+        graphics.drawString(name,0,50);//x值越小越往左;y值越小越往上;
+        graphics.drawString(value,((width-width_value)/2),36);//此处的x的水平居中
         //图片上写文字
         graphics.dispose();
         final String image = writeImage(fullDir,fileName,bufferedImage);

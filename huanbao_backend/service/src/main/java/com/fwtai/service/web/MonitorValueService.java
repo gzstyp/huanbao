@@ -188,7 +188,7 @@ public class MonitorValueService{
         list.forEach(map->{
             final String value = (String)map.get("count");
             final String icon = ToolString.getIdsChar32();
-            final ImagePng png = ToolImage.getPng(baseDir+"/png/",icon,value);
+            final ImagePng png = ToolImage.getPng(baseDir+"/png/",icon,String.valueOf(map.get("siteName")),value);
             if(png != null){
                 map.put("icon",png.getIcon()+".png");
                 map.put("width",png.getWidth());
