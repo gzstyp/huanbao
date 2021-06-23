@@ -37,7 +37,7 @@ public final class ToolImage{
         }
     }
 
-    public static int getWordWidth(final Font font,final String content){
+    protected static int getWordWidth(final Font font,final String content){
         final FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         int width = 0;
         for (int i = 0; i < content.length(); i++){
