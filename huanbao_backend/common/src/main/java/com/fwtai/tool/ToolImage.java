@@ -9,6 +9,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 若要添加汉字时,请按照下面的方式安装汉字字体
+ * ① yum install mkfontscale fontconfig -y
+ * ② mkdir /usr/share/fonts/zh_cn -p
+ * ③ 上传字体(微软雅黑、宋体、黑体)到指定目录
+ * ④ chmod -R 777 /usr/share/fonts/zh_cn
+ * ⑤ mkfontscale && mkfontdir && fc-cache -fv
+*/
 public final class ToolImage{
 
     public static void getJpg(final String value){
