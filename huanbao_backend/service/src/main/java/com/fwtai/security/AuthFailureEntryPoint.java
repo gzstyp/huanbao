@@ -25,7 +25,7 @@ public final class AuthFailureEntryPoint implements AuthenticationEntryPoint {
     public void commence(final HttpServletRequest request,final HttpServletResponse response,final AuthenticationException authException) throws IOException, ServletException {
         final Integer flag = FlagToken.get();//值若为空说明是未带token且未放行的url而请求导致的
         System.out.println("flag-->"+flag);
-        String json = ToolClient.notAuthorized();
+        String json = ToolClient.accessDenied();
         final Locale locale = request.getLocale();
         final String language = locale.getLanguage();
         final String country = locale.getCountry();

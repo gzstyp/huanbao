@@ -874,7 +874,7 @@ public final class ToolClient implements Serializable{
      * @QQ 444141300
      * @创建时间 2020/3/1 0:13
      */
-    public static String notAuthorized(){
+    public static String accessDenied(){
         return createJson(ConfigFile.code401,ConfigFile.msg401);
     }
 
