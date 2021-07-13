@@ -261,7 +261,7 @@
       for (i = 0; i < data.length; i++) {
         var obj = data[i];
         var marker = new BMap.Marker(new BMap.Point(obj.lng,obj.lat),{
-          icon : new BMap.Icon((obj.icon == null || obj.icon == '' ? 'images/circle.png' : '/png/'+obj.icon),new BMap.Size(obj.width,55)),
+          icon : new BMap.Icon((obj.icon == null || obj.icon == '' ? 'images/circle.png' : '/png/'+obj.icon),new BMap.Size(obj.width,55)),//todo 上线后需要配置服务端接口的url
           title : obj.siteName
         });
         map.addOverlay(marker);
