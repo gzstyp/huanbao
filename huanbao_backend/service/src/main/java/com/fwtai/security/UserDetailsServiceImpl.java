@@ -50,9 +50,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(user != null){
             final List<String> roles = userService.getRolePermissions(userId,url);
             final List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
-            for(final String role : roles){
-                authorities.add(new SimpleGrantedAuthority(role));
-            }
+            roles.forEach(role->{
+                if(role != null){
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+            });
             if(url.contains("/listData")){
                 if(url.startsWith("/")){
                     url = url.substring(1);
