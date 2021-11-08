@@ -52,6 +52,14 @@ public class MonitorValueDao{
         return dao.queryForPage(pageFormData,"monitor_value.listData","monitor_value.listTotal");
     }
 
+    public List<Object> getListData(final PageFormData formData){
+        return dao.queryListEntity("monitor_value.listData",formData);
+    }
+
+    public Integer getListTotal(final PageFormData formData){
+        return dao.queryForInteger("monitor_value.listTotal",formData);
+    }
+
     public List<HashMap<String,Object>> getListTable(final PageFormData formData){
         return dao.queryForListHashMap("monitor_value.getListTable",formData);
     }

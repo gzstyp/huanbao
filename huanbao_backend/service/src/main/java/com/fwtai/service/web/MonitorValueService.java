@@ -132,7 +132,7 @@ public class MonitorValueService{
             if(formData == null)return ToolClient.jsonValidateField();
             final HashMap<String,Object> map = monitorvalueDao.listData(formData);
             return ToolClient.dataTableOK((List<Object>)map.get(ConfigFile.rows),map.get(ConfigFile.total),formData.get("sEcho"));
-        } catch (Exception e){
+        } catch (final Exception e){
             return ToolClient.dataTableException(formData.get("sEcho"));
         }
     }
